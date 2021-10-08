@@ -1,4 +1,3 @@
-#pragma once
 #include "rng.hpp"
 
 int get_random(int a, int b){
