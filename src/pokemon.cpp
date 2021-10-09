@@ -12,19 +12,74 @@ Pokemon::~Pokemon(){
 /// battle relevant
 ///
 
-void set_status(Status p_status){
+void Pokemon::set_status(Status p_status){
     this->status = p_status;
 }
 
-void set_revealed(bool p_revealed){
+void Pokemon::set_revealed(bool p_revealed){
     this->revealed = revealed;
 }
 
+Status Pokemon::get_status(){
+    return this->status;
+}
+
+bool Pokemon::get_revealed(){
+    return this->revealed;
+}
+
+Ability Pokemon::get_ability(){
+    return this->ability;
+}
+
+Nature Pokemon::get_nature(){
+    return this->nature;
+}
+
+Species Pokemon::get_species(){
+    return this->species;
+}
+
+std::array<AttackMove, 4> Pokemon::get_moveset(){
+    return this->moveset;
+}
+
+std::array<Type, 2> Pokemon::get_type(){
+    return this->type;
+}
+
+int Pokemon::get_level(){
+    return this->level;
+}
+
+int Pokemon::get_happiness(){
+    return this->happiness;
+}
+
+int Pokemon::get_hiddenpower_power(){
+    return this->hiddenpower_power;
+}
+
+Type Pokemon::get_hiddenpower_type(){
+    return this->hiddenpower;
+}
+
 ///
-/// intilization relevant
+/// initilization relevant
 ///
+
 void Pokemon::set_ability(Ability p_ability){
     this->ability = p_ability;
+}
+
+
+void Pokemon::set_basestats(Stats p_stats){
+    this->basestats.hp = p_stats.hp;
+    this->basestats.atk = p_stats.atk;
+    this->basestats.def = p_stats.def;
+    this->basestats.satk = p_stats.satk;
+    this->basestats.sdef = p_stats.sdef;
+    this->basestats.spe = p_stats.spe;
 }
 
 void Pokemon::set_nature(Nature p_nature){
@@ -158,6 +213,9 @@ void Pokemon::stat_init(){
     default:
         break;
     }
+    
+    this->calc_hiddenpower_power();
+    this->calc_hiddenpower_type();
 }
 
 Stats Pokemon::get_stats(){
@@ -174,7 +232,7 @@ void Pokemon::calc_hp(){
     this->stats.hp += (this->EVs.hp / 4);
     this->stats.hp *= this->level;
     this->stats.hp /= 100;
-    this->stats.hp += this->stats.hp + 10;
+    this->stats.hp += this->level + 10;
 }
 
 void Pokemon::calc_atk(){
@@ -220,4 +278,107 @@ void Pokemon::calc_spe(){
     this->stats.spe *= this->level;
     this->stats.spe /= 100;
     this->stats.spe += 5;
+}
+
+
+void Pokemon::calc_hiddenpower_power(){
+    int sum = 0;
+
+    if(this->IVs.hp % 2 != 0){
+        sum += 1;
+    }
+
+    if(this->IVs.atk % 2 != 0){
+        sum += 2;
+    }
+
+    if(this->IVs.def % 2 != 0){
+        sum += 4;
+    }
+
+    if(this->IVs.spe % 2 != 0){
+        sum += 8;
+    }
+
+    if(this->IVs.satk % 2 != 0){
+        sum += 16;
+    }
+
+    if(this->IVs.sdef % 2 != 0){
+        sum += 32;
+    }
+
+    sum *= 40;
+    sum = static_cast<int>(sum / 63);
+    this->hiddenpower_power = sum + 30;
+}
+
+void Pokemon::calc_hiddenpower_type(){
+
+    int sum = 0;
+
+    if(this->IVs.hp % 2 != 0){
+        sum += 1;
+    }
+
+    if(this->IVs.atk % 2 != 0){
+        sum += 2;
+    }
+
+    if(this->IVs.def % 2 != 0){
+        sum += 4;
+    }
+
+    if(this->IVs.spe % 2 != 0){
+        sum += 8;
+    }
+
+    if(this->IVs.satk % 2 != 0){
+        sum += 16;
+    }
+
+    if(this->IVs.sdef % 2 != 0){
+        sum += 32;
+    }
+    
+    sum *= 5;
+    sum = static_cast<int>(sum / 21);
+
+    switch (sum)
+    {
+    case 0: this->hiddenpower = Type::Fighting;
+        break;
+    case 1: this->hiddenpower = Type::Flying;
+        break;
+    case 2: this->hiddenpower = Type::Poison;
+        break;
+    case 3: this->hiddenpower = Type::Ground;
+        break;
+    case 4: this->hiddenpower = Type::Rock;
+        break;
+    case 5: this->hiddenpower = Type::Bug;
+        break;
+    case 6: this->hiddenpower = Type::Ghost;
+        break;
+    case 7: this->hiddenpower = Type::Steel;
+        break;
+    case 8: this->hiddenpower = Type::Fire;
+        break;
+    case 9: this->hiddenpower = Type::Water;
+        break;
+    case 10: this->hiddenpower = Type::Grass;
+        break;
+    case 11: this->hiddenpower = Type::Electric;
+        break;
+    case 12: this->hiddenpower = Type::Psychic;
+        break;
+    case 13: this->hiddenpower = Type::Ice;
+        break;
+    case 14: this->hiddenpower = Type::Dragon;
+        break;
+    case 15: this->hiddenpower = Type::Dark;
+        break;
+    default: std::cout << "ERROR HIDDEN POWER TYPE" << std::endl;
+        break;
+    }
 }
