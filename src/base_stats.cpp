@@ -1,6 +1,6 @@
 #include "base_stats.hpp"
 
-BaseStats base_stats(Species species){
+Stats base_stats(Species species){
     switch(species){
 			case Species::Bulbasaur: return {45, 49, 49, 65, 65, 45};
 			case Species::Ivysaur: return {60, 62, 63, 80, 80, 60};
