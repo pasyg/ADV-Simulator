@@ -33,18 +33,35 @@ class Timer{
 };
 #endif
 
+#define log(x) std::cout << (x) << std::endl;
+
 int main(int argc, char** argv[]) {
 
-    Pokemon Abra;
+    Pokemon Tyranitar, Abra, Alakazam, Gengar;
 
-    BaseStats abra_stats = base_stats(Species::Abra); 
+    std::array<Type, 2> tartype = {Type::Rock, Type::Dark};
+    Stats tarev = {252,252,0,0,4,0};
+    Stats tarstats;
 
-    std::cout << abra_stats.hp << std::endl;
-    std::cout << abra_stats.atk << std::endl;
-    std::cout << abra_stats.def << std::endl;
-    std::cout << abra_stats.satk << std::endl;
-    std::cout << abra_stats.sdef << std::endl;
-    std::cout << abra_stats.spd << std::endl;
+    Tyranitar.set_ability(Ability::Sand_Stream);
+    Tyranitar.set_type(tartype);
+    Tyranitar.set_species(Species::Tyranitar);
+    Tyranitar.set_basestats(base_stats(Tyranitar.get_species()));
+    Tyranitar.set_nature(Nature::adamant);
+    
+    Tyranitar.stat_init();
+
+    tarstats = Tyranitar.get_stats();
+    log(tarstats.hp);
+    log(tarstats.atk);
+    log(tarstats.def);
+    log(tarstats.satk);
+    log(tarstats.sdef);
+    log(tarstats.spe);
+
+    log(Tyranitar.get_hiddenpower_power());
+
+    
 
 
   return 0;
