@@ -1,3 +1,9 @@
+///
+/// simple timer for benchmark testing
+/// use by creating Timer object within a defined scope
+/// will be destructed and shows needed time by itself
+///
+
 #ifdef BENCHMARK
 #include <chrono>
 class Timer{

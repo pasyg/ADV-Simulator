@@ -280,6 +280,10 @@ void Pokemon::calc_spe(){
     this->stats.spe += 5;
 }
 
+///
+/// determinies the power of hidden power by summing up
+/// differently weighted IV LSBs and normalizing between 30-70
+///
 
 void Pokemon::calc_hiddenpower_power(){
     int sum = 0;
@@ -312,6 +316,12 @@ void Pokemon::calc_hiddenpower_power(){
     sum = static_cast<int>(sum / 63);
     this->hiddenpower_power = sum + 30;
 }
+
+///
+/// determines the type of hidden power by summing up 
+/// differently weighted IV LSBs and normalizing between 
+/// 0-15 to pick from a simple table
+///
 
 void Pokemon::calc_hiddenpower_type(){
 
