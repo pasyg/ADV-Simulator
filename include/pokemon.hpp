@@ -4,12 +4,11 @@
 #include <iostream>
 
 #include "abilities.hpp"
+#include "attackmove.hpp"
 #include "base_stats.hpp"
 #include "natures.hpp"
-#include "attackmove.hpp"
 #include "species.hpp"
 #include "status.hpp"
-
 
 
 class Pokemon{
