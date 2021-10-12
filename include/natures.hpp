@@ -1,4 +1,5 @@
 #pragma once
+
 #include <cstdint>
 
 enum class Nature : std::uint8_t{

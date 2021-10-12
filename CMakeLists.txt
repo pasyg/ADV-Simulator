@@ -4,8 +4,10 @@ project(Simulator VERSION 0.1.0)
 set(CMAKE_CXX_STANDARD 17)
 
 INCLUDE_DIRECTORIES(
+    ${PROJECT_SOURCE_DIR}
     ${PROJECT_SOURCE_DIR}/include
     ${PROJECT_SOURCE_DIR}/string_conversions
+    ${PROJECT_SOURCE_DIR}/bounded-integer/include
 )
 
 LINK_DIRECTORIES(
@@ -25,7 +27,14 @@ add_executable(Simulator
     src/state.cpp
     src/rng.cpp
     
-    string_conversions/ability.cpp)
+    string_conversions/ability.cpp
+    string_conversions/gender.cpp
+    string_conversions/item.cpp
+    string_conversions/moves.cpp
+    string_conversions/nature.cpp
+    string_conversions/species.cpp
+    string_conversions/status.cpp
+    string_conversions/type.cpp)
 
 TARGET_LINK_LIBRARIES(Simulator
     

@@ -1,4 +1,5 @@
 #pragma once
+
 #include <cstdint>
 
 enum class Move : std::uint16_t{

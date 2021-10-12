@@ -1,4 +1,5 @@
 #pragma once
+
 #include <cstdint>
 
 enum Status : std::uint8_t {

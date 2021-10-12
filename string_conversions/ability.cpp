@@ -1,7 +1,7 @@
 #include "ability.hpp"
 
 
-auto to_string(Ability const ability) -> std::string_view {
+std::string to_string(Ability const ability) {
 	switch (ability) {
 		case Ability::Stench: return "Stench";
 		case Ability::Drizzle: return "Drizzle";
@@ -79,6 +79,7 @@ auto to_string(Ability const ability) -> std::string_view {
 		case Ability::Pure_Power: return "Pure Power";
 		case Ability::Shell_Armor: return "Shell Armor";
 		case Ability::Air_Lock: return "Air Lock";
-		default: return "Error";
+		default: return "Error ability";
     }
 }
+

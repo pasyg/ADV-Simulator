@@ -3,9 +3,12 @@
 /// use by creating Timer object within a defined scope
 /// will be destructed and shows needed time by itself
 ///
+#pragma once
 
 #ifdef BENCHMARK
+
 #include <chrono>
+
 class Timer{
     public:
     Timer(){

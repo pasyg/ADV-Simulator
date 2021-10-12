@@ -1,7 +1,8 @@
 #pragma once
+
 #include <cstdint>
 
-enum class Item : std::uint8_t{
+enum class Item : std::uint8_t {
     none,
     choiceband,
     leftovers,
@@ -34,7 +35,7 @@ enum class Item : std::uint8_t{
     quickclaw,
     scopelens,
     seaincense,
-    sharkpbeak,
+    sharpbeak,
     shellbell,
     silkscarf,
     silverpowder,

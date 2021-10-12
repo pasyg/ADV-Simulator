@@ -1,11 +1,9 @@
 #pragma once
 
-#include "abilities.hpp"
-#include "conversion.hpp"
-
+#include <algorithm>
+#include <string>
 #include <string_view>
 
-auto to_string(Ability const name) -> std::string_view;
+#include "abilities.hpp"
 
-template<>
-auto from_string<Ability>(std::string_view const str) -> Ability;
+ std::string to_string(Ability const name);

@@ -8,10 +8,12 @@ Pokemon::~Pokemon(){
     
 }
 
+Stats Pokemon::get_stats(){
+    return this->stats;
+}
 ///
-/// battle relevant
+/// relevant in battles
 ///
-
 void Pokemon::set_status(Status p_status){
     this->status = p_status;
 }
@@ -20,12 +22,24 @@ void Pokemon::set_revealed(bool p_revealed){
     this->revealed = revealed;
 }
 
-Status Pokemon::get_status(){
-    return this->status;
+void Pokemon::remove_item(){
+    this->item = Item::none;
+}
+
+void Pokemon::set_item(Item p_item){
+    this->item = p_item;    
+}
+
+Item Pokemon::get_item(){
+    return this->item;
 }
 
 bool Pokemon::get_revealed(){
     return this->revealed;
+}
+
+Status Pokemon::get_status(){
+    return this->status;
 }
 
 Ability Pokemon::get_ability(){
@@ -52,6 +66,10 @@ int Pokemon::get_level(){
     return this->level;
 }
 
+Gender Pokemon::get_gender(){
+    return this->gender;
+}
+
 int Pokemon::get_happiness(){
     return this->happiness;
 }
@@ -63,15 +81,12 @@ int Pokemon::get_hiddenpower_power(){
 Type Pokemon::get_hiddenpower_type(){
     return this->hiddenpower;
 }
-
 ///
 /// initilization relevant
 ///
-
 void Pokemon::set_ability(Ability p_ability){
     this->ability = p_ability;
 }
-
 
 void Pokemon::set_basestats(Stats p_stats){
     this->basestats.hp = p_stats.hp;
@@ -102,6 +117,10 @@ void Pokemon::set_level(int p_level){
     this->level = p_level;
 }
 
+void Pokemon::set_gender(Gender p_gender){
+    this->gender = p_gender;
+}
+
 void Pokemon::set_happiness(int p_happiness){
     this->happiness = p_happiness;
 }
@@ -110,7 +129,6 @@ void Pokemon::set_hiddenpower(Type p_type, int p_power){
     this->hiddenpower = p_type;
     this->hiddenpower_power = p_power;
 }
-
 ///
 /// calculates the pokemon objects stats from
 /// base stats / EVs / IVs / nature
@@ -118,7 +136,6 @@ void Pokemon::set_hiddenpower(Type p_type, int p_power){
 /// static_cast<int> is used to avoid compiler warnings 
 /// for truncating the float values, like in the game
 ///
-
 void Pokemon::stat_init(){
     this->calc_hp();
     this->calc_atk();
@@ -217,15 +234,9 @@ void Pokemon::stat_init(){
     this->calc_hiddenpower_power();
     this->calc_hiddenpower_type();
 }
-
-Stats Pokemon::get_stats(){
-    return this->stats;
-}
-
 ///
 /// stat calculations for initilization
 ///
-
 void Pokemon::calc_hp(){
     this->stats.hp = 2 * this->basestats.hp;
     this->stats.hp += this->IVs.hp;
@@ -279,12 +290,10 @@ void Pokemon::calc_spe(){
     this->stats.spe /= 100;
     this->stats.spe += 5;
 }
-
 ///
 /// determinies the power of hidden power by summing up
 /// differently weighted IV LSBs and normalizing between 30-70
 ///
-
 void Pokemon::calc_hiddenpower_power(){
     int sum = 0;
 
@@ -316,13 +325,11 @@ void Pokemon::calc_hiddenpower_power(){
     sum = static_cast<int>(sum / 63);
     this->hiddenpower_power = sum + 30;
 }
-
 ///
 /// determines the type of hidden power by summing up 
 /// differently weighted IV LSBs and normalizing between 
 /// 0-15 to pick from a simple table
 ///
-
 void Pokemon::calc_hiddenpower_type(){
 
     int sum = 0;
