@@ -4,7 +4,7 @@
 
 enum class Type : std::uint8_t {
 
-	//physical types
+	// physical types
 	Normal,
 	Flying,
 	Bug,
@@ -13,8 +13,9 @@ enum class Type : std::uint8_t {
 	Ground,
 	Fighting,
 	Ghost,
+	Steel,
 
-	//special types
+	// special types
 	Dragon,
 	Fire,
 	Water,
@@ -22,10 +23,9 @@ enum class Type : std::uint8_t {
 	Grass,
 	Ice,
 	Psychic,
-
-	//later gens
 	Dark,
+
+	// bonus
 	Fairy,
-	Steel,
 	Typeless
 };

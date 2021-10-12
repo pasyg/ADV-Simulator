@@ -1,7 +1,7 @@
 #include "ability.hpp"
 
 
-std::string to_string(Ability const ability) {
+std::string_view to_string(Ability const ability) {
 	switch (ability) {
 		case Ability::Stench: return "Stench";
 		case Ability::Drizzle: return "Drizzle";
