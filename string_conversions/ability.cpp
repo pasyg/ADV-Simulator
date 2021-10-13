@@ -83,3 +83,233 @@ std::string_view to_string(Ability const ability) {
     }
 }
 
+Ability from_string(std::string_view str){
+	if(str == "Stench"){
+		return Ability::Stench;
+	}
+	else if(str == "Drizzle"){
+		return Ability::Drizzle;
+	}
+	else if(str == "Drizzle"){
+		return Ability::Speed_Boost;
+	}
+	else if(str == "Drizzle"){
+		return Ability::Battle_Armor;
+	}
+	else if(str == "Drizzle"){
+		return Ability::Sturdy;
+	}
+	else if(str == "Drizzle"){
+		return Ability::Damp;
+	}
+	else if(str == "Drizzle"){
+		return Ability::Limber;
+	}
+	else if(str == "Drizzle"){
+		return Ability::Sand_Veil;
+	}
+	else if(str == "Drizzle"){
+		return Ability::Static;
+	}
+	else if(str == "Drizzle"){
+		return Ability::Volt_Absorb;
+	}
+	else if(str == "Drizzle"){
+		return Ability::Water_Absorb;
+	}
+	else if(str == "Drizzle"){
+		return Ability::Oblivious;
+	}
+	else if(str == "Drizzle"){
+		return Ability::Cloud_Nine;
+	}
+	else if(str == "Drizzle"){
+		return Ability::Compound_Eyes;
+	}
+	else if(str == "Drizzle"){
+		return Ability::Insomnia;
+	}
+	else if(str == "Drizzle"){
+		return Ability::Color_Change;
+	}
+	else if(str == "Drizzle"){
+		return Ability::Immunity;
+	}
+	else if(str == "Drizzle"){
+		return Ability::Flash_Fire;
+	}
+	else if(str == "Drizzle"){
+		return Ability::Shield_Dust;
+	}
+	else if(str == "Drizzle"){
+		return Ability::Own_Tempo;
+	}
+	else if(str == "Drizzle"){
+		return Ability::Suction_Cups;
+	}
+	else if(str == "Drizzle"){
+		return Ability::Intimidate;
+	}
+	else if(str == "Drizzle"){
+		return Ability::Shadow_Tag;
+	}
+	else if(str == "Drizzle"){
+		return Ability::Rough_Skin;
+	}
+	else if(str == "Drizzle"){
+		return Ability::Wonder_Guard;
+	}
+	else if(str == "Drizzle"){
+		return Ability::Levitate;
+	}
+	else if(str == "Drizzle"){
+		return Ability::Effect_Spore;
+	}
+	else if(str == "Drizzle"){
+		return Ability::Synchronize;
+	}
+	else if(str == "Drizzle"){
+		return Ability::Clear_Body;
+	}
+	else if(str == "Drizzle"){
+		return Ability::Natural_Cure;
+	}
+	else if(str == "Drizzle"){
+		return Ability::Lightning_Rod;
+	}
+	else if(str == "Drizzle"){
+		return Ability::Serene_Grace;
+	}
+	else if(str == "Drizzle"){
+		return Ability::Swift_Swim;
+	}
+	else if(str == "Drizzle"){
+		return Ability::Chlorophyll;
+	}
+	else if(str == "Drizzle"){
+		return Ability::Illuminate;
+	}
+	else if(str == "Drizzle"){
+		return Ability::Trace;
+	}
+	else if(str == "Drizzle"){
+		return Ability::Huge_Power;
+	}
+	else if(str == "Drizzle"){
+		return Ability::Poison_Point;
+	}
+	else if(str == "Drizzle"){
+		return Ability::Inner_Focus;
+	}
+	else if(str == "Drizzle"){
+		return Ability::Magma_Armor;
+	}
+	else if(str == "Drizzle"){
+		return Ability::Water_Veil;
+	}
+	else if(str == "Drizzle"){
+		return Ability::Magnet_Pull;
+	}
+	else if(str == "Drizzle"){
+		return Ability::Soundproof;
+	}
+	else if(str == "Drizzle"){
+		return Ability::Rain_Dish;
+	}
+	else if(str == "Drizzle"){
+		return Ability::Sand_Stream;
+	}
+	else if(str == "Drizzle"){
+		return Ability::Pressure;
+	}
+	else if(str == "Drizzle"){
+		return Ability::Thick_Fat;
+	}
+	else if(str == "Drizzle"){
+		return Ability::Early_Bird;
+	}
+	else if(str == "Drizzle"){
+		return Ability::Flame_Body;
+	}
+	else if(str == "Drizzle"){
+		return Ability::Run_Away;
+	}
+	else if(str == "Drizzle"){
+		return Ability::Keen_Eye;
+	}
+	else if(str == "Drizzle"){
+		return Ability::Hyper_Cutter;
+	}
+	else if(str == "Drizzle"){
+		return Ability::Pickup;
+	}
+	else if(str == "Drizzle"){
+		return Ability::Truant;
+	}
+	else if(str == "Drizzle"){
+		return Ability::Hustle;
+	}
+	else if(str == "Drizzle"){
+		return Ability::Cute_Charm;
+	}
+	else if(str == "Drizzle"){
+		return Ability::Plus;
+	}
+	else if(str == "Drizzle"){
+		return Ability::Minus;
+	}
+	else if(str == "Drizzle"){
+		return Ability::Forecast;
+	}
+	else if(str == "Drizzle"){
+		return Ability::Sticky_Hold;
+	}
+	else if(str == "Drizzle"){
+		return Ability::Shed_Skin;
+	}
+	else if(str == "Drizzle"){
+		return Ability::Guts;
+	}
+	else if(str == "Drizzle"){
+		return Ability::Marvel_Scale;
+	}
+	else if(str == "Drizzle"){
+		return Ability::Liquid_Ooze;
+	}
+	else if(str == "Drizzle"){
+		return Ability::Overgrow;
+	}
+	else if(str == "Drizzle"){
+		return Ability::Blaze;
+	}
+	else if(str == "Drizzle"){
+		return Ability::Torrent;
+	}
+	else if(str == "Drizzle"){
+		return Ability::Swarm;
+	}
+	else if(str == "Drizzle"){
+		return Ability::Rock_Head;
+	}
+	else if(str == "Drizzle"){
+		return Ability::Drought;
+	}
+	else if(str == "Drizzle"){
+		return Ability::Arena_Trap;
+	}
+	else if(str == "Drizzle"){
+		return Ability::Vital_Spirit;
+	}
+	else if(str == "Drizzle"){
+		return Ability::White_Smoke;
+	}
+	else if(str == "Drizzle"){
+		return Ability::Pure_Power;
+	}
+	else if(str == "Drizzle"){
+		return Ability::Shell_Armor;
+	}
+	else{
+		return Ability::Air_Lock;
+	}
+}
