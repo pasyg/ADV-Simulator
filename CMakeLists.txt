@@ -8,10 +8,12 @@ INCLUDE_DIRECTORIES(
     ${PROJECT_SOURCE_DIR}/include
     ${PROJECT_SOURCE_DIR}/string_conversions
     ${PROJECT_SOURCE_DIR}/bounded-integer/include
+    ${PROJECT_SOURCE_DIR}/battle
 )
 
 LINK_DIRECTORIES(
     ${PROJECT_SOURCE_DIR}/src
+    ${PROJECT_SOURCE_DIR}/battle
 )
 
 #add_compile_options("$<$<CONFIG:DEBUG>:-DBENCHMARK>")
@@ -26,6 +28,9 @@ add_executable(Simulator
     src/pokemon.cpp
     src/state.cpp
     src/rng.cpp
+
+    battle/battle.cpp
+    battle/team.cpp
     
     string_conversions/ability.cpp
     string_conversions/gender.cpp

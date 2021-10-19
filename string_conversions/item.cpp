@@ -69,3 +69,201 @@ std::string to_string(Item item){
         default: return "ERROR item";
     }
 }
+
+Item from_string(std::string_view str){
+    if(str == "none"){
+        return Item::none;
+    }
+    else if(str == "Choice Band"){
+        return Item::choiceband;
+    }
+    else if(str == "Choice Band"){
+        return Item::leftovers;
+    }
+    else if(str == "Choice Band"){
+        return Item::lumberry;
+    }
+    else if(str == "Choice Band"){
+        return Item::salacberry;
+    }
+    else if(str == "Choice Band"){
+        return Item::apicotberry;
+    }
+    else if(str == "Choice Band"){
+        return Item::blackbelt;
+    }
+    else if(str == "Choice Band"){
+        return Item::blackglasses;
+    }
+    else if(str == "Choice Band"){
+        return Item::brightpowder;
+    }
+    else if(str == "Choice Band"){
+        return Item::charcoal;
+    }
+    else if(str == "Choice Band"){
+        return Item::chestoberry;
+    }
+    else if(str == "Choice Band"){
+        return Item::dragonfang;
+    }
+    else if(str == "Choice Band"){
+        return Item::ganlonberry;
+    }
+    else if(str == "Choice Band"){
+        return Item::grepaberry;
+    }
+    else if(str == "Choice Band"){
+        return Item::hardstone;
+    }
+    else if(str == "Choice Band"){
+        return Item::kelpsyberry;
+    }
+    else if(str == "Choice Band"){
+        return Item::kingsrock;
+    }
+    else if(str == "Choice Band"){
+        return Item::lansatberry;
+    }
+    else if(str == "Choice Band"){
+        return Item::laxincense;
+    }
+    else if(str == "Choice Band"){
+        return Item::leppaberry;
+    }
+    else if(str == "Choice Band"){
+        return Item::liechiberry;
+    }
+    else if(str == "Choice Band"){
+        return Item::magnet;
+    }
+    else if(str == "Choice Band"){
+        return Item::mail;
+    }
+    else if(str == "Choice Band"){
+        return Item::metalcoat;
+    }
+    else if(str == "Choice Band"){
+        return Item::miracleseed;
+    }
+    else if(str == "Choice Band"){
+        return Item::mysticwater;
+    }
+    else if(str == "Choice Band"){
+        return Item::nevermeltice;
+    }
+    else if(str == "Choice Band"){
+        return Item::petayaberry;
+    }
+    else if(str == "Choice Band"){
+        return Item::poisonbarb;
+    }
+    else if(str == "Choice Band"){
+        return Item::quickclaw;
+    }
+    else if(str == "Choice Band"){
+        return Item::scopelens;
+    }
+    else if(str == "Choice Band"){
+        return Item::seaincense;
+    }
+    else if(str == "Choice Band"){
+        return Item::sharpbeak;
+    }
+    else if(str == "Choice Band"){
+        return Item::shellbell;
+    }
+    else if(str == "Choice Band"){
+        return Item::silkscarf;
+    }
+    else if(str == "Choice Band"){
+        return Item::silverpowder;
+    }
+    else if(str == "Choice Band"){
+        return Item::softsand;
+    }
+    else if(str == "Choice Band"){
+        return Item::spelltag;
+    }
+    else if(str == "Choice Band"){
+        return Item::starfberry;
+    }
+    else if(str == "Choice Band"){
+        return Item::twistedspoon;
+    }
+    else if(str == "Choice Band"){
+        return Item::whiteherb;
+    }
+    else if(str == "Choice Band"){
+        return Item::deepseascale;
+    }
+    else if(str == "Choice Band"){
+        return Item::deepseatooth;
+    }
+    else if(str == "Choice Band"){
+        return Item::lightball;
+    }
+    else if(str == "Choice Band"){
+        return Item::luckypunch;
+    }
+    else if(str == "Choice Band"){
+        return Item::metalpowder;
+    }
+    else if(str == "Choice Band"){
+        return Item::souldew;
+    }
+    else if(str == "Choice Band"){
+        return Item::stick;
+    }
+    else if(str == "Choice Band"){
+        return Item::thickclub;
+    }
+    else if(str == "Choice Band"){
+        return Item::aguavberry;
+    }
+    else if(str == "Choice Band"){
+        return Item::aspearberry;
+    }
+    else if(str == "Choice Band"){
+        return Item::cheriberry;
+    }
+    else if(str == "Choice Band"){
+        return Item::cheriberry;
+    }
+    else if(str == "Choice Band"){
+        return Item::figyberry;
+    }
+    else if(str == "Choice Band"){
+        return Item::focusband;
+    }
+    else if(str == "Choice Band"){
+        return Item::iapapaberry;
+    }
+    else if(str == "Choice Band"){
+        return Item::machobrace;
+    }
+    else if(str == "Choice Band"){
+        return Item::magoberry;
+    }
+    else if(str == "Choice Band"){
+        return Item::mentalberry;
+    }
+    else if(str == "Choice Band"){
+        return Item::oranberry;
+    }
+    else if(str == "Choice Band"){
+        return Item::pechaberry;
+    }
+    else if(str == "Choice Band"){
+        return Item::persimberry;
+    }
+    else if(str == "Choice Band"){
+        return Item::rawstberry;
+    }
+    else if(str == "Choice Band"){
+        return Item::sitrusberry;
+    }
+    else{
+        return Item::wikiberry;
+    }
+}

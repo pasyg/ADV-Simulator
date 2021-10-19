@@ -19,8 +19,11 @@ public:
     void set_type(Type type);
     Type get_type();
     void reduce_pp(int x);
+    int get_priority();
+    void set_priority();
 
 private:
+    int priority;
     bool revealed = false;
     bool damage = false;
     bool secondary = false;
@@ -29,6 +32,6 @@ private:
     #endif
     bool is_STAB = false;
     Move move;
-    uint8_t pp = 0;
+    int pp = 0;
     Type type;
 };

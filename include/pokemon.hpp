@@ -87,7 +87,6 @@ private:
     Stats stats;
     Type hiddenpower;
     int hiddenpower_power = 70;
-
     ///
     /// private methods
     ///
