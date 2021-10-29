@@ -1,3 +1,5 @@
+#pragma once
+
 #include <cstdint>
 
 enum class Weather : uint8_t{
@@ -6,4 +8,4 @@ enum class Weather : uint8_t{
     rain,
     sun,
     hail
-}
+};

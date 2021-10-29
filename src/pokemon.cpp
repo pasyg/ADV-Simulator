@@ -30,6 +30,21 @@ void Pokemon::set_item(Item p_item){
     this->item = p_item;    
 }
 
+int Pokemon::get_stat(Statname stat){
+    switch(stat){
+        case Statname::atk:
+            return this->stats.atk;
+        case Statname::def:
+        return this->stats.def;
+        case Statname::satk:
+        return this->stats.satk;
+        case Statname::sdef:
+        return this->stats.sdef;
+        case Statname::spe:
+        return this->stats.spe;
+    }
+}
+
 Item Pokemon::get_item(){
     return this->item;
 }
@@ -136,6 +151,15 @@ void Pokemon::set_hiddenpower(Type p_type, int p_power){
 /// static_cast<int> is used to avoid compiler warnings 
 /// for truncating the float values, like in the game
 ///
+
+int Pokemon::pos_nature(int stat){
+    return static_cast<int>(stat * 1.1f);
+}
+
+int Pokemon::neg_nature(int stat){
+    return static_cast<int>(stat * 0.9f);
+}
+
 void Pokemon::stat_init(){
     this->calc_hp();
     this->calc_atk();
@@ -147,84 +171,84 @@ void Pokemon::stat_init(){
     switch (this->nature)
     {
     case Nature::adamant:
-    this->stats.atk = static_cast<int>(this->stats.atk * 1.1f);
-    this->stats.satk = static_cast<int>(this->stats.satk * 0.9f);
+    this->stats.atk = pos_nature(this->stats.atk);
+    this->stats.satk = neg_nature(this->stats.satk);
         break;
     case Nature::bold:
-    this->stats.def = static_cast<int>(this->stats.def * 1.1f);
-    this->stats.atk = static_cast<int>(this->stats.atk * 0.9f);
+    this->stats.def = pos_nature(this->stats.def);
+    this->stats.atk = neg_nature(this->stats.atk);
         break;
     case Nature::brave:
-    this->stats.atk = static_cast<int>(this->stats.atk * 1.1f);
-    this->stats.spe = static_cast<int>(this->stats.spe * 0.9f);
+    this->stats.atk = pos_nature(this->stats.atk);
+    this->stats.spe = neg_nature(this->stats.spe);
         break;
     case Nature::calm:
-    this->stats.sdef = static_cast<int>(this->stats.sdef * 1.1f);
-    this->stats.atk = static_cast<int>(this->stats.atk * 0.9f);
+    this->stats.sdef = pos_nature(this->stats.sdef);
+    this->stats.atk = neg_nature(this->stats.atk);
         break;
     case Nature::careful:
-    this->stats.sdef = static_cast<int>(this->stats.sdef * 1.1f);
-    this->stats.satk = static_cast<int>(this->stats.satk * 0.9f);
+    this->stats.sdef = pos_nature(this->stats.sdef);
+    this->stats.satk = neg_nature(this->stats.satk);
         break;
     case Nature::gentle:
-    this->stats.sdef = static_cast<int>(this->stats.sdef * 1.1f);
-    this->stats.def = static_cast<int>(this->stats.def * 0.9f);
+    this->stats.sdef = pos_nature(this->stats.sdef);
+    this->stats.def = neg_nature(this->stats.def);
         break;
     case Nature::hasty:
-    this->stats.spe = static_cast<int>(this->stats.spe * 1.1f);
-    this->stats.def = static_cast<int>(this->stats.def * 0.9f);
+    this->stats.spe = pos_nature(this->stats.spe);
+    this->stats.def = neg_nature(this->stats.def);
         break;
     case Nature::impish:
-    this->stats.def = static_cast<int>(this->stats.def * 1.1f);
-    this->stats.satk = static_cast<int>(this->stats.satk * 0.9f);
+    this->stats.def = pos_nature(this->stats.def);
+    this->stats.satk = neg_nature(this->stats.satk);
         break;
     case Nature::jolly:
-    this->stats.spe = static_cast<int>(this->stats.spe * 1.1f);
-    this->stats.satk = static_cast<int>(this->stats.satk * 0.9f);
+    this->stats.spe = pos_nature(this->stats.spe);
+    this->stats.satk = neg_nature(this->stats.satk);
         break;
     case Nature::lax:
-    this->stats.def = static_cast<int>(this->stats.def * 1.1f);
-    this->stats.sdef = static_cast<int>(this->stats.sdef * 0.9f);
+    this->stats.def = pos_nature(this->stats.def);
+    this->stats.sdef = neg_nature(this->stats.sdef);
         break;
     case Nature::lonely:
-    this->stats.atk = static_cast<int>(this->stats.atk * 1.1f);
-    this->stats.def = static_cast<int>(this->stats.def * 0.9f);
+    this->stats.atk = pos_nature(this->stats.atk);
+    this->stats.def = neg_nature(this->stats.def);
         break;
     case Nature::mild:
-    this->stats.satk = static_cast<int>(this->stats.satk * 1.1f);
-    this->stats.def = static_cast<int>(this->stats.def * 0.9f);
+    this->stats.satk = pos_nature(this->stats.satk);
+    this->stats.def = neg_nature(this->stats.def);
         break;
     case Nature::modest:
-    this->stats.satk = static_cast<int>(this->stats.satk * 1.1f);
-    this->stats.atk = static_cast<int>(this->stats.atk * 0.9f);
+    this->stats.satk = pos_nature(this->stats.satk);
+    this->stats.atk = neg_nature(this->stats.atk);
         break;
     case Nature::naive:
-    this->stats.spe = static_cast<int>(this->stats.spe * 1.1f);
-    this->stats.sdef = static_cast<int>(this->stats.sdef * 0.9f);
+    this->stats.spe = pos_nature(this->stats.spe);
+    this->stats.sdef = neg_nature(this->stats.sdef);
         break;
     case Nature::naughty:
-    this->stats.atk = static_cast<int>(this->stats.atk * 1.1f);
-    this->stats.sdef = static_cast<int>(this->stats.sdef * 0.9f);
+    this->stats.atk = pos_nature(this->stats.atk);
+    this->stats.sdef = neg_nature(this->stats.sdef);
         break;
     case Nature::quiet:
-    this->stats.satk = static_cast<int>(this->stats.satk * 1.1f);
-    this->stats.spe = static_cast<int>(this->stats.spe * 0.9f);
+    this->stats.satk = pos_nature(this->stats.satk);
+    this->stats.spe = neg_nature(this->stats.spe);
         break;
     case Nature::rash:
-    this->stats.satk = static_cast<int>(this->stats.satk * 1.1f);
-    this->stats.sdef = static_cast<int>(this->stats.sdef * 0.9f);
+    this->stats.satk = pos_nature(this->stats.satk);
+    this->stats.sdef = neg_nature(this->stats.sdef);
         break;
     case Nature::relaxed:
-    this->stats.def = static_cast<int>(this->stats.def * 1.1f);
-    this->stats.spe = static_cast<int>(this->stats.spe * 0.9f);
+    this->stats.def = pos_nature(this->stats.def);
+    this->stats.spe = neg_nature(this->stats.spe);
         break;
     case Nature::sassy:
-    this->stats.sdef = static_cast<int>(this->stats.sdef * 1.1f);
-    this->stats.spe = static_cast<int>(this->stats.spe * 0.9f);
+    this->stats.sdef = pos_nature(this->stats.sdef);
+    this->stats.spe = neg_nature(this->stats.spe);
         break;
     case Nature::timid:
-    this->stats.spe = static_cast<int>(this->stats.spe * 1.1f);
-    this->stats.atk = static_cast<int>(this->stats.atk * 0.9f);
+    this->stats.spe = pos_nature(this->stats.spe);
+    this->stats.atk = neg_nature(this->stats.atk);
         break;
     
     default:

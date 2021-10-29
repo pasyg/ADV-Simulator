@@ -43,3 +43,15 @@ Type AttackMove::get_type(){
 void AttackMove::reduce_pp(int x = 1){
     this->pp -= x;
 }
+
+int AttackMove::get_priority(){
+    return 0;
+}
+
+void AttackMove::set_priority(int prio){
+    this->priority = prio;    
+}
+
+int AttackMove::get_power(){
+    return movepower(this->move);
+}

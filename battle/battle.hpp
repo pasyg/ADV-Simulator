@@ -11,5 +11,9 @@ private:
     Team team2;
     Weather weather;
 
+    int calculate_damage(Team &atkteam, Team &defteam);
+    bool move_first();
+    bool compare_speed();
+    int apply_boost(Statname stat, Pokemon &pokemon, int boost);
     
 };

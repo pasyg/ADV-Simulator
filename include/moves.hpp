@@ -6,6 +6,7 @@ enum class Move : std::uint16_t{
     
     None,
 	Pass,
+	Switch,
 	Switch0,
 	Switch1,
 	Switch2,

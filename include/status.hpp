@@ -2,7 +2,7 @@
 
 #include <cstdint>
 
-enum Status : std::uint8_t {
+enum class Status : std::uint8_t {
 	healthy,
     fainted,
     paralysis,
@@ -12,5 +12,5 @@ enum Status : std::uint8_t {
 	confusion,
 	burn,
 	poison,
-	toxic_poison,
+	toxic_poison
 };

@@ -10,6 +10,7 @@
 #include "item.hpp"
 #include "natures.hpp"
 #include "species.hpp"
+#include "statnames.hpp"
 #include "status.hpp"
 
 
@@ -17,6 +18,8 @@ class Pokemon{
 public:
     Pokemon();
     ~Pokemon();
+    int pos_nature(int stat);
+    int neg_nature(int stat);
     void stat_init();
     Stats get_stats();
     ///
@@ -30,6 +33,7 @@ public:
     void set_revealed(bool p_revealed);
     void set_item(Item p_item);
     
+    int get_stat(Statname stat);
     Item get_item();
     bool get_revealed();
     Status get_status();

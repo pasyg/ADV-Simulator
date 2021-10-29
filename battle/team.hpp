@@ -5,10 +5,11 @@
 class Team{
 public:
     void swap(int slot);
-
-private:
+    Move movechoice;
+    std::array<Move, 9> move_options;
 /// TRANSFORM / BIDE / DOOMDESIRE / FUTURE SIGHT / IMPRISON / METRONOME / MIRRORMOVE
     std::array<Pokemon, 6> member;
+    int active_pokemon = 0;  // index of currently active pokemon 
     ///
     /// one turn
     ///
@@ -19,6 +20,7 @@ private:
     bool magiccoat = false;
     bool endure = false;
     bool grudge = false;
+    int lastdamage = 0;
     ///
     /// static
     ///

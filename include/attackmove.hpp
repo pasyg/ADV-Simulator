@@ -20,7 +20,9 @@ public:
     Type get_type();
     void reduce_pp(int x);
     int get_priority();
-    void set_priority();
+    void set_priority(int prio);
+
+    int get_power();
 
 private:
     int priority;
