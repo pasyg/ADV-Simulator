@@ -750,3 +750,39 @@ int moveaccuracy(Move move){
 		default: return NULL;
     }
 }
+
+int moveprio(Move move){
+	switch(move){
+		case Move::Switch:
+			return 6;
+		case Move::Helping_Hand:
+			return 5;
+		case Move::Magic_Coat:
+		case Move::Snatch:
+			return 4;
+		case Move::Detect:
+		case Move::Protect:
+		case Move::Endure:
+		case Move::Follow_Me:
+			return 3;
+		case Move::Extreme_Speed:
+		case Move::Fake_Out:
+		case Move::Mach_Punch:
+		case Move::Quick_Attack:
+			return 1;
+		case Move::Vital_Throw:
+			return -1;
+		case Move::Focus_Punch:
+			return -2;
+		case Move::Revenge:
+			return -3;
+		case Move::Mirror_Coat:
+		case Move::Counter:
+			return -4;
+		case Move::Roar:
+		case Move::Whirlwind:
+			return -5;
+		default:
+			return 0;
+	}
+}
