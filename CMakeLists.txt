@@ -23,6 +23,7 @@ add_executable(Simulator
     src/attackmove/effectiveness.cpp
 
     src/battle/battle.cpp
+    src/battle/damage_calc.cpp
 
     src/data/base_stats.cpp
     src/data/item.cpp
