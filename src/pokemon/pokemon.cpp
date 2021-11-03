@@ -14,6 +14,10 @@ Stats Pokemon::get_stats() const{
 ///
 /// relevant in battles
 ///
+
+int Pokemon::get_current_hp(){
+    return this->current_hp;    
+}
 void Pokemon::set_status(const Status p_status){
     this->status = p_status;
 }
@@ -106,6 +110,14 @@ Type Pokemon::get_hiddenpower_type() const{
 ///
 /// initilization relevant
 ///
+void Pokemon::set_evs(const Stats stats){
+    this->EVs = stats;
+}
+
+void Pokemon::set_ivs(const Stats stats){
+    this->IVs = stats;
+}
+
 void Pokemon::set_ability(const Ability p_ability){
     this->ability = p_ability;
 }

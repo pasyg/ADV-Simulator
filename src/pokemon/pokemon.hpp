@@ -18,13 +18,13 @@ class Pokemon{
 public:
     Pokemon();
     ~Pokemon();
-    int pos_nature(const int stat);
-    int neg_nature(const int stat);
+    void init();
     void stat_init();
     Stats get_stats() const;
     ///
     /// relevant in battles
     ///
+    int get_current_hp();
     void remove_item();
     void reduce_hp(const int p_damage);
     void increase_hp(const int p_heal);
@@ -51,6 +51,8 @@ public:
     ///
     /// always intilization relevant
     ///
+    void set_evs(const Stats stats);
+    void set_ivs(const Stats stats);
     void set_ability(const Ability p_ability);
     void set_basestats(const Stats p_stats);
     void set_nature(const Nature p_nature);
@@ -67,6 +69,7 @@ public:
     void set_hiddenpower(const Type p_type, const int p_power);
 
 private:
+    int current_hp = 0;
     ///
     /// given by import
     ///
@@ -105,4 +108,6 @@ private:
     void calc_spe();
     void calc_hiddenpower_power();
     void calc_hiddenpower_type();
+    int pos_nature(const int stat);
+    int neg_nature(const int stat);
 };
