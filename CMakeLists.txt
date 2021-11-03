@@ -11,6 +11,7 @@ INCLUDE_DIRECTORIES(
     ${PROJECT_SOURCE_DIR}/src/data
     ${PROJECT_SOURCE_DIR}/src/pokemon
     ${PROJECT_SOURCE_DIR}/src/string_conversions
+    ${PROJECT_SOURCE_DIR}/src/team
     ${PROJECT_SOURCE_DIR}/src/tools
 )
 
@@ -24,6 +25,8 @@ add_executable(Simulator
 
     src/battle/battle.cpp
     src/battle/damage_calc.cpp
+    src/battle/turn.cpp
+    src/battle/use_move.cpp
 
     src/data/base_stats.cpp
     src/data/item.cpp
@@ -42,12 +45,8 @@ add_executable(Simulator
 
     src/tools/rng.cpp
     src/tools/state.cpp
+    src/tools/import.cpp
 
     src/team/team.cpp
 
     test/main.cpp)
-    
-
-TARGET_LINK_LIBRARIES(Simulator
-    
-)
