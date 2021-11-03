@@ -1,5 +1,8 @@
+#include <string_view>
+
 #include "effectiveness.hpp"
-#include "team/team.hpp"
+#include "team.hpp"
+#include "rng.hpp"
 
 #include "weather.hpp"
 
@@ -7,15 +10,16 @@ class Battle{
 public:
 
 private:
-    std::string p1 = "p1";
-    std::string p2 = "p2";
-    Team team1;
-    Team team2;
+    std::string_view p1 = "p1";
+    std::string_view p2 = "p2";
+    std::array<Team, 2> team;
     Weather weather;
 
+    void use_move(const int team);
     int calculate_damage(const int patkteam);
     bool move_first();
     bool compare_speed();
     int get_stat_boost(const Statname stat, const Pokemon &pokemon, const int boost);
-    int item_ability_mult(const int damage, const Pokemon &atkmon, const Pokemon &defmon);
+    int item_ability_mult(int damage, const AttackMove &movechoice, const Pokemon &atkmon, const Pokemon &defmon);
+    void play_turn();
 };
