@@ -2,6 +2,8 @@
 
 #include <cstdint>
 
+#include "weather.hpp"
+
 enum class Move : std::uint16_t{
     
     None,
@@ -377,6 +379,6 @@ enum class Move : std::uint16_t{
 	Psycho_Boost
 };
 
-int movepower(Move move);
-int moveaccuracy(Move move);
-int moveprio(Move move);
+int movepower(const Move move);
+int moveaccuracy(const Move move, const Weather weather);
+int moveprio(const Move move);

@@ -9,7 +9,7 @@
 	- Ohko Move
 */
 
-int movepower(Move move){
+int movepower(const Move move){
     switch (move) {	
 		case Move::Pass: 			return 0;
 		case Move::Switch0: 		return 0;
@@ -149,7 +149,7 @@ int movepower(Move move){
 		case Move::Fire_Blast: 		return 120;
 		case Move::Waterfall: 		return 80;
 		case Move::Clamp: 			return 35;
-		case Move::Swift: 			return 60;
+		case Move::Swift: 			return -1;
 		case Move::Skull_Bash: 		return 100;
 		case Move::Spike_Cannon: 	return 20;
 		case Move::Constrict: 		return 10;
@@ -378,17 +378,18 @@ int movepower(Move move){
         default: 					return 0;
     }
 }
-
-int moveaccuracy(Move move){
+// -1 for perfect accuracy
+// -2 for moves without accuracy check, ever
+int moveaccuracy(const Move move, const Weather weather){
     switch (move) {
-		case Move::Pass: 			return NULL;
-		case Move::Switch0: 		return NULL;
-		case Move::Switch1: 		return NULL;
-		case Move::Switch2: 		return NULL;
-		case Move::Switch3: 		return NULL;
-		case Move::Switch4: 		return NULL;
-		case Move::Switch5: 		return NULL;
-		case Move::Hit_Self:		return NULL;
+		case Move::Pass: 			return -2;
+		case Move::Switch0: 		return -2;
+		case Move::Switch1: 		return -2;
+		case Move::Switch2: 		return -2;
+		case Move::Switch3: 		return -2;
+		case Move::Switch4: 		return -2;
+		case Move::Switch5: 		return -2;
+		case Move::Hit_Self:		return -2;
 		case Move::Pound: 			return 100;
 		case Move::Karate_Chop: 	return 100;
 		case Move::Double_Slap: 	return 85;
@@ -402,7 +403,7 @@ int moveaccuracy(Move move){
 		case Move::Vice_Grip: 		return 100;
 		case Move::Guillotine: 		return 30;
 		case Move::Razor_Wind: 		return 100;
-		case Move::Swords_Dance: 	return NULL;
+		case Move::Swords_Dance: 	return -2;
 		case Move::Cut: 			return 95;
 		case Move::Gust: 			return 100;
 		case Move::Wing_Attack: 	return 100;
@@ -442,12 +443,13 @@ int moveaccuracy(Move move){
 		case Move::Acid: 			return 100;
 		case Move::Ember: 			return 100;
 		case Move::Flamethrower: 	return 100;
-		case Move::Mist: 			return NULL;
+		case Move::Mist: 			return -2;
 		case Move::Water_Gun: 		return 100;
 		case Move::Hydro_Pump: 		return 80;
 		case Move::Surf: 			return 100;
 		case Move::Ice_Beam: 		return 100;
-		case Move::Blizzard:		return 70;
+		case Move::Blizzard:
+			return weather == Weather::hail ? -1 : 70;
 		case Move::Psybeam: 		return 100;
 		case Move::Bubble_Beam: 	return 100;
 		case Move::Aurora_Beam: 	return 100;
@@ -462,7 +464,7 @@ int moveaccuracy(Move move){
 		case Move::Absorb: 			return 100;
 		case Move::Mega_Drain: 		return 100;
 		case Move::Leech_Seed: 		return 90;
-		case Move::Growth: 			return NULL;
+		case Move::Growth: 			return -2;
 		case Move::Razor_Leaf: 		return 95;
 		case Move::Solar_Beam: 		return 100;
 		case Move::Poison_Powder: 	return 75;
@@ -475,11 +477,16 @@ int moveaccuracy(Move move){
 		case Move::Thunder_Shock: 	return 100;
 		case Move::Thunderbolt: 	return 100;
 		case Move::Thunder_Wave: 	return 100;
-		//case Move::Thunder:
-		//	return
-		//		weather.rain(weather_blocked) ? BaseAccuracy(NULL) :
-		//		weather.sun(weather_blocked) ? BaseAccuracy(50) :
-		//		BaseAccuracy(70);
+		case Move::Thunder:
+			if(weather == Weather::rain){
+				return -1;
+			}
+			else if(weather == Weather::sun){
+				return 50;
+			}
+			else{
+				return 70;
+			}
 		case Move::Rock_Throw: 		return 90;
 		case Move::Earthquake: 		return 100;
 		case Move::Fissure: 		return 30;
@@ -488,30 +495,30 @@ int moveaccuracy(Move move){
 		case Move::Confusion: 		return 100;
 		case Move::Psychic: 		return 100;
 		case Move::Hypnosis: 		return 60;
-		case Move::Meditate: 		return NULL;
-		case Move::Agility: 		return NULL;
+		case Move::Meditate: 		return -2;
+		case Move::Agility: 		return -2;
 		case Move::Quick_Attack: 	return 100;
 		case Move::Rage: 			return 100;
-		case Move::Teleport: 		return NULL;
+		case Move::Teleport: 		return -2;
 		case Move::Night_Shade: 	return 100;
-		//case Move::Mimic: return bounded::optional<bounded::integer<30, 100>>(BOUNDED_CONDITIONAL(generation <= Generation::two, 100, NULL));
+		//case Move::Mimic: return bounded::optional<bounded::integer<30, 100>>(BOUNDED_CONDITIONAL(generation <= Generation::two, 100, -2));
 		case Move::Screech: 		return 85;
-		case Move::Double_Team: 	return NULL;
-		case Move::Recover: 		return NULL;
-		case Move::Harden: 			return NULL;
-		case Move::Minimize: 		return NULL;
+		case Move::Double_Team: 	return -2;
+		case Move::Recover: 		return -2;
+		case Move::Harden: 			return -2;
+		case Move::Minimize: 		return -2;
 		case Move::Smokescreen: 	return 100;
 		case Move::Confuse_Ray: 	return 100;
-		case Move::Withdraw: 		return NULL;
-		case Move::Defense_Curl: 	return NULL;
-		case Move::Barrier: 		return NULL;
-		case Move::Light_Screen: 	return NULL;
-		case Move::Haze: 			return NULL;
-		case Move::Reflect: 		return NULL;
-		case Move::Focus_Energy: 	return NULL;
+		case Move::Withdraw: 		return -2;
+		case Move::Defense_Curl: 	return -2;
+		case Move::Barrier: 		return -2;
+		case Move::Light_Screen: 	return -2;
+		case Move::Haze: 			return -2;
+		case Move::Reflect: 		return -2;
+		case Move::Focus_Energy: 	return -2;
 		case Move::Bide:			return 100;
-		case Move::Metronome: 		return NULL;
-		case Move::Mirror_Move: 	return NULL;
+		case Move::Metronome: 		return -2;
+		case Move::Mirror_Move: 	return -2;
 		case Move::Self_Destruct: 	return 100;
 		case Move::Egg_Bomb: 		return 75;
 		case Move::Lick: 			return 100;
@@ -521,13 +528,13 @@ int moveaccuracy(Move move){
 		case Move::Fire_Blast: 		return 85;
 		case Move::Waterfall: 		return 100;
 		case Move::Clamp: 			return 75;
-		case Move::Swift: 			return NULL;
+		case Move::Swift: 			return -2;
 		case Move::Skull_Bash: 		return 100;
 		case Move::Spike_Cannon: 	return 100;
 		case Move::Constrict: 		return 100;
-		case Move::Amnesia: 		return NULL;
+		case Move::Amnesia: 		return -2;
 		case Move::Kinesis: 		return 80;
-		case Move::Soft_Boiled: 	return NULL;
+		case Move::Soft_Boiled: 	return -2;
 		case Move::High_Jump_Kick: 	return 90;
 		case Move::Glare:			return 75;
 		case Move::Dream_Eater: 	return 100;
@@ -536,107 +543,107 @@ int moveaccuracy(Move move){
 		case Move::Leech_Life: 		return 100;
 		case Move::Lovely_Kiss: 	return 75;
 		case Move::Sky_Attack: 		return 90;
-		case Move::Transform: 		return NULL;
+		case Move::Transform: 		return -2;
 		case Move::Bubble: 			return 100;
 		case Move::Dizzy_Punch: 	return 100;
 		case Move::Spore: 			return 100;
 		case Move::Flash: 			return 70;
 		case Move::Psywave: 		return 80;
-		case Move::Splash: 			return NULL;
-		case Move::Acid_Armor: 		return NULL;
+		case Move::Splash: 			return -2;
+		case Move::Acid_Armor: 		return -2;
 		case Move::Crabhammer: 		return 85;
 		case Move::Explosion: 		return 100;
 		case Move::Fury_Swipes: 	return 80;
 		case Move::Bonemerang: 		return 90;
-		case Move::Rest: 			return NULL;
+		case Move::Rest: 			return -2;
 		case Move::Rock_Slide: 		return 90;
 		case Move::Hyper_Fang: 		return 90;
-		case Move::Sharpen: 		return NULL;
-		case Move::Conversion: 		return NULL;
+		case Move::Sharpen: 		return -2;
+		case Move::Conversion: 		return -2;
 		case Move::Tri_Attack: 		return 100;
 		case Move::Super_Fang: 		return 90;
 		case Move::Slash: 			return 100;
-		case Move::Substitute: 		return NULL;
+		case Move::Substitute: 		return -2;
 		case Move::Struggle: 		return 100;
-		case Move::Sketch: 			return NULL;
+		case Move::Sketch: 			return -2;
 		case Move::Triple_Kick: 	return 90;
 		case Move::Thief: 			return 100;
-		case Move::Spider_Web: 		return NULL;
+		case Move::Spider_Web: 		return -2;
 		case Move::Mind_Reader: 	return 100;
-		case Move::Nightmare: 		return NULL;
+		case Move::Nightmare: 		return -2;
 		case Move::Flame_Wheel: 	return 100;
 		case Move::Snore: 			return 100;
-		case Move::Curse: 			return NULL;
+		case Move::Curse: 			return -2;
 		case Move::Flail: 			return 100;
-		case Move::Conversion_2: 	return NULL;
+		case Move::Conversion_2: 	return -2;
 		case Move::Aeroblast: 		return 95;
 		case Move::Cotton_Spore: 	return 85;
 		case Move::Reversal: 		return 100;
 		case Move::Spite: 			return 100;
 		case Move::Powder_Snow: 	return 100;
-		case Move::Protect: 		return NULL;
+		case Move::Protect: 		return -2;
 		case Move::Mach_Punch: 		return 100;
 		case Move::Scary_Face: 		return 90;
-		case Move::Feint_Attack: 	return NULL;
+		case Move::Feint_Attack: 	return -2;
 		case Move::Sweet_Kiss: 		return 75;
-		case Move::Belly_Drum: 		return NULL;
+		case Move::Belly_Drum: 		return -2;
 		case Move::Sludge_Bomb: 	return 100;
 		case Move::Mud_Slap: 		return 100;
 		case Move::Octazooka: 		return 85;
-		case Move::Spikes: 			return NULL;
+		case Move::Spikes: 			return -2;
 		case Move::Zap_Cannon: 		return 50;
 		case Move::Foresight: 		return 100;
-		case Move::Destiny_Bond: 	return NULL;
-		case Move::Perish_Song: 	return NULL;
+		case Move::Destiny_Bond: 	return -2;
+		case Move::Perish_Song: 	return -2;
 		case Move::Icy_Wind: 		return 95;
-		case Move::Detect: 			return NULL;
+		case Move::Detect: 			return -2;
 		case Move::Bone_Rush: 		return 80;
 		case Move::Lock_On: 		return 100;
 		case Move::Outrage: 		return 100;
-		case Move::Sandstorm: 		return NULL;
+		case Move::Sandstorm: 		return -2;
 		case Move::Giga_Drain: 		return 100;
-		case Move::Endure: 			return NULL;
+		case Move::Endure: 			return -2;
 		case Move::Charm: 			return 100;
 		case Move::Rollout: 		return 90;
 		case Move::False_Swipe: 	return 100;
 		case Move::Swagger: 		return 90;
-		case Move::Milk_Drink: 		return NULL;
+		case Move::Milk_Drink: 		return -2;
 		case Move::Spark: 			return 100;
 		case Move::Fury_Cutter: 	return 95;
 		case Move::Steel_Wing: 		return 90;
-		case Move::Mean_Look: 		return NULL;
+		case Move::Mean_Look: 		return -2;
 		case Move::Attract: 		return 100;
-		case Move::Sleep_Talk: 		return NULL;
-		case Move::Heal_Bell: 		return NULL;
+		case Move::Sleep_Talk: 		return -2;
+		case Move::Heal_Bell: 		return -2;
 		case Move::Return: 			return 100;
 		case Move::Present: 		return 90;
 		case Move::Frustration: 	return 100;
-		case Move::Safeguard: 		return NULL;
-		case Move::Pain_Split: 		return NULL;
+		case Move::Safeguard: 		return -2;
+		case Move::Pain_Split: 		return -2;
 		case Move::Sacred_Fire: 	return 95;
 		case Move::Magnitude: 		return 100;
 		case Move::Dynamic_Punch: 	return 50;
 		case Move::Megahorn: 		return 85;
 		case Move::Dragon_Breath: 	return 100;
-		case Move::Baton_Pass: 		return NULL;
+		case Move::Baton_Pass: 		return -2;
 		case Move::Encore: 			return 100;
 		case Move::Pursuit: 		return 100;
 		case Move::Rapid_Spin: 		return 100;
 		case Move::Sweet_Scent: 	return 100;
 		case Move::Iron_Tail: 		return 75;
 		case Move::Metal_Claw: 		return 95;
-		case Move::Vital_Throw: 	return NULL;
-		case Move::Morning_Sun: 	return NULL;
-		case Move::Synthesis: 		return NULL;
-		case Move::Moonlight: 		return NULL;
+		case Move::Vital_Throw: 	return -2;
+		case Move::Morning_Sun: 	return -2;
+		case Move::Synthesis: 		return -2;
+		case Move::Moonlight: 		return -2;
 		case Move::Hidden_Power: 	return 100;
 		case Move::Cross_Chop: 		return 80;
 		case Move::Twister: 		return 100;
-		case Move::Rain_Dance: 		return NULL;
-		case Move::Sunny_Day: 		return NULL;
+		case Move::Rain_Dance: 		return -2;
+		case Move::Sunny_Day: 		return -2;
 		case Move::Crunch: 			return 100;
 		case Move::Mirror_Coat: 	return 100;
-		case Move::Psych_Up: 		return NULL;
+		case Move::Psych_Up: 		return -2;
 		case Move::Extreme_Speed: 	return 100;
 		case Move::Ancient_Power: 	return 100;
 		case Move::Shadow_Ball: 	return 100;
@@ -646,56 +653,56 @@ int moveaccuracy(Move move){
 		case Move::Beat_Up: 		return 100;
 		case Move::Fake_Out: 		return 100;
 		case Move::Uproar: 			return 100;
-		case Move::Stockpile: 		return NULL;
+		case Move::Stockpile: 		return -2;
 		case Move::Spit_Up: 		return 100;
-		case Move::Swallow: 		return NULL;
+		case Move::Swallow: 		return -2;
 		case Move::Heat_Wave: 		return 90;
-		case Move::Hail: 			return NULL;
+		case Move::Hail: 			return -2;
 		case Move::Torment: 		return 100;
 		case Move::Flatter: 		return 100;
 		case Move::Will_O_Wisp: 	return 75;
-		case Move::Memento: 		return NULL;
+		case Move::Memento: 		return -2;
 		case Move::Facade: 			return 100;
 		case Move::Focus_Punch: 	return 100;
 		case Move::Smelling_Salts: 	return 100;
-		case Move::Follow_Me: 		return NULL;
-		case Move::Nature_Power: 	return NULL;
-		case Move::Charge: 			return NULL;
+		case Move::Follow_Me: 		return -2;
+		case Move::Nature_Power: 	return -2;
+		case Move::Charge: 			return -2;
 		case Move::Taunt: 			return 100;
-		case Move::Helping_Hand: 	return NULL;
+		case Move::Helping_Hand: 	return -2;
 		case Move::Trick: 			return 100;
-		case Move::Role_Play: 		return NULL;
-		case Move::Wish: 			return NULL;
-		case Move::Assist: 			return NULL;
-		case Move::Ingrain: 		return NULL;
+		case Move::Role_Play: 		return -2;
+		case Move::Wish: 			return -2;
+		case Move::Assist: 			return -2;
+		case Move::Ingrain: 		return -2;
 		case Move::Superpower: 		return 100;
-		case Move::Magic_Coat: 		return NULL;
-		case Move::Recycle: 		return NULL;
+		case Move::Magic_Coat: 		return -2;
+		case Move::Recycle: 		return -2;
 		case Move::Revenge: 		return 100;
 		case Move::Brick_Break: 	return 100;
-		case Move::Yawn: 			return NULL;
+		case Move::Yawn: 			return -2;
 		case Move::Knock_Off: 		return 100;
 		case Move::Endeavor: 		return 100;
 		case Move::Eruption: 		return 100;
-		case Move::Skill_Swap: 		return NULL;
-		case Move::Imprison: 		return NULL;
-		case Move::Refresh: 		return NULL;
-		case Move::Grudge: 			return NULL;
-		case Move::Snatch: 			return NULL;
+		case Move::Skill_Swap: 		return -2;
+		case Move::Imprison: 		return -2;
+		case Move::Refresh: 		return -2;
+		case Move::Grudge: 			return -2;
+		case Move::Snatch: 			return -2;
 		case Move::Secret_Power: 	return 100;
 		case Move::Dive: 			return 100;
 		case Move::Arm_Thrust: 		return 100;
-		case Move::Camouflage: 		return NULL;
-		case Move::Tail_Glow: 		return NULL;
+		case Move::Camouflage: 		return -2;
+		case Move::Tail_Glow: 		return -2;
 		case Move::Luster_Purge: 	return 100;
 		case Move::Mist_Ball: 		return 100;
 		case Move::Feather_Dance: 	return 100;
 		case Move::Teeter_Dance: 	return 100;
 		case Move::Blaze_Kick: 		return 90;
-		case Move::Mud_Sport: 		return NULL;
+		case Move::Mud_Sport: 		return -2;
 		case Move::Ice_Ball: 		return 90;
 		case Move::Needle_Arm: 		return 100;
-		case Move::Slack_Off: 		return NULL;
+		case Move::Slack_Off: 		return -2;
 		case Move::Hyper_Voice: 	return 100;
 		case Move::Poison_Fang: 	return 100;
 		case Move::Crush_Claw: 		return 95;
@@ -704,7 +711,7 @@ int moveaccuracy(Move move){
 		case Move::Meteor_Mash: 	return 85;
 		case Move::Astonish: 		return 100;
 		case Move::Weather_Ball: 	return 100;
-		case Move::Aromatherapy: 	return NULL;
+		case Move::Aromatherapy: 	return -2;
 		case Move::Fake_Tears: 		return 100;
 		case Move::Air_Cutter: 		return 95;
 		case Move::Overheat: 		return 90;
@@ -714,44 +721,44 @@ int moveaccuracy(Move move){
 		case Move::Metal_Sound: 	return 85;
 		case Move::Grass_Whistle: 	return 55;
 		case Move::Tickle: 			return 100;
-		case Move::Cosmic_Power: 	return NULL;
+		case Move::Cosmic_Power: 	return -2;
 		case Move::Water_Spout: 	return 100;
 		case Move::Signal_Beam: 	return 100;
-		case Move::Shadow_Punch: 	return NULL;
+		case Move::Shadow_Punch: 	return -2;
 		case Move::Extrasensory: 	return 100;
 		case Move::Sky_Uppercut: 	return 90;
 		case Move::Sand_Tomb: 		return 70;
-		case Move::Sheer_Cold: 		return NULL;
+		case Move::Sheer_Cold: 		return -2;
 		case Move::Muddy_Water: 	return 85;
 		case Move::Bullet_Seed: 	return 100;
-		case Move::Aerial_Ace: 		return NULL;
+		case Move::Aerial_Ace: 		return -2;
 		case Move::Icicle_Spear: 	return 100;
-		case Move::Iron_Defense: 	return NULL;
-		case Move::Block: 			return NULL;
-		case Move::Howl: 			return NULL;
+		case Move::Iron_Defense: 	return -2;
+		case Move::Block: 			return -2;
+		case Move::Howl: 			return -2;
 		case Move::Dragon_Claw: 	return 100;
 		case Move::Frenzy_Plant: 	return 90;
-		case Move::Bulk_Up: 		return NULL;
+		case Move::Bulk_Up: 		return -2;
 		case Move::Bounce: 			return 85;
 		case Move::Mud_Shot: 		return 95;
 		case Move::Poison_Tail: 	return 100;
 		case Move::Covet: 			return 100;
 		case Move::Volt_Tackle: 	return 100;
-		case Move::Magical_Leaf: 	return NULL;
-		case Move::Water_Sport: 	return NULL;
-		case Move::Calm_Mind: 		return NULL;
+		case Move::Magical_Leaf: 	return -2;
+		case Move::Water_Sport: 	return -2;
+		case Move::Calm_Mind: 		return -2;
 		case Move::Leaf_Blade: 		return 100;
-		case Move::Dragon_Dance: 	return NULL;
+		case Move::Dragon_Dance: 	return -2;
 		case Move::Rock_Blast: 		return 80;
-		case Move::Shock_Wave: 		return NULL;
+		case Move::Shock_Wave: 		return -1;
 		case Move::Water_Pulse: 	return 100;
 		case Move::Doom_Desire: 	return 85;
 		case Move::Psycho_Boost: 	return 90;
-		default: 					return NULL;
+		default: 					return -2;
     }
 }
 
-int moveprio(Move move){
+int moveprio(const Move move){
 	switch(move){
 		case Move::Switch:
 			return 6;
