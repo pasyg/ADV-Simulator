@@ -32,76 +32,76 @@ std::string_view to_string(Nature const name){
 }
 
 Nature nature_from_string(std::string_view str){
-    if(str == "adamant"){
+    if(str == "Adamant"){
         return Nature::adamant;
     }
-    else if(str == "bashful"){
+    else if(str == "Bashful"){
         return Nature::bashful;
     }
-    else if(str == "bold"){
+    else if(str == "Bold"){
         return Nature::bold;
     }
-    else if(str == "brave"){
+    else if(str == "Brave"){
         return Nature::brave;
     }
-    else if(str == "calm"){
+    else if(str == "Calm"){
         return Nature::calm;
     }
-    else if(str == "careful"){
+    else if(str == "Careful"){
         return Nature::careful;
     }
-    else if(str == "docile"){
+    else if(str == "Docile"){
         return Nature::docile;
     }
-    else if(str == "gentle"){
+    else if(str == "Gentle"){
         return Nature::gentle;
     }
-    else if(str == "hardy"){
+    else if(str == "Hardy"){
         return Nature::hardy;
     }
-    else if(str == "hasty"){
+    else if(str == "Hasty"){
         return Nature::hasty;
     }
-    else if(str == "impish"){
+    else if(str == "Impish"){
         return Nature::impish;
     }
-    else if(str == "jolly"){
+    else if(str == "Jolly"){
         return Nature::jolly;
     }
-    else if(str == "lax"){
+    else if(str == "Lax"){
         return Nature::lax;
     }
-    else if(str == "lonely"){
+    else if(str == "Lonely"){
         return Nature::lonely;
     }
-    else if(str == "mild"){
+    else if(str == "Mild"){
         return Nature::mild;
     }
-    else if(str == "modest"){
+    else if(str == "Modest"){
         return Nature::modest;
     }
-    else if(str == "naive"){
+    else if(str == "Naive"){
         return Nature::naive;
     }
-    else if(str == "naughty"){
+    else if(str == "Naughty"){
         return Nature::naughty;
     }
-    else if(str == "quiet"){
+    else if(str == "Quiet"){
         return Nature::quiet;
     }
-    else if(str == "quirky"){
+    else if(str == "Quirky"){
         return Nature::quirky;
     }
-    else if(str == "rash"){
+    else if(str == "Rash"){
         return Nature::rash;
     }
-    else if(str == "relaxed"){
+    else if(str == "Relaxed"){
         return Nature::relaxed;
     }
-    else if(str == "sassy"){
+    else if(str == "Sassy"){
         return Nature::sassy;
     }
-    else if(str == "serious"){
+    else if(str == "Serious"){
         return Nature::serious;
     }
     else{

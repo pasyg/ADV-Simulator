@@ -10,3 +10,12 @@ std::string to_string(Gender const name){
         break;
     }
 }
+
+Gender gender_from_string(std::string_view str){
+    if(str == "M"){
+        return Gender::male;
+    }
+    else if(str == "F"){
+        return Gender::female;
+    }
+}

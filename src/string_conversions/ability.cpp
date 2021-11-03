@@ -90,223 +90,223 @@ Ability ability_from_string(std::string_view str){
 	else if(str == "Drizzle"){
 		return Ability::Drizzle;
 	}
-	else if(str == "Drizzle"){
+	else if(str == "SpeedBoost"){
 		return Ability::Speed_Boost;
 	}
-	else if(str == "Drizzle"){
+	else if(str == "BattleArmor"){
 		return Ability::Battle_Armor;
 	}
-	else if(str == "Drizzle"){
+	else if(str == "Sturdy"){
 		return Ability::Sturdy;
 	}
-	else if(str == "Drizzle"){
+	else if(str == "Damp"){
 		return Ability::Damp;
 	}
-	else if(str == "Drizzle"){
+	else if(str == "Limber"){
 		return Ability::Limber;
 	}
-	else if(str == "Drizzle"){
+	else if(str == "SandVeil"){
 		return Ability::Sand_Veil;
 	}
-	else if(str == "Drizzle"){
+	else if(str == "Static"){
 		return Ability::Static;
 	}
-	else if(str == "Drizzle"){
+	else if(str == "VoltAbsorb"){
 		return Ability::Volt_Absorb;
 	}
-	else if(str == "Drizzle"){
+	else if(str == "WaterAbsorb"){
 		return Ability::Water_Absorb;
 	}
-	else if(str == "Drizzle"){
+	else if(str == "Oblivious"){
 		return Ability::Oblivious;
 	}
-	else if(str == "Drizzle"){
+	else if(str == "CloudNine"){
 		return Ability::Cloud_Nine;
 	}
-	else if(str == "Drizzle"){
+	else if(str == "CompoundEyes"){
 		return Ability::Compound_Eyes;
 	}
-	else if(str == "Drizzle"){
+	else if(str == "Insomnia"){
 		return Ability::Insomnia;
 	}
-	else if(str == "Drizzle"){
+	else if(str == "ColorChange"){
 		return Ability::Color_Change;
 	}
-	else if(str == "Drizzle"){
+	else if(str == "Immunity"){
 		return Ability::Immunity;
 	}
-	else if(str == "Drizzle"){
+	else if(str == "FlashFire"){
 		return Ability::Flash_Fire;
 	}
-	else if(str == "Drizzle"){
+	else if(str == "ShieldDust"){
 		return Ability::Shield_Dust;
 	}
-	else if(str == "Drizzle"){
+	else if(str == "OwnTempo"){
 		return Ability::Own_Tempo;
 	}
-	else if(str == "Drizzle"){
+	else if(str == "SuctionCups"){
 		return Ability::Suction_Cups;
 	}
-	else if(str == "Drizzle"){
+	else if(str == "Intimidate"){
 		return Ability::Intimidate;
 	}
-	else if(str == "Drizzle"){
+	else if(str == "ShadowTag"){
 		return Ability::Shadow_Tag;
 	}
-	else if(str == "Drizzle"){
+	else if(str == "RoughSkin"){
 		return Ability::Rough_Skin;
 	}
-	else if(str == "Drizzle"){
+	else if(str == "WonderGuard"){
 		return Ability::Wonder_Guard;
 	}
-	else if(str == "Drizzle"){
+	else if(str == "Levitate"){
 		return Ability::Levitate;
 	}
-	else if(str == "Drizzle"){
+	else if(str == "EffectSpore"){
 		return Ability::Effect_Spore;
 	}
-	else if(str == "Drizzle"){
+	else if(str == "Synchronize"){
 		return Ability::Synchronize;
 	}
-	else if(str == "Drizzle"){
+	else if(str == "ClearBody"){
 		return Ability::Clear_Body;
 	}
-	else if(str == "Drizzle"){
+	else if(str == "NaturalCure"){
 		return Ability::Natural_Cure;
 	}
-	else if(str == "Drizzle"){
+	else if(str == "LightningRod"){
 		return Ability::Lightning_Rod;
 	}
-	else if(str == "Drizzle"){
+	else if(str == "SereneGrace"){
 		return Ability::Serene_Grace;
 	}
-	else if(str == "Drizzle"){
+	else if(str == "SwiftSwim"){
 		return Ability::Swift_Swim;
 	}
-	else if(str == "Drizzle"){
+	else if(str == "Chlorophyll"){
 		return Ability::Chlorophyll;
 	}
-	else if(str == "Drizzle"){
+	else if(str == "Illuminate"){
 		return Ability::Illuminate;
 	}
-	else if(str == "Drizzle"){
+	else if(str == "Trace"){
 		return Ability::Trace;
 	}
-	else if(str == "Drizzle"){
+	else if(str == "HugePower"){
 		return Ability::Huge_Power;
 	}
-	else if(str == "Drizzle"){
+	else if(str == "PoisonPoint"){
 		return Ability::Poison_Point;
 	}
-	else if(str == "Drizzle"){
+	else if(str == "InnerFocus"){
 		return Ability::Inner_Focus;
 	}
-	else if(str == "Drizzle"){
+	else if(str == "MagmaArmor"){
 		return Ability::Magma_Armor;
 	}
-	else if(str == "Drizzle"){
+	else if(str == "WaterVeil"){
 		return Ability::Water_Veil;
 	}
-	else if(str == "Drizzle"){
+	else if(str == "MagnetPull"){
 		return Ability::Magnet_Pull;
 	}
-	else if(str == "Drizzle"){
+	else if(str == "Soundproof"){
 		return Ability::Soundproof;
 	}
-	else if(str == "Drizzle"){
+	else if(str == "RainDish"){
 		return Ability::Rain_Dish;
 	}
-	else if(str == "Drizzle"){
+	else if(str == "SandStream"){
 		return Ability::Sand_Stream;
 	}
-	else if(str == "Drizzle"){
+	else if(str == "Pressure"){
 		return Ability::Pressure;
 	}
-	else if(str == "Drizzle"){
+	else if(str == "ThickFat"){
 		return Ability::Thick_Fat;
 	}
-	else if(str == "Drizzle"){
+	else if(str == "EarlyBird"){
 		return Ability::Early_Bird;
 	}
-	else if(str == "Drizzle"){
+	else if(str == "FlameBody"){
 		return Ability::Flame_Body;
 	}
-	else if(str == "Drizzle"){
+	else if(str == "RunAway"){
 		return Ability::Run_Away;
 	}
-	else if(str == "Drizzle"){
+	else if(str == "KeenEye"){
 		return Ability::Keen_Eye;
 	}
-	else if(str == "Drizzle"){
+	else if(str == "HyperCutter"){
 		return Ability::Hyper_Cutter;
 	}
-	else if(str == "Drizzle"){
+	else if(str == "Pickup"){
 		return Ability::Pickup;
 	}
-	else if(str == "Drizzle"){
+	else if(str == "Truant"){
 		return Ability::Truant;
 	}
-	else if(str == "Drizzle"){
+	else if(str == "Hustle"){
 		return Ability::Hustle;
 	}
-	else if(str == "Drizzle"){
+	else if(str == "CuteCharm"){
 		return Ability::Cute_Charm;
 	}
-	else if(str == "Drizzle"){
+	else if(str == "Plus"){
 		return Ability::Plus;
 	}
-	else if(str == "Drizzle"){
+	else if(str == "Minus"){
 		return Ability::Minus;
 	}
-	else if(str == "Drizzle"){
+	else if(str == "Forecast"){
 		return Ability::Forecast;
 	}
-	else if(str == "Drizzle"){
+	else if(str == "StickyHold"){
 		return Ability::Sticky_Hold;
 	}
-	else if(str == "Drizzle"){
+	else if(str == "ShedSkin"){
 		return Ability::Shed_Skin;
 	}
-	else if(str == "Drizzle"){
+	else if(str == "Guts"){
 		return Ability::Guts;
 	}
-	else if(str == "Drizzle"){
+	else if(str == "MarvelScale"){
 		return Ability::Marvel_Scale;
 	}
-	else if(str == "Drizzle"){
+	else if(str == "LiquidOoze"){
 		return Ability::Liquid_Ooze;
 	}
-	else if(str == "Drizzle"){
+	else if(str == "Overgrow"){
 		return Ability::Overgrow;
 	}
-	else if(str == "Drizzle"){
+	else if(str == "Blaze"){
 		return Ability::Blaze;
 	}
-	else if(str == "Drizzle"){
+	else if(str == "Torrent"){
 		return Ability::Torrent;
 	}
-	else if(str == "Drizzle"){
+	else if(str == "Swarm"){
 		return Ability::Swarm;
 	}
-	else if(str == "Drizzle"){
+	else if(str == "RockHead"){
 		return Ability::Rock_Head;
 	}
-	else if(str == "Drizzle"){
+	else if(str == "Drought"){
 		return Ability::Drought;
 	}
-	else if(str == "Drizzle"){
+	else if(str == "ArenaTrap"){
 		return Ability::Arena_Trap;
 	}
-	else if(str == "Drizzle"){
+	else if(str == "VitalSpirit"){
 		return Ability::Vital_Spirit;
 	}
-	else if(str == "Drizzle"){
+	else if(str == "WhiteSmoke"){
 		return Ability::White_Smoke;
 	}
-	else if(str == "Drizzle"){
+	else if(str == "PurePower"){
 		return Ability::Pure_Power;
 	}
-	else if(str == "Drizzle"){
+	else if(str == "ShellArmor"){
 		return Ability::Shell_Armor;
 	}
 	else{

@@ -3,7 +3,7 @@
 std::string to_string(Item item){
     switch(item){
         case Item::none: return "none";
-        case Item::choiceband: return "Choice Band";
+        case Item::choiceband: return "Leftovers";
         case Item::leftovers: return "Leftovers";
         case Item::lumberry: return "Lum Berry";
         case Item::salacberry: return "Salac Berry";
@@ -74,193 +74,190 @@ Item item_from_string(std::string_view str){
     if(str == "none"){
         return Item::none;
     }
-    else if(str == "Choice Band"){
+    else if(str == "ChoiceBand"){
         return Item::choiceband;
     }
-    else if(str == "Choice Band"){
+    else if(str == "Leftovers"){
         return Item::leftovers;
     }
-    else if(str == "Choice Band"){
+    else if(str == "LumBerry"){
         return Item::lumberry;
     }
-    else if(str == "Choice Band"){
+    else if(str == "SalacBerry"){
         return Item::salacberry;
     }
-    else if(str == "Choice Band"){
+    else if(str == "ApicotBerry"){
         return Item::apicotberry;
     }
-    else if(str == "Choice Band"){
+    else if(str == "BlackBelt"){
         return Item::blackbelt;
     }
-    else if(str == "Choice Band"){
+    else if(str == "BlackGlasses"){
         return Item::blackglasses;
     }
-    else if(str == "Choice Band"){
+    else if(str == "BrightPowder"){
         return Item::brightpowder;
     }
-    else if(str == "Choice Band"){
+    else if(str == "Charcoal"){
         return Item::charcoal;
     }
-    else if(str == "Choice Band"){
+    else if(str == "ChestoBerry"){
         return Item::chestoberry;
     }
-    else if(str == "Choice Band"){
+    else if(str == "DragonFang"){
         return Item::dragonfang;
     }
-    else if(str == "Choice Band"){
+    else if(str == "GanlonBerry"){
         return Item::ganlonberry;
     }
-    else if(str == "Choice Band"){
+    else if(str == "GrepaBerry"){
         return Item::grepaberry;
     }
-    else if(str == "Choice Band"){
+    else if(str == "HardStone"){
         return Item::hardstone;
     }
-    else if(str == "Choice Band"){
+    else if(str == "KelpsyBerry"){
         return Item::kelpsyberry;
     }
-    else if(str == "Choice Band"){
+    else if(str == "KingsRock"){
         return Item::kingsrock;
     }
-    else if(str == "Choice Band"){
+    else if(str == "LansatBerry"){
         return Item::lansatberry;
     }
-    else if(str == "Choice Band"){
+    else if(str == "LaxIncense"){
         return Item::laxincense;
     }
-    else if(str == "Choice Band"){
+    else if(str == "LeppaBerry"){
         return Item::leppaberry;
     }
-    else if(str == "Choice Band"){
+    else if(str == "LiechiBerry"){
         return Item::liechiberry;
     }
-    else if(str == "Choice Band"){
+    else if(str == "Magnet"){
         return Item::magnet;
     }
-    else if(str == "Choice Band"){
+    else if(str == "Mail"){
         return Item::mail;
     }
-    else if(str == "Choice Band"){
+    else if(str == "MetalCoat"){
         return Item::metalcoat;
     }
-    else if(str == "Choice Band"){
+    else if(str == "MiracleSeed"){
         return Item::miracleseed;
     }
-    else if(str == "Choice Band"){
+    else if(str == "MysticWater"){
         return Item::mysticwater;
     }
-    else if(str == "Choice Band"){
+    else if(str == "NeverMeltIce"){
         return Item::nevermeltice;
     }
-    else if(str == "Choice Band"){
+    else if(str == "PetayaBerry"){
         return Item::petayaberry;
     }
-    else if(str == "Choice Band"){
+    else if(str == "PoisonBarb"){
         return Item::poisonbarb;
     }
-    else if(str == "Choice Band"){
+    else if(str == "QuickClaw"){
         return Item::quickclaw;
     }
-    else if(str == "Choice Band"){
+    else if(str == "ScopeLens"){
         return Item::scopelens;
     }
-    else if(str == "Choice Band"){
+    else if(str == "SeaIncense"){
         return Item::seaincense;
     }
-    else if(str == "Choice Band"){
+    else if(str == "SharpBeak"){
         return Item::sharpbeak;
     }
-    else if(str == "Choice Band"){
+    else if(str == "ShellBell"){
         return Item::shellbell;
     }
-    else if(str == "Choice Band"){
+    else if(str == "SilkScarf"){
         return Item::silkscarf;
     }
-    else if(str == "Choice Band"){
+    else if(str == "SilverPowder"){
         return Item::silverpowder;
     }
-    else if(str == "Choice Band"){
+    else if(str == "SoftSand"){
         return Item::softsand;
     }
-    else if(str == "Choice Band"){
+    else if(str == "SpellTag"){
         return Item::spelltag;
     }
-    else if(str == "Choice Band"){
+    else if(str == "StarfBerry"){
         return Item::starfberry;
     }
-    else if(str == "Choice Band"){
+    else if(str == "TwistedSpoon"){
         return Item::twistedspoon;
     }
-    else if(str == "Choice Band"){
+    else if(str == "WhiteHerb"){
         return Item::whiteherb;
     }
-    else if(str == "Choice Band"){
+    else if(str == "DeepSeaScale"){
         return Item::deepseascale;
     }
-    else if(str == "Choice Band"){
+    else if(str == "DeepSeaTooth"){
         return Item::deepseatooth;
     }
-    else if(str == "Choice Band"){
+    else if(str == "LightBall"){
         return Item::lightball;
     }
-    else if(str == "Choice Band"){
+    else if(str == "LuckyPunch"){
         return Item::luckypunch;
     }
-    else if(str == "Choice Band"){
+    else if(str == "MetalPowder"){
         return Item::metalpowder;
     }
-    else if(str == "Choice Band"){
+    else if(str == "SoulDew"){
         return Item::souldew;
     }
-    else if(str == "Choice Band"){
+    else if(str == "Stick"){
         return Item::stick;
     }
-    else if(str == "Choice Band"){
+    else if(str == "ThickClub"){
         return Item::thickclub;
     }
-    else if(str == "Choice Band"){
+    else if(str == "AguavBerry"){
         return Item::aguavberry;
     }
-    else if(str == "Choice Band"){
+    else if(str == "AspearBerry"){
         return Item::aspearberry;
     }
-    else if(str == "Choice Band"){
+    else if(str == "CheriBerry"){
         return Item::cheriberry;
     }
-    else if(str == "Choice Band"){
-        return Item::cheriberry;
-    }
-    else if(str == "Choice Band"){
+    else if(str == "FigyBerry"){
         return Item::figyberry;
     }
-    else if(str == "Choice Band"){
+    else if(str == "FocusBand"){
         return Item::focusband;
     }
-    else if(str == "Choice Band"){
+    else if(str == "IapapaBerry"){
         return Item::iapapaberry;
     }
-    else if(str == "Choice Band"){
+    else if(str == "MachoBrace"){
         return Item::machobrace;
     }
-    else if(str == "Choice Band"){
+    else if(str == "MagoBerry"){
         return Item::magoberry;
     }
-    else if(str == "Choice Band"){
+    else if(str == "MentalBerry"){
         return Item::mentalberry;
     }
-    else if(str == "Choice Band"){
+    else if(str == "OranBerry"){
         return Item::oranberry;
     }
-    else if(str == "Choice Band"){
+    else if(str == "PechaBerry"){
         return Item::pechaberry;
     }
-    else if(str == "Choice Band"){
+    else if(str == "PersimBerry"){
         return Item::persimberry;
     }
-    else if(str == "Choice Band"){
+    else if(str == "RawstBerry"){
         return Item::rawstberry;
     }
-    else if(str == "Choice Band"){
+    else if(str == "SitrusBerry"){
         return Item::sitrusberry;
     }
     else{

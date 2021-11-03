@@ -2,8 +2,8 @@
 
 #include <string_view>
 
-#include "moves.hpp"
+#include "data/moves.hpp"
 
 std::string_view to_string(Move const name);
 
-Move from_string(std::string_view str);
+Move move_from_string(std::string_view str);
