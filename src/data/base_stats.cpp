@@ -424,4 +424,4 @@ Stats base_stats(Species species){
 			case Species::Deoxys_Spe: 	return {50, 95, 90, 95, 90, 180};
             default: 					return {0,0,0,0,0,0};
     }
-}
+};
