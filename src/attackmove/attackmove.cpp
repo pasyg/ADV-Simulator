@@ -8,11 +8,11 @@ AttackMove::~AttackMove(){
 
 }
 
-void AttackMove::set_move(const Move move){
+void AttackMove::set_move(Move move){
     this->move = move;
 }
 
-Move AttackMove::get_move() const{
+Move AttackMove::get_move(){
     return this->move;
 }
 
@@ -60,6 +60,10 @@ void AttackMove::set_priority(const int prio){
     this->priority = prio;    
 }
 
+void AttackMove::set_disabled(const bool disable){
+    this->disabled = disable;
+}
+
 void AttackMove::set_category(const Category category){
     this->category = category;
 }
@@ -70,4 +74,8 @@ Category AttackMove::get_category() const{
 
 int AttackMove::get_power() const{
     return movepower(this->move);
+}
+
+bool AttackMove::get_disabled() const{
+    return this->disabled;
 }
