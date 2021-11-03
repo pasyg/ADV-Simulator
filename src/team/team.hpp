@@ -1,4 +1,5 @@
 #include <array>
+#include <vector>
 
 #include "pokemon.hpp"
 
@@ -7,10 +8,11 @@ public:
     void swap(int slot);
     void team_init();
     void get_move_options();
+    void decide_move();
     int get_boost(Statname stat);
     AttackMove* movechoice;
     std::array<AttackMove, 6> switches;
-    std::array<AttackMove*, 9> move_options;
+    std::vector<AttackMove> move_options;
 /// TRANSFORM / BIDE / DOOMDESIRE / FUTURE SIGHT / IMPRISON / METRONOME / MIRRORMOVE
     std::array<Pokemon, 6> member;
     int active_pokemon = 0;     // index of currently active pokemon 
@@ -42,22 +44,20 @@ public:
     int accboost = 0;
     int evaboost = 0; // evasion
     int reflect = 0;
+
     int lightscreen = 0;
     int perishsong = 0;
+    
+    bool trapped = false;
+    bool move_locked = false;
+    AttackMove locked_move;
     bool taunt = false;
     bool confusion = false;
     bool ingrain = false;
     bool yawn = false;
     bool infatuated = false;
     bool curse = false;
-    bool disable = false;
-    bool encore = false;
-    Move encore_move = Move::None;
     bool leechseed = false;
-    bool selflock = false;
-    Move selflock_move = Move::None;
-    bool choicelock = false;
-    Move choicelock_move = Move::None;
     bool block = false;
     bool targetable = true; // bounce, dig, etc.
     bool charge = false;

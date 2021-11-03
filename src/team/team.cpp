@@ -53,11 +53,38 @@ int Team::get_boost(Statname stat){
 }
 
 void Team::get_move_options(){
-/*    for(int i = 0; i < 4; ++i){
-        if(this->member[this->active_pokemon].get_moveset()[i].get_move() != Move::None){
-            if(this->member[this->active_pokemon].get_moveset()[i].get_pp() > 0){
-                this->move_options[i] = this->member[this->active_pokemon].get_moveset()[i];
+    const Pokemon activemon = this->member[this->active_pokemon];
+    const std::array<AttackMove, 4> moves = activemon.get_moveset();
+    
+    // free the vector from previous options
+    this->move_options.clear();
+    
+    if(this->move_locked){
+        this->move_options.push_back(this->locked_move);
+    }
+    else{
+        for(int i = 0; i<4; ++i){
+            if(moves[i].get_pp() > 0 && !moves[i].get_disabled()){
+                this->move_options.push_back(moves[i]);
             }
         }
-    }*/
+    }
+    if(this->trapped){
+        return;
+    }
+    for(int i = 0; i<6; ++i){
+        if(i == this->active_pokemon){
+            continue;
+        }
+        else{
+            if(this->member[i].get_status() != Status::fainted){
+                this->move_options.push_back(this->switches[i]);
+            }
+        }
+    }
+}
+
+// can be rewritten for however one wants to make move decisions
+void Team::decide_move(){
+
 }
