@@ -77,7 +77,7 @@ void set_ivs(std::string &ivs, Pokemon &pokemon){
 }
 
 Team importteam(std::string const path){
-    //std::ifstream file("C:/Users/pgekl/Documents/Programmieren/C++/VSCode/Simulator/teams/packed/sample.txt");
+    //std::ifstream file("../../teams/packed/sample.txt");
     
     std::string line = "Tyranitar||ChoiceBand|SandStream|RockSlide,Earthquake,FocusPunch,HiddenPowerBug|Adamant|4,252,,,,252|||||]Swampert||SalacBerry|Torrent|HydroPump,IceBeam,Substitute,Endeavor|Timid|,,4,252,,252|||||]Skarmory||Leftovers|KeenEye|Protect,DrillPeck,Roar,Spikes|Careful|240,,,,244,24|||||]Metagross||Leftovers|ClearBody|MeteorMash,Earthquake,Agility,Explosion|Adamant|168,236,16,,,88|||||]Blissey||Leftovers|NaturalCure|ThunderWave,SeismicToss,IceBeam,SoftBoiled|Bold|40,,252,216,,|||||]Aerodactyl||ChoiceBand|RockHead|RockSlide,Earthquake,DoubleEdge,HiddenPowerBug|Jolly|,252,,,4,252|||||";
     std::string delimiter1 = "]";
