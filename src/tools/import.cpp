@@ -3,6 +3,7 @@
 //NICKNAME=0|SPECIES=1|ITEM=2|ABILITY=3|MOVES=4|NATURE=5|EVS=6|GENDER=7|IVS=8|SHINY=9|LEVEL=10|HAPPINESS,POKEBALL,HIDDENPOWERTYPE=11
 
 void set_moves(std::string &moves, Pokemon &pokemon){
+    std::array<AttackMove, 4> moveset;
     std::string delimiter = ",";
 
     std::array<std::string, 4> arrmoves;
@@ -11,10 +12,12 @@ void set_moves(std::string &moves, Pokemon &pokemon){
     moves += ",";
 
     while((posmoves = moves.find(delimiter)) != std::string::npos){
-        arrmoves[moveindex] = moves.substr(0, posmoves);
+        moveset[moveindex].set_move(move_from_string(moves.substr(0, posmoves)));
         moves.erase(0, posmoves + delimiter.length());
         ++moveindex;
     }
+    pokemon.set_moveset(moveset);
+    
 }
 void set_evs(std::string &evs, Pokemon &pokemon){
     Stats stats;
@@ -29,6 +32,11 @@ void set_evs(std::string &evs, Pokemon &pokemon){
         arrevs[evindex] = evs.substr(0, posevs);
         evs.erase(0, posevs + delimiter.length());
         ++evindex;
+    }
+    for(int i = 0; i < 6; ++i){
+        if(arrevs[i] == ""){
+            arrevs[i] = "0";
+        }
     }
     stats.hp = std::stoi(arrevs[0]);
     stats.atk = std::stoi(arrevs[1]);
@@ -53,6 +61,11 @@ void set_ivs(std::string &ivs, Pokemon &pokemon){
         ivs.erase(0, posivs + delimiter.length());
         ++ivindex;
     }
+    for(int i = 0; i < 6; ++i){
+        if(arrivs[i] == ""){
+            arrivs[i] = "0";
+        }
+    }
     stats.hp = std::stoi(arrivs[0]);
     stats.atk = std::stoi(arrivs[1]);
     stats.def = std::stoi(arrivs[2]);
@@ -63,10 +76,10 @@ void set_ivs(std::string &ivs, Pokemon &pokemon){
     pokemon.set_ivs(stats);
 }
 
-Team importteam(std::string path){
-    std::ifstream file("../teams/packed/" + path + ".txt");
+Team importteam(std::string const path){
+    //std::ifstream file("C:/Users/pgekl/Documents/Programmieren/C++/VSCode/Simulator/teams/packed/sample.txt");
     
-    std::string line;
+    std::string line = "Tyranitar||ChoiceBand|SandStream|RockSlide,Earthquake,FocusPunch,HiddenPowerBug|Adamant|4,252,,,,252|||||]Swampert||SalacBerry|Torrent|HydroPump,IceBeam,Substitute,Endeavor|Timid|,,4,252,,252|||||]Skarmory||Leftovers|KeenEye|Protect,DrillPeck,Roar,Spikes|Careful|240,,,,244,24|||||]Metagross||Leftovers|ClearBody|MeteorMash,Earthquake,Agility,Explosion|Adamant|168,236,16,,,88|||||]Blissey||Leftovers|NaturalCure|ThunderWave,SeismicToss,IceBeam,SoftBoiled|Bold|40,,252,216,,|||||]Aerodactyl||ChoiceBand|RockHead|RockSlide,Earthquake,DoubleEdge,HiddenPowerBug|Jolly|,252,,,4,252|||||";
     std::string delimiter1 = "]";
     std::string delimiter2 = "|";
     size_t pos1 = 0;
@@ -80,7 +93,7 @@ Team importteam(std::string path){
     size_t i = 0;
     size_t j = 0;
 
-    std::getline(file, line);
+    //std::getline(file, line);
 
     line += "]";
     
@@ -107,10 +120,11 @@ Team importteam(std::string path){
         for(int j = 0; j < 12; ++j){
             if(data[i][1] == ""){
                 importteam.member[i].set_species(species_from_string(data[i][0]));
+                importteam.member[i].set_name(data[i][0]);
             }
             else{
-                
                 importteam.member[i].set_species(species_from_string(data[i][1]));
+                importteam.member[i].set_name(data[i][1]);
             }
             importteam.member[i].set_item(item_from_string(data[i][2]));
             importteam.member[i].set_ability(ability_from_string(data[i][3]));

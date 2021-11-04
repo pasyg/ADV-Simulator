@@ -11,6 +11,11 @@ Pokemon::~Pokemon(){
 Stats Pokemon::get_stats() const{
     return this->stats;
 }
+
+std::string Pokemon::get_name() const{
+    return this->name;
+}
+
 ///
 /// relevant in battles
 ///
@@ -110,6 +115,10 @@ Type Pokemon::get_hiddenpower_type() const{
 ///
 /// initilization relevant
 ///
+void Pokemon::set_name(const std::string name){
+    this->name = name;
+}
+
 void Pokemon::set_evs(const Stats stats){
     this->EVs = stats;
 }

@@ -15,7 +15,8 @@ INCLUDE_DIRECTORIES(
     ${PROJECT_SOURCE_DIR}/src/tools
 )
 
-#add_compile_options("$<$<CONFIG:DEBUG>:-DBENCHMARK>")
+add_compile_options("$<$<CONFIG:DEBUG>:-DBENCHMARK>")
+add_compile_options("$<$<CONFIG:RELEASE>:-DBENCHMARK>")
 
 set(EXECUTABLE_OUTPUT_PATH ../)
 

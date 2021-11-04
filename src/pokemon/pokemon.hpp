@@ -21,6 +21,7 @@ public:
     void init();
     void stat_init();
     Stats get_stats() const;
+    std::string get_name() const;
     ///
     /// relevant in battles
     ///
@@ -51,6 +52,7 @@ public:
     ///
     /// always intilization relevant
     ///
+    void set_name(const std::string name);
     void set_evs(const Stats stats);
     void set_ivs(const Stats stats);
     void set_ability(const Ability p_ability);
@@ -73,6 +75,7 @@ private:
     ///
     /// given by import
     ///
+    std::string name;
     Species species;
     Gender gender;
     Item item;
