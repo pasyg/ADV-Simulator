@@ -6,9 +6,9 @@ A battle simulator for the third generation of the pokemon games.
 ## important customizable functions
 ### src/main.cpp:
   structure of the game, team import.
-### src/team/team.cpp // decide_move()
+### src/team/team.cpp // decide_move():
   implementation of decision processes for battles
-### src/tools/import.cpp
+### src/tools/import.cpp // import_team():
   function to customize importable team formats, currently only supports the [packed pokemon showdown format](https://github.com/smogon/pokemon-showdown/blob/master/sim/TEAMS.md)
   most values have to be set for later initialization
   
