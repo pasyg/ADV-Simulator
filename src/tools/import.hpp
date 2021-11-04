@@ -26,4 +26,4 @@ struct Strstats{
 void set_moves(std::string &moves, Pokemon &pokemon);
 void set_evs(std::string &evs, Pokemon &pokemon);
 void set_ivs(std::string &ivs, Pokemon &pokemon);
-Team importteam(std::string const path);
+std::vector<Team> importteam(std::string const path);
