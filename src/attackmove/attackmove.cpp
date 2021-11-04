@@ -8,7 +8,18 @@ AttackMove::~AttackMove(){
 
 }
 
-void AttackMove::set_move(Move move){
+void AttackMove::init(){
+    this->power = move_power(this->move);
+    this->priority = move_prio(this->move);
+    this->type = move_type(this->move);
+    this->category = move_category(this->type);
+}
+
+void AttackMove::set_power(const int power){
+    this->power = power;
+}
+
+void AttackMove::set_move(const Move move){
     this->move = move;
 }
 

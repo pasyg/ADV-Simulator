@@ -1,7 +1,11 @@
 #include "team.hpp"
 #include "rng.hpp"
 
-void Team::team_init(){
+void Team::team_init(int index){
+
+    this->index = index;
+
+    // switch move options
     for(int i = 0; i < 6; ++i){
         this->switches[i].set_priority(6);
         switch(i){
@@ -18,15 +22,17 @@ void Team::team_init(){
         case 5:
             this->switches[i].set_move(Move::Switch5);
         default:
-            std::cout << "ERROR TEAM INIT SWITCHES";
+        #ifdef _DEBUG
+            debug_log("ERROR TEAM INIT SWITCHES");
+        #endif
         }
     }
-
-/*    for(int i = 0; i<6; ++i){
-        if(this->member[i].get_species() != Species::no_pokemon){
-            this->member[i].stat_init();
+    // initialize each pokemon
+    for(int i = 0; i < 6; ++i){
+        if(static_cast<int>(member[i].get_species())){
+            member[i].init();
         }
-    }*/
+    }
 }
 
 
@@ -47,12 +53,15 @@ int Team::get_boost(Statname stat){
         case Statname::Eva:
             return this->evaboost;
         default:
+        #ifdef _DEBUG
             std::cout << "ERROR GET_BOOST team.cpp" << std::endl;
+        #endif
             return 0;
     }
 }
 
 void Team::get_move_options(){
+    
     const Pokemon activemon = this->member[this->active_pokemon];
     const std::array<AttackMove, 4> moves = activemon.get_moveset();
     
@@ -86,5 +95,5 @@ void Team::get_move_options(){
 
 // can be rewritten for however one wants to make move decisions
 void Team::decide_move(){
-
+    movechoice = &move_options[get_random(0, move_options.size()-1)];
 }

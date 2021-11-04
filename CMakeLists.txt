@@ -32,6 +32,7 @@ add_executable(Simulator
     src/battle/use_move.cpp
 
     src/data/base_stats.cpp
+    src/data/category.cpp
     src/data/item.cpp
     src/data/moves.cpp
 

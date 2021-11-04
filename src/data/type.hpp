@@ -27,5 +27,7 @@ enum class Type : std::uint8_t {
 
 	// bonus
 	Fairy,
-	Typeless
+	Typeless,
+	//
+	Hidden_Power
 };

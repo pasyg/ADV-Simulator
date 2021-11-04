@@ -1,12 +1,14 @@
 #include <array>
 #include <vector>
 
+#include "define.hpp"
+
 #include "pokemon.hpp"
 
 class Team{
 public:
     void swap(int slot);
-    void team_init();
+    void team_init(int index);
     void get_move_options();
     void decide_move();
     int get_boost(Statname stat);

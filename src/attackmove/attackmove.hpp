@@ -12,6 +12,9 @@ public:
     AttackMove();
     ~AttackMove();
 
+    void init();
+
+    void set_power(const int power);
     void set_stab(const bool STAB);
     void set_revealed(const bool revealed);
     void set_pp(const int pp);
@@ -19,7 +22,7 @@ public:
     void reduce_pp(const int x);
     void set_priority(const int prio);
     void set_disabled(const bool disable);
-    void set_move(Move move);
+    void set_move(const Move move);
     void set_category(const Category category);
 
     int get_power() const;
