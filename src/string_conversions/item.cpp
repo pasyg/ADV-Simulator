@@ -1,6 +1,6 @@
 #include "string_conversions/item.hpp"
 
-std::string to_string(Item item){
+std::string to_string(Item const item){
     switch(item){
         case Item::none: return "none";
         case Item::choiceband: return "Leftovers";
@@ -70,197 +70,75 @@ std::string to_string(Item item){
     }
 }
 
-Item item_from_string(std::string_view str){
-    if(str == "none"){
-        return Item::none;
-    }
-    else if(str == "ChoiceBand"){
-        return Item::choiceband;
-    }
-    else if(str == "Leftovers"){
-        return Item::leftovers;
-    }
-    else if(str == "LumBerry"){
-        return Item::lumberry;
-    }
-    else if(str == "SalacBerry"){
-        return Item::salacberry;
-    }
-    else if(str == "ApicotBerry"){
-        return Item::apicotberry;
-    }
-    else if(str == "BlackBelt"){
-        return Item::blackbelt;
-    }
-    else if(str == "BlackGlasses"){
-        return Item::blackglasses;
-    }
-    else if(str == "BrightPowder"){
-        return Item::brightpowder;
-    }
-    else if(str == "Charcoal"){
-        return Item::charcoal;
-    }
-    else if(str == "ChestoBerry"){
-        return Item::chestoberry;
-    }
-    else if(str == "DragonFang"){
-        return Item::dragonfang;
-    }
-    else if(str == "GanlonBerry"){
-        return Item::ganlonberry;
-    }
-    else if(str == "GrepaBerry"){
-        return Item::grepaberry;
-    }
-    else if(str == "HardStone"){
-        return Item::hardstone;
-    }
-    else if(str == "KelpsyBerry"){
-        return Item::kelpsyberry;
-    }
-    else if(str == "KingsRock"){
-        return Item::kingsrock;
-    }
-    else if(str == "LansatBerry"){
-        return Item::lansatberry;
-    }
-    else if(str == "LaxIncense"){
-        return Item::laxincense;
-    }
-    else if(str == "LeppaBerry"){
-        return Item::leppaberry;
-    }
-    else if(str == "LiechiBerry"){
-        return Item::liechiberry;
-    }
-    else if(str == "Magnet"){
-        return Item::magnet;
-    }
-    else if(str == "Mail"){
-        return Item::mail;
-    }
-    else if(str == "MetalCoat"){
-        return Item::metalcoat;
-    }
-    else if(str == "MiracleSeed"){
-        return Item::miracleseed;
-    }
-    else if(str == "MysticWater"){
-        return Item::mysticwater;
-    }
-    else if(str == "NeverMeltIce"){
-        return Item::nevermeltice;
-    }
-    else if(str == "PetayaBerry"){
-        return Item::petayaberry;
-    }
-    else if(str == "PoisonBarb"){
-        return Item::poisonbarb;
-    }
-    else if(str == "QuickClaw"){
-        return Item::quickclaw;
-    }
-    else if(str == "ScopeLens"){
-        return Item::scopelens;
-    }
-    else if(str == "SeaIncense"){
-        return Item::seaincense;
-    }
-    else if(str == "SharpBeak"){
-        return Item::sharpbeak;
-    }
-    else if(str == "ShellBell"){
-        return Item::shellbell;
-    }
-    else if(str == "SilkScarf"){
-        return Item::silkscarf;
-    }
-    else if(str == "SilverPowder"){
-        return Item::silverpowder;
-    }
-    else if(str == "SoftSand"){
-        return Item::softsand;
-    }
-    else if(str == "SpellTag"){
-        return Item::spelltag;
-    }
-    else if(str == "StarfBerry"){
-        return Item::starfberry;
-    }
-    else if(str == "TwistedSpoon"){
-        return Item::twistedspoon;
-    }
-    else if(str == "WhiteHerb"){
-        return Item::whiteherb;
-    }
-    else if(str == "DeepSeaScale"){
-        return Item::deepseascale;
-    }
-    else if(str == "DeepSeaTooth"){
-        return Item::deepseatooth;
-    }
-    else if(str == "LightBall"){
-        return Item::lightball;
-    }
-    else if(str == "LuckyPunch"){
-        return Item::luckypunch;
-    }
-    else if(str == "MetalPowder"){
-        return Item::metalpowder;
-    }
-    else if(str == "SoulDew"){
-        return Item::souldew;
-    }
-    else if(str == "Stick"){
-        return Item::stick;
-    }
-    else if(str == "ThickClub"){
-        return Item::thickclub;
-    }
-    else if(str == "AguavBerry"){
-        return Item::aguavberry;
-    }
-    else if(str == "AspearBerry"){
-        return Item::aspearberry;
-    }
-    else if(str == "CheriBerry"){
-        return Item::cheriberry;
-    }
-    else if(str == "FigyBerry"){
-        return Item::figyberry;
-    }
-    else if(str == "FocusBand"){
-        return Item::focusband;
-    }
-    else if(str == "IapapaBerry"){
-        return Item::iapapaberry;
-    }
-    else if(str == "MachoBrace"){
-        return Item::machobrace;
-    }
-    else if(str == "MagoBerry"){
-        return Item::magoberry;
-    }
-    else if(str == "MentalBerry"){
-        return Item::mentalberry;
-    }
-    else if(str == "OranBerry"){
-        return Item::oranberry;
-    }
-    else if(str == "PechaBerry"){
-        return Item::pechaberry;
-    }
-    else if(str == "PersimBerry"){
-        return Item::persimberry;
-    }
-    else if(str == "RawstBerry"){
-        return Item::rawstberry;
-    }
-    else if(str == "SitrusBerry"){
-        return Item::sitrusberry;
-    }
-    else{
-        return Item::wikiberry;
-    }
+Item item_from_string(std::string_view str){ 
+  
+    static std::unordered_map<std::string_view, Item> map{ 
+        
+        { "", Item::none },
+        { "Leftovers", Item::leftovers },
+        { "LumBerry", Item::lumberry },
+        { "SalacBerry", Item::salacberry },
+        { "ChoiceBand", Item::choiceband },
+        { "ThickClub", Item::thickclub },
+        { "LightBall", Item::lightball },
+        { "DeepSeaScale", Item::deepseascale },
+        { "DeepSeaTooth", Item::deepseatooth },
+        { "BlackBelt", Item::blackbelt },
+        { "SharpBeak", Item::sharpbeak },
+        { "MetalCoat", Item::metalcoat },
+        { "PoisonBarb", Item::poisonbarb },
+        { "SoftSand", Item::softsand },
+        { "SilkScarf", Item::silkscarf },
+        { "SpellTag", Item::spelltag },
+        { "BlackGlasses", Item::blackglasses },
+        { "Charcoal", Item::charcoal },
+        { "Magnet", Item::magnet },
+        { "DragonFang", Item::dragonfang },
+        { "MiracleSeed", Item::miracleseed },
+        { "MysticWater", Item::mysticwater },
+        { "SeaIncense", Item::seaincense },
+        { "NeverMeltIce", Item::nevermeltice },
+        { "TwistedSpoon", Item::twistedspoon },
+        { "ScopeLens", Item::scopelens },
+        { "Stick", Item::stick },
+        { "ApicotBerry", Item::apicotberry },
+        { "BrightPowder", Item::brightpowder },
+        { "ChestoBerry", Item::chestoberry },
+        { "GanlonBerry", Item::ganlonberry },
+        { "GrepaBerry", Item::grepaberry },
+        { "HardStone", Item::hardstone },
+        { "KelpsyBerry", Item::kelpsyberry },
+        { "KingsRock", Item::kingsrock },
+        { "LansatBerry", Item::lansatberry },
+        { "LaxIncense", Item::laxincense },
+        { "SoulDew", Item::souldew },
+        { "LeppaBerry", Item::leppaberry },
+        { "LiechiBerr", Item::liechiberry },
+        { "Mail", Item::mail },
+        { "PetayaBerry", Item::petayaberry },
+        { "QuickClaw", Item::quickclaw },
+        { "ShellBell", Item::shellbell },
+        { "SilverPowder", Item::silverpowder },
+        { "StarfBerry", Item::starfberry },
+        { "WhiteHerb", Item::whiteherb },
+        { "LuckyPunch", Item::luckypunch },
+        { "MetalPowder", Item::metalpowder },
+        { "AguavBerry", Item::aguavberry },
+        { "AspearBerry", Item::aspearberry },
+        { "CheriBerry", Item::cheriberry },
+        { "FigyBerry", Item::figyberry },
+        { "FocusBand", Item::focusband },
+        { "IapapaBerry", Item::iapapaberry },
+        { "MachoBrace", Item::machobrace },
+        { "MagoBerry", Item::magoberry },
+        { "MentalBerry", Item::mentalberry },
+        { "OranBerry", Item::oranberry },
+        { "PechaBerry", Item::pechaberry },
+        { "PersimBerry", Item::persimberry },
+        { "RawstBerry", Item::rawstberry },
+        { "SitrusBerry", Item::sitrusberry },
+        { "WikiBerry", Item::wikiberry },
+    };
+
+    return map[str];
 }

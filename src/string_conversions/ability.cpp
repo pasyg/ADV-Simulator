@@ -83,233 +83,87 @@ std::string_view to_string(Ability const ability) {
     }
 }
 
-Ability ability_from_string(std::string_view str){
-	if(str == "Stench"){
-		return Ability::Stench;
-	}
-	else if(str == "Drizzle"){
-		return Ability::Drizzle;
-	}
-	else if(str == "SpeedBoost"){
-		return Ability::Speed_Boost;
-	}
-	else if(str == "BattleArmor"){
-		return Ability::Battle_Armor;
-	}
-	else if(str == "Sturdy"){
-		return Ability::Sturdy;
-	}
-	else if(str == "Damp"){
-		return Ability::Damp;
-	}
-	else if(str == "Limber"){
-		return Ability::Limber;
-	}
-	else if(str == "SandVeil"){
-		return Ability::Sand_Veil;
-	}
-	else if(str == "Static"){
-		return Ability::Static;
-	}
-	else if(str == "VoltAbsorb"){
-		return Ability::Volt_Absorb;
-	}
-	else if(str == "WaterAbsorb"){
-		return Ability::Water_Absorb;
-	}
-	else if(str == "Oblivious"){
-		return Ability::Oblivious;
-	}
-	else if(str == "CloudNine"){
-		return Ability::Cloud_Nine;
-	}
-	else if(str == "CompoundEyes"){
-		return Ability::Compound_Eyes;
-	}
-	else if(str == "Insomnia"){
-		return Ability::Insomnia;
-	}
-	else if(str == "ColorChange"){
-		return Ability::Color_Change;
-	}
-	else if(str == "Immunity"){
-		return Ability::Immunity;
-	}
-	else if(str == "FlashFire"){
-		return Ability::Flash_Fire;
-	}
-	else if(str == "ShieldDust"){
-		return Ability::Shield_Dust;
-	}
-	else if(str == "OwnTempo"){
-		return Ability::Own_Tempo;
-	}
-	else if(str == "SuctionCups"){
-		return Ability::Suction_Cups;
-	}
-	else if(str == "Intimidate"){
-		return Ability::Intimidate;
-	}
-	else if(str == "ShadowTag"){
-		return Ability::Shadow_Tag;
-	}
-	else if(str == "RoughSkin"){
-		return Ability::Rough_Skin;
-	}
-	else if(str == "WonderGuard"){
-		return Ability::Wonder_Guard;
-	}
-	else if(str == "Levitate"){
-		return Ability::Levitate;
-	}
-	else if(str == "EffectSpore"){
-		return Ability::Effect_Spore;
-	}
-	else if(str == "Synchronize"){
-		return Ability::Synchronize;
-	}
-	else if(str == "ClearBody"){
-		return Ability::Clear_Body;
-	}
-	else if(str == "NaturalCure"){
-		return Ability::Natural_Cure;
-	}
-	else if(str == "LightningRod"){
-		return Ability::Lightning_Rod;
-	}
-	else if(str == "SereneGrace"){
-		return Ability::Serene_Grace;
-	}
-	else if(str == "SwiftSwim"){
-		return Ability::Swift_Swim;
-	}
-	else if(str == "Chlorophyll"){
-		return Ability::Chlorophyll;
-	}
-	else if(str == "Illuminate"){
-		return Ability::Illuminate;
-	}
-	else if(str == "Trace"){
-		return Ability::Trace;
-	}
-	else if(str == "HugePower"){
-		return Ability::Huge_Power;
-	}
-	else if(str == "PoisonPoint"){
-		return Ability::Poison_Point;
-	}
-	else if(str == "InnerFocus"){
-		return Ability::Inner_Focus;
-	}
-	else if(str == "MagmaArmor"){
-		return Ability::Magma_Armor;
-	}
-	else if(str == "WaterVeil"){
-		return Ability::Water_Veil;
-	}
-	else if(str == "MagnetPull"){
-		return Ability::Magnet_Pull;
-	}
-	else if(str == "Soundproof"){
-		return Ability::Soundproof;
-	}
-	else if(str == "RainDish"){
-		return Ability::Rain_Dish;
-	}
-	else if(str == "SandStream"){
-		return Ability::Sand_Stream;
-	}
-	else if(str == "Pressure"){
-		return Ability::Pressure;
-	}
-	else if(str == "ThickFat"){
-		return Ability::Thick_Fat;
-	}
-	else if(str == "EarlyBird"){
-		return Ability::Early_Bird;
-	}
-	else if(str == "FlameBody"){
-		return Ability::Flame_Body;
-	}
-	else if(str == "RunAway"){
-		return Ability::Run_Away;
-	}
-	else if(str == "KeenEye"){
-		return Ability::Keen_Eye;
-	}
-	else if(str == "HyperCutter"){
-		return Ability::Hyper_Cutter;
-	}
-	else if(str == "Pickup"){
-		return Ability::Pickup;
-	}
-	else if(str == "Truant"){
-		return Ability::Truant;
-	}
-	else if(str == "Hustle"){
-		return Ability::Hustle;
-	}
-	else if(str == "CuteCharm"){
-		return Ability::Cute_Charm;
-	}
-	else if(str == "Plus"){
-		return Ability::Plus;
-	}
-	else if(str == "Minus"){
-		return Ability::Minus;
-	}
-	else if(str == "Forecast"){
-		return Ability::Forecast;
-	}
-	else if(str == "StickyHold"){
-		return Ability::Sticky_Hold;
-	}
-	else if(str == "ShedSkin"){
-		return Ability::Shed_Skin;
-	}
-	else if(str == "Guts"){
-		return Ability::Guts;
-	}
-	else if(str == "MarvelScale"){
-		return Ability::Marvel_Scale;
-	}
-	else if(str == "LiquidOoze"){
-		return Ability::Liquid_Ooze;
-	}
-	else if(str == "Overgrow"){
-		return Ability::Overgrow;
-	}
-	else if(str == "Blaze"){
-		return Ability::Blaze;
-	}
-	else if(str == "Torrent"){
-		return Ability::Torrent;
-	}
-	else if(str == "Swarm"){
-		return Ability::Swarm;
-	}
-	else if(str == "RockHead"){
-		return Ability::Rock_Head;
-	}
-	else if(str == "Drought"){
-		return Ability::Drought;
-	}
-	else if(str == "ArenaTrap"){
-		return Ability::Arena_Trap;
-	}
-	else if(str == "VitalSpirit"){
-		return Ability::Vital_Spirit;
-	}
-	else if(str == "WhiteSmoke"){
-		return Ability::White_Smoke;
-	}
-	else if(str == "PurePower"){
-		return Ability::Pure_Power;
-	}
-	else if(str == "ShellArmor"){
-		return Ability::Shell_Armor;
-	}
-	else{
-		return Ability::Air_Lock;
-	}
+Ability ability_from_string(std::string_view const str){
+	
+    static std::unordered_map<std::string_view, Ability> map{
+        
+        {"Stench", Ability::Stench},
+        {"Drizzle", Ability::Drizzle},
+        {"SpeedBoost", Ability::Speed_Boost},
+        {"BattleArmor", Ability::Battle_Armor},
+        {"Sturdy", Ability::Sturdy},
+        {"Damp", Ability::Damp},
+        {"Limber", Ability::Limber},
+        {"SandVeil", Ability::Sand_Veil},
+        {"Static", Ability::Static},
+        {"VoltAbsorb", Ability::Volt_Absorb},
+        {"WaterAbsorb", Ability::Water_Absorb},
+        {"Oblivious", Ability::Oblivious},
+        {"CloudNine", Ability::Cloud_Nine},
+        {"CompoundEyes", Ability::Compound_Eyes},
+        {"Insomnia", Ability::Insomnia},
+        {"ColorChange", Ability::Color_Change},
+        {"Immunity", Ability::Immunity},
+        {"FlashFire", Ability::Flash_Fire},
+        {"ShieldDust", Ability::Shield_Dust},
+        {"OwnTempo", Ability::Own_Tempo},
+        {"SuctionCups", Ability::Suction_Cups},
+        {"Intimidate", Ability::Intimidate},
+        {"ShadowTag", Ability::Shadow_Tag},
+        {"RoughSkin", Ability::Rough_Skin},
+        {"WonderGuard", Ability::Wonder_Guard},
+        {"Levitate", Ability::Levitate},
+        {"EffectSpore", Ability::Effect_Spore},
+        {"Synchronize", Ability::Synchronize},
+        {"ClearBody", Ability::Clear_Body},
+        {"NaturalCure", Ability::Natural_Cure},
+        {"LightningRod", Ability::Lightning_Rod},
+        {"SereneGrace", Ability::Serene_Grace},
+        {"SwiftSwim", Ability::Swift_Swim},
+        {"Chlorophyll", Ability::Chlorophyll},
+        {"Illuminate", Ability::Illuminate},
+        {"Trace", Ability::Trace},
+        {"HugePower", Ability::Huge_Power},
+        {"PoisonPoint", Ability::Poison_Point},
+        {"InnerFocus", Ability::Inner_Focus},
+        {"MagmaArmor", Ability::Magma_Armor},
+        {"WaterVeil", Ability::Water_Veil},
+        {"MagnetPull", Ability::Magnet_Pull},
+        {"Soundproof", Ability::Soundproof},
+        {"RainDish", Ability::Rain_Dish},
+        {"SandStream", Ability::Sand_Stream},
+        {"Pressure", Ability::Pressure},
+        {"ThickFat", Ability::Thick_Fat},
+        {"EarlyBird", Ability::Early_Bird},
+        {"FlameBody", Ability::Flame_Body},
+        {"RunAway", Ability::Run_Away},
+        {"KeenEye", Ability::Keen_Eye},
+        {"HyperCutter", Ability::Hyper_Cutter},
+        {"Pickup", Ability::Pickup},
+        {"Truant", Ability::Truant},
+        {"Hustle", Ability::Hustle},
+        {"CuteCharm", Ability::Cute_Charm},
+        {"Plus", Ability::Plus},
+        {"Minus", Ability::Minus},
+        {"Forecast", Ability::Forecast},
+        {"StickyHold", Ability::Sticky_Hold},
+        {"ShedSkin", Ability::Shed_Skin},
+        {"Guts", Ability::Guts},
+        {"MarvelScale", Ability::Marvel_Scale},
+        {"LiquidOoze", Ability::Liquid_Ooze},
+        {"Overgrow", Ability::Overgrow},
+        {"Blaze", Ability::Blaze},
+        {"Torrent", Ability::Torrent},
+        {"Swarm", Ability::Swarm},
+        {"RockHead", Ability::Rock_Head},
+        {"Drought", Ability::Drought},
+        {"ArenaTrap", Ability::Arena_Trap},
+        {"VitalSpirit", Ability::Vital_Spirit},
+        {"WhiteSmoke", Ability::White_Smoke},
+        {"PurePower", Ability::Pure_Power},
+        {"ShellArmor", Ability::Shell_Armor},
+        {"AirLock", Ability::Air_Lock}
+    };
+
+	return map[str];
 }

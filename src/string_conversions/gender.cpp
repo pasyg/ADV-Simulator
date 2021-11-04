@@ -11,11 +11,14 @@ std::string to_string(Gender const name){
     }
 }
 
-Gender gender_from_string(std::string_view str){
-    if(str == "M"){
-        return Gender::male;
-    }
-    else if(str == "F"){
-        return Gender::female;
-    }
+Gender gender_from_string(std::string_view const str){
+
+    static std::unordered_map<std::string_view, Gender> map{
+        
+        {"M", Gender::male },
+        {"F", Gender::female },
+        {"", Gender::genderless }
+    };
+
+    return map[str];
 }

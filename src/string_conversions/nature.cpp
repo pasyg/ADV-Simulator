@@ -1,7 +1,7 @@
 #include "string_conversions/nature.hpp"
 
-std::string_view to_string(Nature const name){
-    switch(name){
+std::string_view to_string(Nature const name){ 
+    switch(name){ 
         case Nature::adamant: return "adamant";
         case Nature::bashful: return "bashful";
         case Nature::bold: return "bold";
@@ -31,80 +31,36 @@ std::string_view to_string(Nature const name){
     }
 }
 
-Nature nature_from_string(std::string_view str){
-    if(str == "Adamant"){
-        return Nature::adamant;
-    }
-    else if(str == "Bashful"){
-        return Nature::bashful;
-    }
-    else if(str == "Bold"){
-        return Nature::bold;
-    }
-    else if(str == "Brave"){
-        return Nature::brave;
-    }
-    else if(str == "Calm"){
-        return Nature::calm;
-    }
-    else if(str == "Careful"){
-        return Nature::careful;
-    }
-    else if(str == "Docile"){
-        return Nature::docile;
-    }
-    else if(str == "Gentle"){
-        return Nature::gentle;
-    }
-    else if(str == "Hardy"){
-        return Nature::hardy;
-    }
-    else if(str == "Hasty"){
-        return Nature::hasty;
-    }
-    else if(str == "Impish"){
-        return Nature::impish;
-    }
-    else if(str == "Jolly"){
-        return Nature::jolly;
-    }
-    else if(str == "Lax"){
-        return Nature::lax;
-    }
-    else if(str == "Lonely"){
-        return Nature::lonely;
-    }
-    else if(str == "Mild"){
-        return Nature::mild;
-    }
-    else if(str == "Modest"){
-        return Nature::modest;
-    }
-    else if(str == "Naive"){
-        return Nature::naive;
-    }
-    else if(str == "Naughty"){
-        return Nature::naughty;
-    }
-    else if(str == "Quiet"){
-        return Nature::quiet;
-    }
-    else if(str == "Quirky"){
-        return Nature::quirky;
-    }
-    else if(str == "Rash"){
-        return Nature::rash;
-    }
-    else if(str == "Relaxed"){
-        return Nature::relaxed;
-    }
-    else if(str == "Sassy"){
-        return Nature::sassy;
-    }
-    else if(str == "Serious"){
-        return Nature::serious;
-    }
-    else{
-        return Nature::timid;
-    }
+Nature nature_from_string(std::string_view const str){ 
+
+    static std::unordered_map<std::string_view, Nature> map{ 
+        
+        { "Adamant", Nature::adamant },
+        { "Bashful", Nature::bashful },
+        { "Bold", Nature::bold },
+        { "Brave", Nature::brave },
+        { "Calm", Nature::calm },
+        { "Careful", Nature::careful },
+        { "Docile", Nature::docile },
+        { "Gentle", Nature::gentle },
+        { "Hardy", Nature::hardy },
+        { "Hasty", Nature::hasty },
+        { "Impish", Nature::impish },
+        { "Jolly", Nature::jolly },
+        { "Lax", Nature::lax },
+        { "Lonely", Nature::lonely },
+        { "Mild", Nature::mild },
+        { "Modest", Nature::modest },
+        { "Naive", Nature::naive },
+        { "Naughty", Nature::naughty },
+        { "Quiet", Nature::quiet },
+        { "Quirky", Nature::quirky },
+        { "Rash", Nature::rash },
+        { "Relaxed", Nature::relaxed },
+        { "Sassy", Nature::sassy },
+        { "Serious", Nature::serious },
+        { "Timid", Nature::timid }
+    };
+
+    return map[str];
 }

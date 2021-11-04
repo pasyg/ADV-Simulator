@@ -16,38 +16,21 @@ std::string_view to_string(Status const status){
     }
 }
 
-Status status_from_string(std::string_view str){
-    if(str == "healthy"){
-        return Status::healthy;
-    }
-    else if(str == "fainted"){
-        return Status::fainted;
-    }
-    else if(str == "paralysis"){
-        return Status::paralysis;
-    }
-    else if(str == "freeze"){
-        return Status::freeze;
-    }
-    else if(str == "sleep_self"){
-        return Status::sleep_self;
-    }
-    else if(str == "sleep_inflicted"){
-        return Status::sleep_inflicted;
-    }
-    else if(str == "confusion"){
-        return Status::confusion;
-    }
-    else if(str == "burn"){
-        return Status::burn;
-    }
-    else if(str == "poison"){
-        return Status::poison;
-    }
-    else if(str == "toxic_poison"){
-        return Status::toxic_poison;
-    }
-    else{
-        return Status::confusion;
-    }
+Status status_from_string(std::string_view const str){
+
+    static std::unordered_map<std::string_view, Status> map{
+        
+        { "healthy", Status::healthy },
+        { "fainted", Status::fainted },
+        { "paralysis", Status::paralysis },
+        { "freeze", Status::freeze },
+        { "sleepself", Status::sleep_self },
+        { "sleepinflict", Status::sleep_inflicted },
+        { "confusion", Status::confusion },
+        { "burn", Status::burn },
+        { "poison", Status::poison },
+        { "toxicpoison", Status::toxic_poison },
+    };
+
+    return map[str];
 }

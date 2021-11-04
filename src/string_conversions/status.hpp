@@ -1,9 +1,10 @@
 #pragma once
 
+#include <unordered_map>
 #include <string_view>
 
 #include "data/status.hpp"
 
 std::string_view to_string(Status const name);
 
-Status status_from_string(std::string_view str);
+Status status_from_string(std::string_view const str);
