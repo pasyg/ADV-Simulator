@@ -92,7 +92,7 @@ private:
     /// implied / initialized
     ///
     Stats basestats;
-    Status status = Status::healthy;
+    Status status = Status::Healthy;
     std::array<AttackMove, 4> moveset;
     std::array<Type, 2> type = {Type::Typeless, Type::Typeless};
     bool revealed = false;

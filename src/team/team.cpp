@@ -32,19 +32,19 @@ void Team::team_init(){
 
 int Team::get_boost(Statname stat){
     switch(stat){
-        case Statname::atk:
+        case Statname::Atk:
             return this->atkboost;
-        case Statname::def:
+        case Statname::Def:
             return this->defboost;
-        case Statname::satk:
+        case Statname::Satk:
             return this->satkboost;
-        case Statname::sdef:
+        case Statname::Sdef:
             return this->sdefboost;
-        case Statname::spe:
+        case Statname::Spe:
             return this->speboost;
-        case Statname::acc:
+        case Statname::Acc:
             return this->accboost;
-        case Statname::eva:
+        case Statname::Eva:
             return this->evaboost;
         default:
             std::cout << "ERROR GET_BOOST team.cpp" << std::endl;
@@ -77,7 +77,7 @@ void Team::get_move_options(){
             continue;
         }
         else{
-            if(this->member[i].get_status() != Status::fainted){
+            if(this->member[i].get_status() != Status::Fainted){
                 this->move_options.push_back(this->switches[i]);
             }
         }

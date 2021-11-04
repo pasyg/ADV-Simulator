@@ -11,7 +11,6 @@
 
 #include "string_conversions/gender.hpp"
 
-
 int main(int argc, char** argv[]) {
 #ifdef BENCHMARK
   Timer timer;

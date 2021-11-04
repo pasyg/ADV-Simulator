@@ -3,14 +3,14 @@
 #include <cstdint>
 
 enum class Status : std::uint8_t {
-	healthy,
-    fainted,
-    paralysis,
-	freeze,
-	sleep_self,
-	sleep_inflicted,
-	confusion,
-	burn,
-	poison,
-	toxic_poison
+	Healthy,
+    Fainted,
+    Paralysis,
+	Freeze,
+	Sleep_self,
+	Sleep_inflicted,
+	Confusion,
+	Burn,
+	Poison,
+	Toxic_poison
 };

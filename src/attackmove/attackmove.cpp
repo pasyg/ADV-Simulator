@@ -16,12 +16,12 @@ Move AttackMove::get_move(){
     return this->move;
 }
 
-void AttackMove::set_STAB(const bool STAB){
-    this->is_STAB = STAB;
+void AttackMove::set_stab(const bool stab){
+    this->is_stab = stab;
 }
 
-bool AttackMove::get_STAB() const{
-    return this->is_STAB;
+bool AttackMove::get_stab() const{
+    return this->is_stab;
 }
 
 void AttackMove::set_revealed(const bool revealed){
@@ -73,7 +73,7 @@ Category AttackMove::get_category() const{
 }
 
 int AttackMove::get_power() const{
-    return movepower(this->move);
+    return move_power(this->move);
 }
 
 bool AttackMove::get_disabled() const{

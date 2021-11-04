@@ -12,7 +12,7 @@ public:
     AttackMove();
     ~AttackMove();
 
-    void set_STAB(const bool STAB);
+    void set_stab(const bool STAB);
     void set_revealed(const bool revealed);
     void set_pp(const int pp);
     void set_type(const Type type);
@@ -23,7 +23,7 @@ public:
     void set_category(const Category category);
 
     int get_power() const;
-    bool get_STAB() const;
+    bool get_stab() const;
     bool get_revealed() const;
     int get_pp() const;
     Type get_type() const;
@@ -44,7 +44,7 @@ private:
     #ifndef OHKO_CLAUSE
     bool ohko = false;
     #endif
-    bool is_STAB = false;
+    bool is_stab = false;
     Move move;
     int pp = 0;
     Type type;

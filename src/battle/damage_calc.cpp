@@ -17,62 +17,62 @@ int Battle::item_ability_mult(int damage, const AttackMove &movechoice, const Po
     }
 
     if(atkmon.get_item_damage_boost()){
-        if(movechoice.get_category() == Category::physical){
+        if(movechoice.get_category() == Category::Physical){
 
-            if((item == Item::blackbelt) && (movetype == Type::Fighting)){
+            if((item == Item::Blackbelt) && (movetype == Type::Fighting)){
                 return static_cast<int>(damage * 1.1);
             }
-            if((item == Item::sharpbeak) && (movetype == Type::Flying)){
+            if((item == Item::Sharpbeak) && (movetype == Type::Flying)){
                 return static_cast<int>(damage * 1.1);
             }
-            if((item == Item::metalcoat) && (movetype == Type::Steel)){
+            if((item == Item::Metalcoat) && (movetype == Type::Steel)){
                 return static_cast<int>(damage * 1.1);
             }
-            if((item == Item::poisonbarb) && (movetype == Type::Poison)){
+            if((item == Item::Poisonbarb) && (movetype == Type::Poison)){
                 return static_cast<int>(damage * 1.1);
             }
-            if((item == Item::softsand) && (movetype == Type::Ground)){
+            if((item == Item::Softsand) && (movetype == Type::Ground)){
                 return static_cast<int>(damage * 1.1);
             }
-            if((item == Item::silkscarf) && (movetype == Type::Normal)){
+            if((item == Item::Silkscarf) && (movetype == Type::Normal)){
                 return static_cast<int>(damage * 1.1);
             }
-            if((item == Item::spelltag) && (movetype == Type::Ghost)){
+            if((item == Item::Spelltag) && (movetype == Type::Ghost)){
                 return static_cast<int>(damage * 1.1);
             }
-            if((item == Item::hardstone) && (movetype == Type::Rock)){
+            if((item == Item::Hardstone) && (movetype == Type::Rock)){
                 return static_cast<int>(damage * 1.1);
             }
-            if((item == Item::silverpowder) && (movetype == Type::Bug)){
+            if((item == Item::Silverpowder) && (movetype == Type::Bug)){
                 return static_cast<int>(damage * 1.1);
             }
     }
-    if(movechoice.get_category() == Category::special){
-        if((item == Item::blackglasses) && (movetype == Type::Dark)){
+    if(movechoice.get_category() == Category::Special){
+        if((item == Item::Blackglasses) && (movetype == Type::Dark)){
             return static_cast<int>(damage * 1.1);
         }
-        if((item == Item::charcoal) && (movetype == Type::Fire)){
+        if((item == Item::Charcoal) && (movetype == Type::Fire)){
             return static_cast<int>(damage * 1.1);
         }
-        if((item == Item::magnet) && (movetype == Type::Electric)){
+        if((item == Item::Magnet) && (movetype == Type::Electric)){
             return static_cast<int>(damage * 1.1);
         }
-        if((item == Item::dragonfang) && (movetype == Type::Dragon)){
+        if((item == Item::Dragonfang) && (movetype == Type::Dragon)){
             return static_cast<int>(damage * 1.1);
         }
-        if((item == Item::miracleseed) && (movetype == Type::Grass)){
+        if((item == Item::Miracleseed) && (movetype == Type::Grass)){
             return static_cast<int>(damage * 1.1);
         }
-        if((item == Item::mysticwater) && (movetype == Type::Water)){
+        if((item == Item::Mysticwater) && (movetype == Type::Water)){
             return static_cast<int>(damage * 1.1);
         }
-        if((item == Item::seaincense) && (movetype == Type::Water)){
+        if((item == Item::Seaincense) && (movetype == Type::Water)){
             return static_cast<int>(damage * 1.05);
         }
-        if((item == Item::nevermeltice) && (movetype == Type::Ice)){
+        if((item == Item::Nevermeltice) && (movetype == Type::Ice)){
             return static_cast<int>(damage * 1.1);
         }
-        if((item == Item::twistedspoon) && (movetype == Type::Psychic)){
+        if((item == Item::Twistedspoon) && (movetype == Type::Psychic)){
             return static_cast<int>(damage * 1.1);
         }
         if(defmon.get_ability() == Ability::Thick_Fat){
@@ -114,8 +114,10 @@ int Battle::calculate_damage(const int patkteam){
         defteam = &this->team[0];
     }
 
-    if(atkteam->movechoice->get_category() == Category::status){
-        std::cout << "ERROR CATEGORY DAMAGE CALC battle.cpp" << std::endl;
+    if(atkteam->movechoice->get_category() == Category::Status){
+    #ifdef _DEBUG
+        debug_log("ERROR CATEGORY DAMAGE CALC battle.cpp");
+    #endif
         return 0;
     }
 
@@ -137,16 +139,16 @@ int Battle::calculate_damage(const int patkteam){
     }
 
     // Check for physical / special
-    if(atkteam->movechoice->get_category() == Category::physical){
-        attack = Statname::atk;
-        defense = Statname::def;
+    if(atkteam->movechoice->get_category() == Category::Physical){
+        attack = Statname::Atk;
+        defense = Statname::Def;
         
         // Initialize attack value with boost
         atk_stat = get_stat_boosted(attack, *
         atkmon, atkteam->get_boost(attack));
         
         // attack boost abilities / items
-        if(atkmon->get_item() == Item::choiceband){
+        if(atkmon->get_item() == Item::Choiceband){
             atk_stat = static_cast<int>(atk_stat * 1.5);
         }
         if((atkmon->get_ability() == Ability::Huge_Power) || 
@@ -154,25 +156,25 @@ int Battle::calculate_damage(const int patkteam){
             atk_stat *= 2;
         }
         else if(atkmon->get_ability() == Ability::Guts){
-            if(atkmon->get_status() != Status::healthy){
+            if(atkmon->get_status() != Status::Healthy){
                 atk_stat *= 2;
             }
         }
-        else if(atkmon->get_item() == Item::thickclub){
+        else if(atkmon->get_item() == Item::Thickclub){
             if((atkmon->get_species() == Species::Marowak) || 
                (atkmon->get_species() == Species::Cubone)){
                 atk_stat *= 2;
             }
         }
-        if(atkmon->get_status() == Status::burn){
+        if(atkmon->get_status() == Status::Burn){
             if(atkmon->get_ability() != Ability::Guts){
                 burn = 2;
             }
         }
     }
-    else if(atkteam->movechoice->get_category() == Category::special){
-        attack = Statname::satk;
-        defense = Statname::sdef;
+    else if(atkteam->movechoice->get_category() == Category::Special){
+        attack = Statname::Satk;
+        defense = Statname::Sdef;
         // Initialize attack value with boost
         atk_stat = get_stat_boosted(attack, *atkmon, atkteam->get_boost(attack));
     }
@@ -206,7 +208,7 @@ int Battle::calculate_damage(const int patkteam){
     damage += 2;
 
     // STAB
-    if(atkteam->movechoice->get_STAB()){
+    if(atkteam->movechoice->get_stab()){
         damage = static_cast<int>(damage * 1.5);
     }
 
@@ -215,7 +217,7 @@ int Battle::calculate_damage(const int patkteam){
     ///
 
     // Weather effects
-    if(this->weather == Weather::rain){
+    if(this->weather == Weather::Rain){
         if(atkteam->movechoice->get_type() == Type::Water){
             damage = static_cast<int>(damage * 1.5);
         }
@@ -223,7 +225,7 @@ int Battle::calculate_damage(const int patkteam){
             damage = static_cast<int>(damage / 2.0);
         }
     }
-    if(this->weather == Weather::sun){
+    if(this->weather == Weather::Sun){
         if(atkteam->movechoice->get_type() == Type::Fire){
             damage = static_cast<int>(damage * 1.5);
         }

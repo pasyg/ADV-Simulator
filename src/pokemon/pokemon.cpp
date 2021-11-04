@@ -32,7 +32,7 @@ void Pokemon::set_revealed(const bool p_revealed){
 }
 
 void Pokemon::remove_item(){
-    this->item = Item::none;
+    this->item = Item::None;
 }
 
 void Pokemon::set_item(const Item p_item){
@@ -49,15 +49,15 @@ Stats Pokemon::get_ivs() const{
 
 int Pokemon::get_stat(const Statname stat) const{
     switch(stat){
-        case Statname::atk:
+        case Statname::Atk:
             return this->stats.atk;
-        case Statname::def:
+        case Statname::Def:
             return this->stats.def;
-        case Statname::satk:
+        case Statname::Satk:
             return this->stats.satk;
-        case Statname::sdef:
+        case Statname::Sdef:
             return this->stats.sdef;
-        case Statname::spe:
+        case Statname::Spe:
             return this->stats.spe;
         default:
             std::cout << "ERROR GET_STAT pokemon.cpp" << std::endl;
@@ -210,83 +210,83 @@ void Pokemon::stat_init(){
 
     switch (this->nature)
     {
-    case Nature::adamant:
+    case Nature::Adamant:
     this->stats.atk = pos_nature(this->stats.atk);
     this->stats.satk = neg_nature(this->stats.satk);
         break;
-    case Nature::bold:
+    case Nature::Bold:
     this->stats.def = pos_nature(this->stats.def);
     this->stats.atk = neg_nature(this->stats.atk);
         break;
-    case Nature::brave:
+    case Nature::Brave:
     this->stats.atk = pos_nature(this->stats.atk);
     this->stats.spe = neg_nature(this->stats.spe);
         break;
-    case Nature::calm:
+    case Nature::Calm:
     this->stats.sdef = pos_nature(this->stats.sdef);
     this->stats.atk = neg_nature(this->stats.atk);
         break;
-    case Nature::careful:
+    case Nature::Careful:
     this->stats.sdef = pos_nature(this->stats.sdef);
     this->stats.satk = neg_nature(this->stats.satk);
         break;
-    case Nature::gentle:
+    case Nature::Gentle:
     this->stats.sdef = pos_nature(this->stats.sdef);
     this->stats.def = neg_nature(this->stats.def);
         break;
-    case Nature::hasty:
+    case Nature::Hasty:
     this->stats.spe = pos_nature(this->stats.spe);
     this->stats.def = neg_nature(this->stats.def);
         break;
-    case Nature::impish:
+    case Nature::Impish:
     this->stats.def = pos_nature(this->stats.def);
     this->stats.satk = neg_nature(this->stats.satk);
         break;
-    case Nature::jolly:
+    case Nature::Jolly:
     this->stats.spe = pos_nature(this->stats.spe);
     this->stats.satk = neg_nature(this->stats.satk);
         break;
-    case Nature::lax:
+    case Nature::Lax:
     this->stats.def = pos_nature(this->stats.def);
     this->stats.sdef = neg_nature(this->stats.sdef);
         break;
-    case Nature::lonely:
+    case Nature::Lonely:
     this->stats.atk = pos_nature(this->stats.atk);
     this->stats.def = neg_nature(this->stats.def);
         break;
-    case Nature::mild:
+    case Nature::Mild:
     this->stats.satk = pos_nature(this->stats.satk);
     this->stats.def = neg_nature(this->stats.def);
         break;
-    case Nature::modest:
+    case Nature::Modest:
     this->stats.satk = pos_nature(this->stats.satk);
     this->stats.atk = neg_nature(this->stats.atk);
         break;
-    case Nature::naive:
+    case Nature::Naive:
     this->stats.spe = pos_nature(this->stats.spe);
     this->stats.sdef = neg_nature(this->stats.sdef);
         break;
-    case Nature::naughty:
+    case Nature::Naughty:
     this->stats.atk = pos_nature(this->stats.atk);
     this->stats.sdef = neg_nature(this->stats.sdef);
         break;
-    case Nature::quiet:
+    case Nature::Quiet:
     this->stats.satk = pos_nature(this->stats.satk);
     this->stats.spe = neg_nature(this->stats.spe);
         break;
-    case Nature::rash:
+    case Nature::Rash:
     this->stats.satk = pos_nature(this->stats.satk);
     this->stats.sdef = neg_nature(this->stats.sdef);
         break;
-    case Nature::relaxed:
+    case Nature::Relaxed:
     this->stats.def = pos_nature(this->stats.def);
     this->stats.spe = neg_nature(this->stats.spe);
         break;
-    case Nature::sassy:
+    case Nature::Sassy:
     this->stats.sdef = pos_nature(this->stats.sdef);
     this->stats.spe = neg_nature(this->stats.spe);
         break;
-    case Nature::timid:
+    case Nature::Timid:
     this->stats.spe = pos_nature(this->stats.spe);
     this->stats.atk = neg_nature(this->stats.atk);
         break;

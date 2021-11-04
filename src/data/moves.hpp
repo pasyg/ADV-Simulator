@@ -757,6 +757,6 @@ enum class Move : std::uint16_t{
 	Double_Iron_Bash
 };
 
-int movepower(const Move move);
-int moveaccuracy(const Move move, const Weather weather);
-int moveprio(const Move move);
+int move_power(const Move move);
+int move_accuracy(const Move move, const Weather weather);
+int move_prio(const Move move);

@@ -9,7 +9,7 @@
 	- Ohko Move
 */
 
-int movepower(const Move move){
+int move_power(const Move move){
     switch (move) {	
 		case Move::Pass: 			return 0;
 		case Move::Switch0: 		return 0;
@@ -380,7 +380,7 @@ int movepower(const Move move){
 }
 // -1 for perfect accuracy
 // -2 for moves without accuracy check, ever
-int moveaccuracy(const Move move, const Weather weather){
+int move_accuracy(const Move move, const Weather weather){
     switch (move) {
 		case Move::Pass: 			return -2;
 		case Move::Switch0: 		return -2;
@@ -449,7 +449,7 @@ int moveaccuracy(const Move move, const Weather weather){
 		case Move::Surf: 			return 100;
 		case Move::Ice_Beam: 		return 100;
 		case Move::Blizzard:
-			return weather == Weather::hail ? -1 : 70;
+			return weather == Weather::Hail ? -1 : 70;
 		case Move::Psybeam: 		return 100;
 		case Move::Bubble_Beam: 	return 100;
 		case Move::Aurora_Beam: 	return 100;
@@ -478,10 +478,10 @@ int moveaccuracy(const Move move, const Weather weather){
 		case Move::Thunderbolt: 	return 100;
 		case Move::Thunder_Wave: 	return 100;
 		case Move::Thunder:
-			if(weather == Weather::rain){
+			if(weather == Weather::Rain){
 				return -1;
 			}
-			else if(weather == Weather::sun){
+			else if(weather == Weather::Sun){
 				return 50;
 			}
 			else{
@@ -758,7 +758,7 @@ int moveaccuracy(const Move move, const Weather weather){
     }
 }
 
-int moveprio(const Move move){
+int move_prio(const Move move){
 	switch(move){
 		case Move::Switch:
 			return 6;

@@ -2,31 +2,31 @@
 
 std::string_view to_string(Nature const name){ 
     switch(name){ 
-        case Nature::adamant: return "adamant";
-        case Nature::bashful: return "bashful";
-        case Nature::bold: return "bold";
-        case Nature::brave: return "brave";
-        case Nature::calm: return "calm";
-        case Nature::careful: return "careful";
-        case Nature::docile: return "docile";
-        case Nature::gentle: return "gentle";
-        case Nature::hardy: return "hardy";
-        case Nature::hasty: return "hasty";
-        case Nature::impish: return "impish";
-        case Nature::jolly: return "jolly";
-        case Nature::lax: return "lax";
-        case Nature::lonely: return "lonely";
-        case Nature::mild: return "mild";
-        case Nature::modest: return "modest";
-        case Nature::naive: return "naive";
-        case Nature::naughty: return "naughty";
-        case Nature::quiet: return "quiet";
-        case Nature::quirky: return "quirky";
-        case Nature::rash: return "rash";
-        case Nature::relaxed: return "relaxed";
-        case Nature::sassy: return "sassy";
-        case Nature::serious: return "serious";
-        case Nature::timid: return "timid";
+        case Nature::Adamant: return "adamant";
+        case Nature::Bashful: return "bashful";
+        case Nature::Bold: return "bold";
+        case Nature::Brave: return "brave";
+        case Nature::Calm: return "calm";
+        case Nature::Careful: return "careful";
+        case Nature::Docile: return "docile";
+        case Nature::Gentle: return "gentle";
+        case Nature::Hardy: return "hardy";
+        case Nature::Hasty: return "hasty";
+        case Nature::Impish: return "impish";
+        case Nature::Jolly: return "jolly";
+        case Nature::Lax: return "lax";
+        case Nature::Lonely: return "lonely";
+        case Nature::Mild: return "mild";
+        case Nature::Modest: return "modest";
+        case Nature::Naive: return "naive";
+        case Nature::Naughty: return "naughty";
+        case Nature::Quiet: return "quiet";
+        case Nature::Quirky: return "quirky";
+        case Nature::Rash: return "rash";
+        case Nature::Relaxed: return "relaxed";
+        case Nature::Sassy: return "sassy";
+        case Nature::Serious: return "serious";
+        case Nature::Timid: return "timid";
         default: return "ERROR natures";
     }
 }
@@ -35,31 +35,31 @@ Nature nature_from_string(std::string_view const str){
 
     static std::unordered_map<std::string_view, Nature> map{ 
         
-        { "Adamant", Nature::adamant },
-        { "Bashful", Nature::bashful },
-        { "Bold", Nature::bold },
-        { "Brave", Nature::brave },
-        { "Calm", Nature::calm },
-        { "Careful", Nature::careful },
-        { "Docile", Nature::docile },
-        { "Gentle", Nature::gentle },
-        { "Hardy", Nature::hardy },
-        { "Hasty", Nature::hasty },
-        { "Impish", Nature::impish },
-        { "Jolly", Nature::jolly },
-        { "Lax", Nature::lax },
-        { "Lonely", Nature::lonely },
-        { "Mild", Nature::mild },
-        { "Modest", Nature::modest },
-        { "Naive", Nature::naive },
-        { "Naughty", Nature::naughty },
-        { "Quiet", Nature::quiet },
-        { "Quirky", Nature::quirky },
-        { "Rash", Nature::rash },
-        { "Relaxed", Nature::relaxed },
-        { "Sassy", Nature::sassy },
-        { "Serious", Nature::serious },
-        { "Timid", Nature::timid }
+        { "Adamant", Nature::Adamant },
+        { "Bashful", Nature::Bashful },
+        { "Bold", Nature::Bold },
+        { "Brave", Nature::Brave },
+        { "Calm", Nature::Calm },
+        { "Careful", Nature::Careful },
+        { "Docile", Nature::Docile },
+        { "Gentle", Nature::Gentle },
+        { "Hardy", Nature::Hardy },
+        { "Hasty", Nature::Hasty },
+        { "Impish", Nature::Impish },
+        { "Jolly", Nature::Jolly },
+        { "Lax", Nature::Lax },
+        { "Lonely", Nature::Lonely },
+        { "Mild", Nature::Mild },
+        { "Modest", Nature::Modest },
+        { "Naive", Nature::Naive },
+        { "Naughty", Nature::Naughty },
+        { "Quiet", Nature::Quiet },
+        { "Quirky", Nature::Quirky },
+        { "Rash", Nature::Rash },
+        { "Relaxed", Nature::Relaxed },
+        { "Sassy", Nature::Sassy },
+        { "Serious", Nature::Serious },
+        { "Timid", Nature::Timid }
     };
 
     return map[str];

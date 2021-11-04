@@ -3,7 +3,7 @@
 #include "species.hpp"
 
 ///
-/// structure structs for easy handling with IVs, EVs,
+/// stat structs for easy handling with IVs, EVs,
 /// base stats and real stats and easy function returns
 /// 
 

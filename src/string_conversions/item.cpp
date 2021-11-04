@@ -2,70 +2,70 @@
 
 std::string to_string(Item const item){
     switch(item){
-        case Item::none: return "none";
-        case Item::choiceband: return "Leftovers";
-        case Item::leftovers: return "Leftovers";
-        case Item::lumberry: return "Lum Berry";
-        case Item::salacberry: return "Salac Berry";
-        case Item::apicotberry: return "Apicot Berry";
-        case Item::blackbelt: return "Black Belt";
-        case Item::blackglasses: return "Black Glasses";
-        case Item::brightpowder: return "Bright Powder";
-        case Item::charcoal: return "Charcoal";
-        case Item::chestoberry: return "Chesto Berry";
-        case Item::dragonfang: return "Dragon Fang";
-        case Item::ganlonberry: return "Ganlon Berry";
-        case Item::grepaberry: return "Grepa Berry";
-        case Item::hardstone: return "Hard Stone";
-        case Item::kelpsyberry: return "Kelpsy Berry";
-        case Item::kingsrock: return "Kings Rock";
-        case Item::lansatberry: return "Lansat Berry";
-        case Item::laxincense: return "Lax Incense";
-        case Item::leppaberry: return "Leppa Berry";
-        case Item::liechiberry: return "Liechi Berry";
-        case Item::magnet: return "Magnet";
-        case Item::mail: return "Mail";
-        case Item::metalcoat: return "Metal Coat";
-        case Item::miracleseed: return "Miracle Seed";
-        case Item::mysticwater: return "Mystic Water";
-        case Item::nevermeltice: return "Never Melt Ice";
-        case Item::petayaberry: return "Petaya Berry";
-        case Item::poisonbarb: return "Poison Barb";
-        case Item::quickclaw: return "Quick Claw";
-        case Item::scopelens: return "Scope Lens";
-        case Item::seaincense: return "Sea Incense";
-        case Item::sharpbeak: return "Sharp Beak";
-        case Item::shellbell: return "Shell Bell";
-        case Item::silkscarf: return "Silk Scarf";
-        case Item::silverpowder: return "Silver Powder";
-        case Item::softsand: return "Soft Sand";
-        case Item::spelltag: return "Spell Tag";
-        case Item::starfberry: return "Starf Berry";
-        case Item::twistedspoon: return "Twisted Spoon";
-        case Item::whiteherb: return "White Herb";
-        case Item::deepseascale: return "Deep Sea Scale";
-        case Item::deepseatooth: return "Deep Sea Tooth";
-        case Item::lightball: return "Light Ball";
-        case Item::luckypunch: return "Lucky Punch";
-        case Item::metalpowder: return "Metal Powder";
-        case Item::souldew: return "Soul Dew";
-        case Item::stick: return "Stick";
-        case Item::thickclub: return "Thick Club";
-        case Item::aguavberry: return "Aguav Berry";
-        case Item::aspearberry: return "Aspear Berry";
-        case Item::cheriberry: return "Cheri Berry";
-        case Item::figyberry: return "Figy Berry";
-        case Item::focusband: return "Focus Band";
-        case Item::iapapaberry: return "Iapapa Berry";
-        case Item::machobrace: return "Macho Brace";
-        case Item::magoberry: return "Mago Berry";
-        case Item::rawstberry: return "Rawst Berry";
-        case Item::mentalberry: return "Mental Berry";
-        case Item::oranberry: return "Oran Berry";
-        case Item::pechaberry: return "Pecha Berry";
-        case Item::persimberry: return "Persim Berry";
-        case Item::sitrusberry: return "Sitrus Berry";
-        case Item::wikiberry: return "Wiki Berry";
+        case Item::None: return "none";
+        case Item::Choiceband: return "Leftovers";
+        case Item::Leftovers: return "Leftovers";
+        case Item::Lumberry: return "Lum Berry";
+        case Item::Salacberry: return "Salac Berry";
+        case Item::Apicotberry: return "Apicot Berry";
+        case Item::Blackbelt: return "Black Belt";
+        case Item::Blackglasses: return "Black Glasses";
+        case Item::Brightpowder: return "Bright Powder";
+        case Item::Charcoal: return "Charcoal";
+        case Item::Chestoberry: return "Chesto Berry";
+        case Item::Dragonfang: return "Dragon Fang";
+        case Item::Ganlonberry: return "Ganlon Berry";
+        case Item::Grepaberry: return "Grepa Berry";
+        case Item::Hardstone: return "Hard Stone";
+        case Item::Kelpsyberry: return "Kelpsy Berry";
+        case Item::Kingsrock: return "Kings Rock";
+        case Item::Lansatberry: return "Lansat Berry";
+        case Item::Laxincense: return "Lax Incense";
+        case Item::Leppaberry: return "Leppa Berry";
+        case Item::Liechiberry: return "Liechi Berry";
+        case Item::Magnet: return "Magnet";
+        case Item::Mail: return "Mail";
+        case Item::Metalcoat: return "Metal Coat";
+        case Item::Miracleseed: return "Miracle Seed";
+        case Item::Mysticwater: return "Mystic Water";
+        case Item::Nevermeltice: return "Never Melt Ice";
+        case Item::Petayaberry: return "Petaya Berry";
+        case Item::Poisonbarb: return "Poison Barb";
+        case Item::Quickclaw: return "Quick Claw";
+        case Item::Scopelens: return "Scope Lens";
+        case Item::Seaincense: return "Sea Incense";
+        case Item::Sharpbeak: return "Sharp Beak";
+        case Item::Shellbell: return "Shell Bell";
+        case Item::Silkscarf: return "Silk Scarf";
+        case Item::Silverpowder: return "Silver Powder";
+        case Item::Softsand: return "Soft Sand";
+        case Item::Spelltag: return "Spell Tag";
+        case Item::Starfberry: return "Starf Berry";
+        case Item::Twistedspoon: return "Twisted Spoon";
+        case Item::Whiteherb: return "White Herb";
+        case Item::Deepseascale: return "Deep Sea Scale";
+        case Item::Deepseatooth: return "Deep Sea Tooth";
+        case Item::Lightball: return "Light Ball";
+        case Item::Luckypunch: return "Lucky Punch";
+        case Item::Metalpowder: return "Metal Powder";
+        case Item::Souldew: return "Soul Dew";
+        case Item::Stick: return "Stick";
+        case Item::Thickclub: return "Thick Club";
+        case Item::Aguavberry: return "Aguav Berry";
+        case Item::Aspearberry: return "Aspear Berry";
+        case Item::Cheriberry: return "Cheri Berry";
+        case Item::Figyberry: return "Figy Berry";
+        case Item::Focusband: return "Focus Band";
+        case Item::Iapapaberry: return "Iapapa Berry";
+        case Item::Machobrace: return "Macho Brace";
+        case Item::Magoberry: return "Mago Berry";
+        case Item::Rawstberry: return "Rawst Berry";
+        case Item::Mentalberry: return "Mental Berry";
+        case Item::Oranberry: return "Oran Berry";
+        case Item::Pechaberry: return "Pecha Berry";
+        case Item::Persimberry: return "Persim Berry";
+        case Item::Sitrusberry: return "Sitrus Berry";
+        case Item::Wikiberry: return "Wiki Berry";
         default: return "ERROR item";
     }
 }
@@ -74,70 +74,70 @@ Item item_from_string(std::string_view str){
   
     static std::unordered_map<std::string_view, Item> map{ 
         
-        { "", Item::none },
-        { "Leftovers", Item::leftovers },
-        { "LumBerry", Item::lumberry },
-        { "SalacBerry", Item::salacberry },
-        { "ChoiceBand", Item::choiceband },
-        { "ThickClub", Item::thickclub },
-        { "LightBall", Item::lightball },
-        { "DeepSeaScale", Item::deepseascale },
-        { "DeepSeaTooth", Item::deepseatooth },
-        { "BlackBelt", Item::blackbelt },
-        { "SharpBeak", Item::sharpbeak },
-        { "MetalCoat", Item::metalcoat },
-        { "PoisonBarb", Item::poisonbarb },
-        { "SoftSand", Item::softsand },
-        { "SilkScarf", Item::silkscarf },
-        { "SpellTag", Item::spelltag },
-        { "BlackGlasses", Item::blackglasses },
-        { "Charcoal", Item::charcoal },
-        { "Magnet", Item::magnet },
-        { "DragonFang", Item::dragonfang },
-        { "MiracleSeed", Item::miracleseed },
-        { "MysticWater", Item::mysticwater },
-        { "SeaIncense", Item::seaincense },
-        { "NeverMeltIce", Item::nevermeltice },
-        { "TwistedSpoon", Item::twistedspoon },
-        { "ScopeLens", Item::scopelens },
-        { "Stick", Item::stick },
-        { "ApicotBerry", Item::apicotberry },
-        { "BrightPowder", Item::brightpowder },
-        { "ChestoBerry", Item::chestoberry },
-        { "GanlonBerry", Item::ganlonberry },
-        { "GrepaBerry", Item::grepaberry },
-        { "HardStone", Item::hardstone },
-        { "KelpsyBerry", Item::kelpsyberry },
-        { "KingsRock", Item::kingsrock },
-        { "LansatBerry", Item::lansatberry },
-        { "LaxIncense", Item::laxincense },
-        { "SoulDew", Item::souldew },
-        { "LeppaBerry", Item::leppaberry },
-        { "LiechiBerr", Item::liechiberry },
-        { "Mail", Item::mail },
-        { "PetayaBerry", Item::petayaberry },
-        { "QuickClaw", Item::quickclaw },
-        { "ShellBell", Item::shellbell },
-        { "SilverPowder", Item::silverpowder },
-        { "StarfBerry", Item::starfberry },
-        { "WhiteHerb", Item::whiteherb },
-        { "LuckyPunch", Item::luckypunch },
-        { "MetalPowder", Item::metalpowder },
-        { "AguavBerry", Item::aguavberry },
-        { "AspearBerry", Item::aspearberry },
-        { "CheriBerry", Item::cheriberry },
-        { "FigyBerry", Item::figyberry },
-        { "FocusBand", Item::focusband },
-        { "IapapaBerry", Item::iapapaberry },
-        { "MachoBrace", Item::machobrace },
-        { "MagoBerry", Item::magoberry },
-        { "MentalBerry", Item::mentalberry },
-        { "OranBerry", Item::oranberry },
-        { "PechaBerry", Item::pechaberry },
-        { "PersimBerry", Item::persimberry },
-        { "RawstBerry", Item::rawstberry },
-        { "SitrusBerry", Item::sitrusberry },
-        { "WikiBerry", Item::wikiberry },
+        { "", Item::None },
+        { "Leftovers", Item::Leftovers },
+        { "LumBerry", Item::Lumberry },
+        { "SalacBerry", Item::Salacberry },
+        { "ChoiceBand", Item::Choiceband },
+        { "ThickClub", Item::Thickclub },
+        { "LightBall", Item::Lightball },
+        { "DeepSeaScale", Item::Deepseascale },
+        { "DeepSeaTooth", Item::Deepseatooth },
+        { "BlackBelt", Item::Blackbelt },
+        { "SharpBeak", Item::Sharpbeak },
+        { "MetalCoat", Item::Metalcoat },
+        { "PoisonBarb", Item::Poisonbarb },
+        { "SoftSand", Item::Softsand },
+        { "SilkScarf", Item::Silkscarf },
+        { "SpellTag", Item::Spelltag },
+        { "BlackGlasses", Item::Blackglasses },
+        { "Charcoal", Item::Charcoal },
+        { "Magnet", Item::Magnet },
+        { "DragonFang", Item::Dragonfang },
+        { "MiracleSeed", Item::Miracleseed },
+        { "MysticWater", Item::Mysticwater },
+        { "SeaIncense", Item::Seaincense },
+        { "NeverMeltIce", Item::Nevermeltice },
+        { "TwistedSpoon", Item::Twistedspoon },
+        { "ScopeLens", Item::Scopelens },
+        { "Stick", Item::Stick },
+        { "ApicotBerry", Item::Apicotberry },
+        { "BrightPowder", Item::Brightpowder },
+        { "ChestoBerry", Item::Chestoberry },
+        { "GanlonBerry", Item::Ganlonberry },
+        { "GrepaBerry", Item::Grepaberry },
+        { "HardStone", Item::Hardstone },
+        { "KelpsyBerry", Item::Kelpsyberry },
+        { "KingsRock", Item::Kingsrock },
+        { "LansatBerry", Item::Lansatberry },
+        { "LaxIncense", Item::Laxincense },
+        { "SoulDew", Item::Souldew },
+        { "LeppaBerry", Item::Leppaberry },
+        { "LiechiBerr", Item::Liechiberry },
+        { "Mail", Item::Mail },
+        { "PetayaBerry", Item::Petayaberry },
+        { "QuickClaw", Item::Quickclaw },
+        { "ShellBell", Item::Shellbell },
+        { "SilverPowder", Item::Silverpowder },
+        { "StarfBerry", Item::Starfberry },
+        { "WhiteHerb", Item::Whiteherb },
+        { "LuckyPunch", Item::Luckypunch },
+        { "MetalPowder", Item::Metalpowder },
+        { "AguavBerry", Item::Aguavberry },
+        { "AspearBerry", Item::Aspearberry },
+        { "CheriBerry", Item::Cheriberry },
+        { "FigyBerry", Item::Figyberry },
+        { "FocusBand", Item::Focusband },
+        { "IapapaBerry", Item::Iapapaberry },
+        { "MachoBrace", Item::Machobrace },
+        { "MagoBerry", Item::Magoberry },
+        { "MentalBerry", Item::Mentalberry },
+        { "OranBerry", Item::Oranberry },
+        { "PechaBerry", Item::Pechaberry },
+        { "PersimBerry", Item::Persimberry },
+        { "RawstBerry", Item::Rawstberry },
+        { "SitrusBerry", Item::Sitrusberry },
+        { "WikiBerry", Item::Wikiberry },
     };
 
     return map[str];

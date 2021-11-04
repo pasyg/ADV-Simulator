@@ -3,19 +3,19 @@
 
 int Battle::get_stat_boosted(const Statname stat, const Pokemon &pokemon, const int boost){
     switch(stat){
-        case Statname::atk:
-        case Statname::def:
-        case Statname::satk:
-        case Statname::sdef:
-        case Statname::spe:
+        case Statname::Atk:
+        case Statname::Def:
+        case Statname::Satk:
+        case Statname::Sdef:
+        case Statname::Spe:
             if(boost > 0){
                 return static_cast<int>(pokemon.get_stat(stat) * (2 + boost) / 2.0);
             }
             if(boost < 0){
                 return static_cast<int>(pokemon.get_stat(stat) * 2 / static_cast<float>(2 + boost));
             }
-        case Statname::acc:
-        case Statname::eva:
+        case Statname::Acc:
+        case Statname::Eva:
             if(boost > 0){
                 return static_cast<int>((3 + boost) / 3.0);
             }
@@ -38,15 +38,15 @@ bool Battle::compare_speed(){
     Pokemon* mon1 = &this->team[0].member[this->team[0].active_pokemon];
     Pokemon* mon2 = &this->team[1].member[this->team[1].active_pokemon];
 
-    int speed1 = get_stat_boosted(Statname::spe, *mon1, this->team[0].speboost);
-    int speed2 = get_stat_boosted(Statname::spe, *mon2, this->team[1].speboost);
+    int speed1 = get_stat_boosted(Statname::Spe, *mon1, this->team[0].speboost);
+    int speed2 = get_stat_boosted(Statname::Spe, *mon2, this->team[1].speboost);
 
     //this->team[0}.speboost
 
-    if(mon1->get_status() == Status::paralysis){
+    if(mon1->get_status() == Status::Paralysis){
         speed1 = static_cast<int>(speed1 / 4.0);
     }
-    if(mon2->get_status() == Status::paralysis){
+    if(mon2->get_status() == Status::Paralysis){
         speed2 = static_cast<int>(speed2 / 4.0);
     }
     if(speed1 > speed2){
@@ -64,18 +64,18 @@ bool Battle::compare_speed(){
 ///
 bool Battle::move_first(){
 
-    int prio1 = moveprio(this->team[0].movechoice->get_move());
-    int prio2 = moveprio(this->team[1].movechoice->get_move());
+    int prio1 = move_prio(this->team[0].movechoice->get_move());
+    int prio2 = move_prio(this->team[1].movechoice->get_move());
 
     // quickclaw holders have a 20% chance to move first in their priority bracket
     // in singles formats this equates to moving up one priority bracket
-    if(this->team[0].member[this->team[0].active_pokemon].get_item() == Item::quickclaw){
+    if(this->team[0].member[this->team[0].active_pokemon].get_item() == Item::Quickclaw){
         if(get_random(1,10) < 3){
             prio1 += 1;
         }
     }    
 
-    if(this->team[1].member[this->team[1].active_pokemon].get_item() == Item::quickclaw){
+    if(this->team[1].member[this->team[1].active_pokemon].get_item() == Item::Quickclaw){
         if(get_random(1,10) < 3){
             prio2 += 1;
         }
