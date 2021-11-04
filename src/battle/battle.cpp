@@ -1,7 +1,7 @@
 #include "battle.hpp"
 
 
-int Battle::get_stat_boost(const Statname stat, const Pokemon &pokemon, const int boost){
+int Battle::get_stat_boosted(const Statname stat, const Pokemon &pokemon, const int boost){
     switch(stat){
         case Statname::atk:
         case Statname::def:
@@ -9,18 +9,18 @@ int Battle::get_stat_boost(const Statname stat, const Pokemon &pokemon, const in
         case Statname::sdef:
         case Statname::spe:
             if(boost > 0){
-                return static_cast<int>(pokemon.get_stat(stat) * (2 + boost) / 2);
+                return static_cast<int>(pokemon.get_stat(stat) * (2 + boost) / 2.0);
             }
             if(boost < 0){
-                return static_cast<int>(pokemon.get_stat(stat) * 2 / (2 + boost));
+                return static_cast<int>(pokemon.get_stat(stat) * 2 / static_cast<float>(2 + boost));
             }
         case Statname::acc:
         case Statname::eva:
             if(boost > 0){
-                return static_cast<int>((3 + boost) / 3);
+                return static_cast<int>((3 + boost) / 3.0);
             }
             if(boost < 0){
-                return static_cast<int>(3 / (3 + boost));
+                return static_cast<int>(3 / static_cast<float>(3 + boost));
             }
             else{
                 return 1;
@@ -38,16 +38,16 @@ bool Battle::compare_speed(){
     Pokemon* mon1 = &this->team[0].member[this->team[0].active_pokemon];
     Pokemon* mon2 = &this->team[1].member[this->team[1].active_pokemon];
 
-    int speed1 = get_stat_boost(Statname::spe, *mon1, this->team[0].speboost);
-    int speed2 = get_stat_boost(Statname::spe, *mon2, this->team[1].speboost);
+    int speed1 = get_stat_boosted(Statname::spe, *mon1, this->team[0].speboost);
+    int speed2 = get_stat_boosted(Statname::spe, *mon2, this->team[1].speboost);
 
     //this->team[0}.speboost
 
     if(mon1->get_status() == Status::paralysis){
-        static_cast<int>(speed1) /= 4;
+        speed1 = static_cast<int>(speed1 / 4.0);
     }
     if(mon2->get_status() == Status::paralysis){
-        static_cast<int>(speed2) /= 4;
+        speed2 = static_cast<int>(speed2 / 4.0);
     }
     if(speed1 > speed2){
         return false;

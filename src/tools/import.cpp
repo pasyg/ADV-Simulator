@@ -10,7 +10,7 @@ void set_moves(std::string &moves, Pokemon &pokemon){
     size_t posmoves = 0;
     size_t moveindex = 0;
     moves += ",";
-
+    
     while((posmoves = moves.find(delimiter)) != std::string::npos){
         moveset[moveindex].set_move(move_from_string(moves.substr(0, posmoves)));
         moves.erase(0, posmoves + delimiter.length());
@@ -54,7 +54,21 @@ void set_ivs(std::string &ivs, Pokemon &pokemon){
     std::array<std::string, 6> arrivs;
     size_t posivs = 0;
     size_t ivindex = 0;
+    
+    if(ivs == ""){
+        stats.hp = 31;
+        stats.atk = 31;
+        stats.def = 31;
+        stats.satk = 31;
+        stats.sdef = 31;
+        stats.spe = 31;
+
+        pokemon.set_ivs(stats);
+        return;
+    }
+    
     ivs += ",";
+
 
     while((posivs = ivs.find(delimiter)) != std::string::npos){
         arrivs[ivindex] = ivs.substr(0, posivs);
@@ -77,9 +91,9 @@ void set_ivs(std::string &ivs, Pokemon &pokemon){
 }
 
 Team importteam(std::string const path){
-    //std::ifstream file("../../teams/packed/sample.txt");
+    std::ifstream file("../teams/packed/" + path + ".txt");
     
-    std::string line = "Tyranitar||ChoiceBand|SandStream|RockSlide,Earthquake,FocusPunch,HiddenPowerBug|Adamant|4,252,,,,252|||||]Swampert||SalacBerry|Torrent|HydroPump,IceBeam,Substitute,Endeavor|Timid|,,4,252,,252|||||]Skarmory||Leftovers|KeenEye|Protect,DrillPeck,Roar,Spikes|Careful|240,,,,244,24|||||]Metagross||Leftovers|ClearBody|MeteorMash,Earthquake,Agility,Explosion|Adamant|168,236,16,,,88|||||]Blissey||Leftovers|NaturalCure|ThunderWave,SeismicToss,IceBeam,SoftBoiled|Bold|40,,252,216,,|||||]Aerodactyl||ChoiceBand|RockHead|RockSlide,Earthquake,DoubleEdge,HiddenPowerBug|Jolly|,252,,,4,252|||||";
+    std::string line = "";
     std::string delimiter1 = "]";
     std::string delimiter2 = "|";
     size_t pos1 = 0;
@@ -93,7 +107,7 @@ Team importteam(std::string const path){
     size_t i = 0;
     size_t j = 0;
 
-    //std::getline(file, line);
+    std::getline(file, line);
 
     line += "]";
     
@@ -117,35 +131,28 @@ Team importteam(std::string const path){
     }
 
     for(int i = 0; i < 6; ++i){
-        for(int j = 0; j < 12; ++j){
-            if(data[i][1] == ""){
-                importteam.member[i].set_species(species_from_string(data[i][0]));
-                importteam.member[i].set_name(data[i][0]);
-            }
-            else{
-                importteam.member[i].set_species(species_from_string(data[i][1]));
-                importteam.member[i].set_name(data[i][1]);
-            }
-            importteam.member[i].set_item(item_from_string(data[i][2]));
-            importteam.member[i].set_ability(ability_from_string(data[i][3]));
-            set_moves(data[i][4], importteam.member[i]);
-            importteam.member[i].set_nature(nature_from_string(data[i][5]));
-            set_evs(data[i][6], importteam.member[i]);
-            importteam.member[i].set_gender(gender_from_string(data[i][7]));
-            set_ivs(data[i][8], importteam.member[i]);
-            if(data[i][10] == ""){
-                // defaults to level 100
-            }
-            else{
-                importteam.member[i].set_level(stoi(data[i][10]));
-            }
+        if(data[i][1] == ""){
+            importteam.member[i].set_species(species_from_string(data[i][0]));
+            importteam.member[i].set_name(data[i][0]);
+        }
+        else{
+            importteam.member[i].set_species(species_from_string(data[i][1]));
+            importteam.member[i].set_name(data[i][1]);
+        }
+        importteam.member[i].set_item(item_from_string(data[i][2]));
+        importteam.member[i].set_ability(ability_from_string(data[i][3]));
+        set_moves(data[i][4], importteam.member[i]);
+        importteam.member[i].set_nature(nature_from_string(data[i][5]));
+        set_evs(data[i][6], importteam.member[i]);
+        importteam.member[i].set_gender(gender_from_string(data[i][7]));
+        set_ivs(data[i][8], importteam.member[i]);
+        if(data[i][10] == ""){
+            // defaults to level 100
+        }
+        else{
+            importteam.member[i].set_level(stoi(data[i][10]));
         }
     }
-    // split up moves
-
-    // split up evs
-
-    // split up ivs
 
     return importteam;
 }

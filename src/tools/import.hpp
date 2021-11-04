@@ -1,9 +1,3 @@
-///
-///TODO
-/// moves.cpp
-/// species.cpp
-
-
 #pragma once
 #include <fstream>
 #include <string>

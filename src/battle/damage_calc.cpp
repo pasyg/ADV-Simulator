@@ -78,7 +78,7 @@ int Battle::item_ability_mult(int damage, const AttackMove &movechoice, const Po
         if(defmon.get_ability() == Ability::Thick_Fat){
             if((movetype == Type::Fire) || 
                 (movetype == Type::Ice)){
-                    return static_cast<int>(damage / 2);
+                    return static_cast<int>(damage / 2.0);
                 }
             }
         }
@@ -142,7 +142,7 @@ int Battle::calculate_damage(const int patkteam){
         defense = Statname::def;
         
         // Initialize attack value with boost
-        atk_stat = get_stat_boost(attack, *
+        atk_stat = get_stat_boosted(attack, *
         atkmon, atkteam->get_boost(attack));
         
         // attack boost abilities / items
@@ -174,7 +174,7 @@ int Battle::calculate_damage(const int patkteam){
         attack = Statname::satk;
         defense = Statname::sdef;
         // Initialize attack value with boost
-        atk_stat = get_stat_boost(attack, *atkmon, atkteam->get_boost(attack));
+        atk_stat = get_stat_boosted(attack, *atkmon, atkteam->get_boost(attack));
     }
     else{
         return 0;
@@ -182,7 +182,7 @@ int Battle::calculate_damage(const int patkteam){
 
     // basic damage formula from: https://bulbapedia.bulbagarden.net/wiki/Damage
     damage = 2 * atkmon->get_level();
-    damage = static_cast<int>(damage / 5);
+    damage = static_cast<int>(damage / 5.0);
     damage += 2;
     damage *= atkteam->movechoice->get_power();
     damage *= 1;
@@ -190,17 +190,17 @@ int Battle::calculate_damage(const int patkteam){
     // Critical Hit / Ignore positive defensive boost
     if(get_random(0,15) > 0){
         if(defteam->defboost >= 0){
-            damage = static_cast<int>(damage / def_stat);
+            damage = static_cast<int>(damage / static_cast<float>(def_stat));
             damage *= 2;
         }
         else{
-            damage = static_cast<int>(damage / ((get_stat_boost(defense, *defmon, defteam->get_boost(defense)) * 50)));
+            damage = static_cast<int>(damage / static_cast<float>(((get_stat_boosted(defense, *defmon, defteam->get_boost(defense)) * 50))));
             damage *= 2;
         }
     }
     // No Critical Hit
     else{
-    damage = static_cast<int>(damage / ((get_stat_boost(defense, *defmon, defteam->get_boost(defense)) * 50)));
+    damage = static_cast<int>(damage / static_cast<float>(((get_stat_boosted(defense, *defmon, defteam->get_boost(defense)) * 50))));
     }
 
     damage += 2;
@@ -220,7 +220,7 @@ int Battle::calculate_damage(const int patkteam){
             damage = static_cast<int>(damage * 1.5);
         }
         if(atkteam->movechoice->get_type() == Type::Fire){
-            damage = static_cast<int>(damage / 2);
+            damage = static_cast<int>(damage / 2.0);
         }
     }
     if(this->weather == Weather::sun){
@@ -228,7 +228,7 @@ int Battle::calculate_damage(const int patkteam){
             damage = static_cast<int>(damage * 1.5);
         }
         if(atkteam->movechoice->get_type() == Type::Water){
-            damage = static_cast<int>(damage / 2);
+            damage = static_cast<int>(damage / 2.0);
         }
     }
 
@@ -239,7 +239,7 @@ int Battle::calculate_damage(const int patkteam){
                                 effectiveness(atkteam->movechoice->get_type(), defmon->get_type()[1])));
 
     // Damage Roll
-    damage *= static_cast<int>((get_random(85,100) / 100) * damage);
+    damage *= static_cast<int>((get_random(85,100) / 100.0) * damage);
 
     return damage;
 }

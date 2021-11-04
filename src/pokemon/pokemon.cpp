@@ -39,6 +39,14 @@ void Pokemon::set_item(const Item p_item){
     this->item = p_item;    
 }
 
+Stats Pokemon::get_evs() const{
+    return this->EVs;
+}
+
+Stats Pokemon::get_ivs() const{
+    return this->IVs;
+}
+
 int Pokemon::get_stat(const Statname stat) const{
     switch(stat){
         case Statname::atk:
@@ -295,54 +303,54 @@ void Pokemon::stat_init(){
 void Pokemon::calc_hp(){
     this->stats.hp = 2 * this->basestats.hp;
     this->stats.hp += this->IVs.hp;
-    this->stats.hp += (this->EVs.hp / 4);
+    this->stats.hp += static_cast<int>(this->EVs.hp / 4.0);
     this->stats.hp *= this->level;
-    this->stats.hp /= 100;
+    this->stats.hp = static_cast<int>(this->stats.hp/100.0);
     this->stats.hp += this->level + 10;
 }
 
 void Pokemon::calc_atk(){
     this->stats.atk = 2 * this->basestats.atk;
     this->stats.atk += this->IVs.atk;
-    this->stats.atk += (this->EVs.atk / 4);
+    this->stats.atk += static_cast<int>(this->EVs.atk / 4.0);
     this->stats.atk *= this->level;
-    this->stats.atk /= 100;
+    this->stats.atk = static_cast<int>(this->stats.atk/100.0);
     this->stats.atk += 5;
 }
 
 void Pokemon::calc_def(){
     this->stats.def = 2 * this->basestats.def;
     this->stats.def += this->IVs.def;
-    this->stats.def += (this->EVs.def / 4);
+    this->stats.def += static_cast<int>(this->EVs.def / 4.0);
     this->stats.def *= this->level;
-    this->stats.def /= 100;
+    this->stats.def = static_cast<int>(this->stats.def/100.0);
     this->stats.def += 5;
 }
 
 void Pokemon::calc_satk(){
     this->stats.satk = 2 * this->basestats.satk;
     this->stats.satk += this->IVs.satk;
-    this->stats.satk += (this->EVs.satk / 4);
+    this->stats.satk += static_cast<int>(this->EVs.satk / 4.0);
     this->stats.satk *= this->level;
-    this->stats.satk /= 100;
+    this->stats.satk = static_cast<int>(this->stats.satk/100.0);
     this->stats.satk += 5;
 }
 
 void Pokemon::calc_sdef(){
     this->stats.sdef = 2 * this->basestats.sdef;
     this->stats.sdef += this->IVs.sdef;
-    this->stats.sdef += (this->EVs.sdef / 4);
+    this->stats.sdef += static_cast<int>(this->EVs.sdef / 4.0);
     this->stats.sdef *= this->level;
-    this->stats.sdef /= 100;
+    this->stats.sdef = static_cast<int>(this->stats.sdef/100.0);
     this->stats.sdef += 5;
 }
 
 void Pokemon::calc_spe(){
     this->stats.spe = 2 * this->basestats.spe;
     this->stats.spe += this->IVs.spe;
-    this->stats.spe += (this->EVs.spe / 4);
+    this->stats.spe += static_cast<int>(this->EVs.spe / 4.0);
     this->stats.spe *= this->level;
-    this->stats.spe /= 100;
+    this->stats.spe = static_cast<int>(this->stats.spe/100.0);
     this->stats.spe += 5;
 }
 ///
@@ -377,7 +385,7 @@ void Pokemon::calc_hiddenpower_power(){
     }
 
     sum *= 40;
-    sum = static_cast<int>(sum / 63);
+    sum = static_cast<int>(sum / 63.0);
     this->hiddenpower_power = sum + 30;
 }
 ///
@@ -414,7 +422,7 @@ void Pokemon::calc_hiddenpower_type(){
     }
     
     sum *= 5;
-    sum = static_cast<int>(sum / 21);
+    sum = static_cast<int>(sum / 21.0);
 
     switch (sum)
     {

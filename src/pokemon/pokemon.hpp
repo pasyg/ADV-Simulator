@@ -34,6 +34,8 @@ public:
     void set_revealed(const bool p_revealed);
     void set_item(const Item p_item);
     
+    Stats get_evs() const;
+    Stats get_ivs() const;
     int get_stat(const Statname stat) const;
     Item get_item() const;
     bool get_item_damage_boost() const;
