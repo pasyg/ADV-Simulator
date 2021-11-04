@@ -12,13 +12,14 @@
 #include "string_conversions/gender.hpp"
 
 int main(int argc, char** argv[]) {
+  
 #ifdef BENCHMARK
   Timer timer;
 #endif
 
   std::vector<Team> test;
   // file must consist of packed teams (packed showdown format) and be line by line
-  test = importteam("sample");
+  test = import_team("sample");
 
   for(int i = 0; i < test.size(); ++i){
     std::cout << test[i].member[0].get_name() << std::endl;

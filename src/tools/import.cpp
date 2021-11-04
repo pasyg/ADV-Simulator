@@ -90,7 +90,7 @@ void set_ivs(std::string &ivs, Pokemon &pokemon){
     pokemon.set_ivs(stats);
 }
 
-std::vector<Team> importteam(std::string const path){
+std::vector<Team> import_team(std::string const path){
     std::ifstream file("../teams/packed/sample.txt");
     
     std::string line = "";
