@@ -77,7 +77,7 @@ void set_ivs(std::string &ivs, Pokemon &pokemon){
     }
     for(int i = 0; i < 6; ++i){
         if(arrivs[i] == ""){
-            arrivs[i] = "0";
+            arrivs[i] = "31";
         }
     }
     stats.hp = std::stoi(arrivs[0]);
