@@ -1,5 +1,12 @@
 #include "battle.hpp"
 
+Battle::Battle(){
+
+}
+
+Battle::~Battle(){
+
+}
 
 int Battle::get_stat_boosted(const Statname stat, const Pokemon &pokemon, const int boost){
     switch(stat){

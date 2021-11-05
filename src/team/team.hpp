@@ -7,6 +7,8 @@
 
 class Team{
 public:
+    Team();
+    ~Team();
     void swap(int slot);
     void team_init(int index);
     void get_move_options();

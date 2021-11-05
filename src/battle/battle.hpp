@@ -8,7 +8,8 @@
 
 class Battle{
 public:
-
+    Battle();
+    ~Battle();
 private:
     std::string_view p1 = "p1";
     std::string_view p2 = "p2";

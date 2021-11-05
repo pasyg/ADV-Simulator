@@ -1,6 +1,14 @@
 #include "team.hpp"
 #include "rng.hpp"
 
+Team::Team(){
+
+}
+
+Team::~Team(){
+
+}
+
 void Team::team_init(int index){
 
     this->index = index;
@@ -25,6 +33,7 @@ void Team::team_init(int index){
         #ifdef _DEBUG
             debug_log("ERROR TEAM INIT SWITCHES");
         #endif
+            break;
         }
     }
     // initialize each pokemon
@@ -61,7 +70,7 @@ int Team::get_boost(Statname stat){
 }
 
 void Team::get_move_options(){
-    
+
     const Pokemon activemon = this->member[this->active_pokemon];
     const std::array<AttackMove, 4> moves = activemon.get_moveset();
     

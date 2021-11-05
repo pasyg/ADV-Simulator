@@ -53,4 +53,4 @@ add_executable(Simulator
 
     src/team/team.cpp
 
-    test/main.cpp)
+    src/main.cpp)
