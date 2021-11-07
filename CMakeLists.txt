@@ -28,6 +28,7 @@ add_executable(Simulator
 
     src/battle/battle.cpp
     src/battle/damage_calc.cpp
+    src/battle/state.cpp
     src/battle/turn.cpp
     src/battle/use_move.cpp
 
@@ -47,9 +48,8 @@ add_executable(Simulator
     src/string_conversions/status.cpp
     src/string_conversions/type.cpp
 
-    src/tools/rng.cpp
-    src/tools/state.cpp
     src/tools/import.cpp
+    src/tools/rng.cpp
 
     src/team/team.cpp
 

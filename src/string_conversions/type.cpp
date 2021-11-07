@@ -27,7 +27,7 @@ std::string_view to_string(Type const name){
 
 Type type_from_string(std::string_view const str){
     
-   static std::unordered_map<std::string_view, Type> map{
+   static const std::unordered_map<std::string_view, Type> map{
        
        { "Normal", Type::Normal },
        { "Flying", Type::Flying },
@@ -50,5 +50,5 @@ Type type_from_string(std::string_view const str){
        { "Typeless", Type::Typeless }
    };
    
-   return map[str];
+   return map.at(str);
 }

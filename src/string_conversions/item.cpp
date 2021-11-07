@@ -2,77 +2,77 @@
 
 std::string to_string(Item const item){
     switch(item){
-        case Item::None: return "none";
-        case Item::Choiceband: return "Leftovers";
-        case Item::Leftovers: return "Leftovers";
-        case Item::Lumberry: return "Lum Berry";
-        case Item::Salacberry: return "Salac Berry";
-        case Item::Apicotberry: return "Apicot Berry";
-        case Item::Blackbelt: return "Black Belt";
-        case Item::Blackglasses: return "Black Glasses";
-        case Item::Brightpowder: return "Bright Powder";
-        case Item::Charcoal: return "Charcoal";
-        case Item::Chestoberry: return "Chesto Berry";
-        case Item::Dragonfang: return "Dragon Fang";
-        case Item::Ganlonberry: return "Ganlon Berry";
-        case Item::Grepaberry: return "Grepa Berry";
-        case Item::Hardstone: return "Hard Stone";
-        case Item::Kelpsyberry: return "Kelpsy Berry";
-        case Item::Kingsrock: return "Kings Rock";
-        case Item::Lansatberry: return "Lansat Berry";
-        case Item::Laxincense: return "Lax Incense";
-        case Item::Leppaberry: return "Leppa Berry";
-        case Item::Liechiberry: return "Liechi Berry";
-        case Item::Magnet: return "Magnet";
-        case Item::Mail: return "Mail";
-        case Item::Metalcoat: return "Metal Coat";
-        case Item::Miracleseed: return "Miracle Seed";
-        case Item::Mysticwater: return "Mystic Water";
-        case Item::Nevermeltice: return "Never Melt Ice";
-        case Item::Petayaberry: return "Petaya Berry";
-        case Item::Poisonbarb: return "Poison Barb";
-        case Item::Quickclaw: return "Quick Claw";
-        case Item::Scopelens: return "Scope Lens";
-        case Item::Seaincense: return "Sea Incense";
-        case Item::Sharpbeak: return "Sharp Beak";
-        case Item::Shellbell: return "Shell Bell";
-        case Item::Silkscarf: return "Silk Scarf";
-        case Item::Silverpowder: return "Silver Powder";
-        case Item::Softsand: return "Soft Sand";
-        case Item::Spelltag: return "Spell Tag";
-        case Item::Starfberry: return "Starf Berry";
-        case Item::Twistedspoon: return "Twisted Spoon";
-        case Item::Whiteherb: return "White Herb";
-        case Item::Deepseascale: return "Deep Sea Scale";
-        case Item::Deepseatooth: return "Deep Sea Tooth";
-        case Item::Lightball: return "Light Ball";
-        case Item::Luckypunch: return "Lucky Punch";
-        case Item::Metalpowder: return "Metal Powder";
-        case Item::Souldew: return "Soul Dew";
-        case Item::Stick: return "Stick";
-        case Item::Thickclub: return "Thick Club";
-        case Item::Aguavberry: return "Aguav Berry";
-        case Item::Aspearberry: return "Aspear Berry";
-        case Item::Cheriberry: return "Cheri Berry";
-        case Item::Figyberry: return "Figy Berry";
-        case Item::Focusband: return "Focus Band";
-        case Item::Iapapaberry: return "Iapapa Berry";
-        case Item::Machobrace: return "Macho Brace";
-        case Item::Magoberry: return "Mago Berry";
-        case Item::Rawstberry: return "Rawst Berry";
-        case Item::Mentalberry: return "Mental Berry";
-        case Item::Oranberry: return "Oran Berry";
-        case Item::Pechaberry: return "Pecha Berry";
-        case Item::Persimberry: return "Persim Berry";
-        case Item::Sitrusberry: return "Sitrus Berry";
-        case Item::Wikiberry: return "Wiki Berry";
-        default: return "ERROR item";
+        case Item::None:            return "none";
+        case Item::Choiceband:      return "Leftovers";
+        case Item::Leftovers:       return "Leftovers";
+        case Item::Lumberry:        return "Lum Berry";
+        case Item::Salacberry:      return "Salac Berry";
+        case Item::Apicotberry:     return "Apicot Berry";
+        case Item::Blackbelt:       return "Black Belt";
+        case Item::Blackglasses:    return "Black Glasses";
+        case Item::Brightpowder:    return "Bright Powder";
+        case Item::Charcoal:        return "Charcoal";
+        case Item::Chestoberry:     return "Chesto Berry";
+        case Item::Dragonfang:      return "Dragon Fang";
+        case Item::Ganlonberry:     return "Ganlon Berry";
+        case Item::Grepaberry:      return "Grepa Berry";
+        case Item::Hardstone:       return "Hard Stone";
+        case Item::Kelpsyberry:     return "Kelpsy Berry";
+        case Item::Kingsrock:       return "Kings Rock";
+        case Item::Lansatberry:     return "Lansat Berry";
+        case Item::Laxincense:      return "Lax Incense";
+        case Item::Leppaberry:      return "Leppa Berry";
+        case Item::Liechiberry:     return "Liechi Berry";
+        case Item::Magnet:          return "Magnet";
+        case Item::Mail:            return "Mail";
+        case Item::Metalcoat:       return "Metal Coat";
+        case Item::Miracleseed:     return "Miracle Seed";
+        case Item::Mysticwater:     return "Mystic Water";
+        case Item::Nevermeltice:    return "Never Melt Ice";
+        case Item::Petayaberry:     return "Petaya Berry";
+        case Item::Poisonbarb:      return "Poison Barb";
+        case Item::Quickclaw:       return "Quick Claw";
+        case Item::Scopelens:       return "Scope Lens";
+        case Item::Seaincense:      return "Sea Incense";
+        case Item::Sharpbeak:       return "Sharp Beak";
+        case Item::Shellbell:       return "Shell Bell";
+        case Item::Silkscarf:       return "Silk Scarf";
+        case Item::Silverpowder:    return "Silver Powder";
+        case Item::Softsand:        return "Soft Sand";
+        case Item::Spelltag:        return "Spell Tag";
+        case Item::Starfberry:      return "Starf Berry";
+        case Item::Twistedspoon:    return "Twisted Spoon";
+        case Item::Whiteherb:       return "White Herb";
+        case Item::Deepseascale:    return "Deep Sea Scale";
+        case Item::Deepseatooth:    return "Deep Sea Tooth";
+        case Item::Lightball:       return "Light Ball";
+        case Item::Luckypunch:      return "Lucky Punch";
+        case Item::Metalpowder:     return "Metal Powder";
+        case Item::Souldew:         return "Soul Dew";
+        case Item::Stick:           return "Stick";
+        case Item::Thickclub:       return "Thick Club";
+        case Item::Aguavberry:      return "Aguav Berry";
+        case Item::Aspearberry:     return "Aspear Berry";
+        case Item::Cheriberry:      return "Cheri Berry";
+        case Item::Figyberry:       return "Figy Berry";
+        case Item::Focusband:       return "Focus Band";
+        case Item::Iapapaberry:     return "Iapapa Berry";
+        case Item::Machobrace:      return "Macho Brace";
+        case Item::Magoberry:       return "Mago Berry";
+        case Item::Rawstberry:      return "Rawst Berry";
+        case Item::Mentalberry:     return "Mental Berry";
+        case Item::Oranberry:       return "Oran Berry";
+        case Item::Pechaberry:      return "Pecha Berry";
+        case Item::Persimberry:     return "Persim Berry";
+        case Item::Sitrusberry:     return "Sitrus Berry";
+        case Item::Wikiberry:       return "Wiki Berry";
+        default:                    return "ERROR item";
     }
 }
 
 Item item_from_string(std::string_view str){ 
   
-    static std::unordered_map<std::string_view, Item> map{ 
+    static const std::unordered_map<std::string_view, Item> map{ 
         
         { "", Item::None },
         { "Leftovers", Item::Leftovers },
@@ -140,5 +140,5 @@ Item item_from_string(std::string_view str){
         { "WikiBerry", Item::Wikiberry },
     };
 
-    return map[str];
+    return map.at(str);
 }

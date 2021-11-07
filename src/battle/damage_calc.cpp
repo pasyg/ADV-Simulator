@@ -8,11 +8,15 @@ int Battle::item_ability_mult(int damage, const AttackMove &movechoice, const Po
 
     // specific for Shedinja, not compatible with illegal combination
     if(defmon.get_ability() == Ability::Wonder_Guard){
-        if(movetype != Type::Fire && movetype != Type::Flying && movetype != Type::Rock && movetype != Type::Ghost && movetype != Type::Dark){
-            return 0;
-        }
-        else{
-            return damage * 2;
+        switch(movetype){
+            case Type::Fire:
+            case Type::Flying:
+            case Type::Rock:
+            case Type::Ghost:
+            case Type::Dark:
+                return 0;
+            default:
+                return damage * 2;
         }
     }
 
@@ -207,7 +211,7 @@ int Battle::calculate_damage(const int patkteam){
 
     damage += 2;
 
-    // STAB
+    // same type attack bonus
     if(atkteam->movechoice->get_stab()){
         damage = static_cast<int>(damage * 1.5);
     }

@@ -371,8 +371,9 @@ std::string_view to_string(Move const move){
 
 Move move_from_string(std::string_view const str){
 
-	static std::unordered_map<std::string_view, Move> map{
+	static const std::unordered_map<std::string_view, Move> map{
 
+			{  "", Move::None },
 			{  "Absorb",  Move::Absorb },
 			{  "Accelerock",  Move::Accelerock },
 			{  "Acid",  Move::Acid },
@@ -580,7 +581,7 @@ Move move_from_string(std::string_view const str){
 			{  "Flail",  Move::Flail },
 			{  "FlameBurst",  Move::Flame_Burst },
 			{  "FlameCharge",  Move::Flame_Charge },
-			{  "FlameThrower",  Move::Flamethrower },
+			{  "Flamethrower",  Move::Flamethrower },
 			{  "FlameWheel",  Move::Flame_Wheel },
 			{  "FlareBlitz",  Move::Flare_Blitz },
 			{  "Flash",  Move::Flash },
@@ -764,7 +765,7 @@ Move move_from_string(std::string_view const str){
 			{ "Meditate",  Move::Meditate },
 			{ "MeFirst",  Move::Me_First },
 			{ "MegaDrain",  Move::Mega_Drain },
-			{ "MegaHorn",  Move::Megahorn },
+			{ "Megahorn",  Move::Megahorn },
 			{ "MegaKick",  Move::Mega_Kick },
 			{ "MegaPunch",  Move::Mega_Punch },
 			{ "Memento",  Move::Memento },
@@ -789,7 +790,7 @@ Move move_from_string(std::string_view const str){
 			{ "MoonBlast",  Move::Moonblast },
 			{ "MoongeistBeam",  Move::Moongeist_Beam },
 			{ "Moonlight",  Move::Moonlight },
-			{ "MorninSsun",  Move::Morning_Sun },
+			{ "MorningSun",  Move::Morning_Sun },
 			{ "Mudbomb",  Move::Mud_Bomb },
 			{ "MuddyWater",  Move::Muddy_Water },
 			{ "MudShot",  Move::Mud_Shot },
@@ -1126,5 +1127,5 @@ Move move_from_string(std::string_view const str){
 			{ "ZippyZap",  Move::Zippy_Zap }
 	};
 
-	return map[str];
+	return map.at(str);
 }

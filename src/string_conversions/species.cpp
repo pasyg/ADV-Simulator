@@ -401,8 +401,9 @@ std::string_view to_string(Species const name){
 }
 Species species_from_string(std::string_view const str){
 
-    static std::unordered_map<std::string_view, Species> map{
+    static const std::unordered_map<std::string_view, Species> map{
 	
+			{ "", Species::no_pokemon },
 			{ "Abomasnow", Species::Abomasnow },
 			{ "Abomasnowmega", Species::Abomasnow },
 			{ "Abra", Species::Abra },
@@ -1385,5 +1386,5 @@ Species species_from_string(std::string_view const str){
 			{ "Zygardecomplete", Species::Zygarde_Complete }
 	};
 
-	return map[str];
+	return map.at(str);
 }

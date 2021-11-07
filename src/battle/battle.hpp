@@ -6,6 +6,8 @@
 
 #include "weather.hpp"
 
+struct State;
+
 class Battle{
 public:
     Battle();

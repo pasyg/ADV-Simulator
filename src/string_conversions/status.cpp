@@ -18,7 +18,7 @@ std::string_view to_string(Status const status){
 
 Status status_from_string(std::string_view const str){
 
-    static std::unordered_map<std::string_view, Status> map{
+    static const std::unordered_map<std::string_view, Status> map{
         
         { "healthy", Status::Healthy },
         { "fainted", Status::Fainted },
@@ -32,5 +32,5 @@ Status status_from_string(std::string_view const str){
         { "toxicpoison", Status::Toxic_poison },
     };
 
-    return map[str];
+    return map.at(str);
 }

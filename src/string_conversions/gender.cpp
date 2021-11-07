@@ -13,12 +13,12 @@ std::string to_string(Gender const name){
 
 Gender gender_from_string(std::string_view const str){
 
-    static std::unordered_map<std::string_view, Gender> map{
+    static const std::unordered_map<std::string_view, Gender> map{
         
         {"M", Gender::Male },
         {"F", Gender::Female },
         {"", Gender::Genderless }
     };
 
-    return map[str];
+    return map.at(str);
 }

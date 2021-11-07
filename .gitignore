@@ -2,5 +2,6 @@
 build
 thoughts.txt
 Debug
-Release
 test.txt
+output.txt
+Release

@@ -399,23 +399,18 @@ void Pokemon::calc_hiddenpower_power(){
     if(this->IVs.hp % 2 != 0){
         sum += 1;
     }
-
     if(this->IVs.atk % 2 != 0){
         sum += 2;
     }
-
     if(this->IVs.def % 2 != 0){
         sum += 4;
     }
-
     if(this->IVs.spe % 2 != 0){
         sum += 8;
     }
-
     if(this->IVs.satk % 2 != 0){
         sum += 16;
     }
-
     if(this->IVs.sdef % 2 != 0){
         sum += 32;
     }
@@ -436,23 +431,18 @@ void Pokemon::calc_hiddenpower_type(){
     if(this->IVs.hp % 2 != 0){
         sum += 1;
     }
-
     if(this->IVs.atk % 2 != 0){
         sum += 2;
     }
-
     if(this->IVs.def % 2 != 0){
         sum += 4;
     }
-
     if(this->IVs.spe % 2 != 0){
         sum += 8;
     }
-
     if(this->IVs.satk % 2 != 0){
         sum += 16;
     }
-
     if(this->IVs.sdef % 2 != 0){
         sum += 32;
     }
