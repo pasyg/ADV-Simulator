@@ -28,7 +28,6 @@ add_executable(Simulator
 
     src/battle/battle.cpp
     src/battle/damage_calc.cpp
-    src/battle/state.cpp
     src/battle/turn.cpp
     src/battle/use_move.cpp
 

@@ -9,9 +9,7 @@ Team::~Team(){
 
 }
 
-void Team::team_init(int index){
-
-    this->index = index;
+void Team::team_init(){
 
     // switch move options
     for(int i = 0; i < 6; ++i){
@@ -38,12 +36,11 @@ void Team::team_init(int index){
     }
     // initialize each pokemon
     for(int i = 0; i < 6; ++i){
-        if(static_cast<int>(member[i].get_species())){
-            member[i].init();
+        if(this->member[i].get_species() != Species::no_pokemon){
+            this->member[i].init();
         }
     }
 }
-
 
 int Team::get_boost(Statname stat){
     switch(stat){

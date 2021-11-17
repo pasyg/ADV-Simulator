@@ -11,7 +11,7 @@ Pokemon::~Pokemon(){
 void Pokemon::init(){
 
     // stat calculation and initilization
-    this->stats = base_stats(this->species);
+    this->basestats = base_stats(this->species);
     this->stat_init();
     this->current_hp = this->stats.hp;
 
@@ -101,6 +101,17 @@ int Pokemon::get_stat(const Statname stat) const{
     }
 }
 
+void Pokemon::reduce_hp(const int damage){
+    this->current_hp -= damage;
+}
+
+void Pokemon::increase_hp(const int heal){
+    this->current_hp += heal;
+
+    if(this->current_hp >= this->stats.hp){
+        this->current_hp = this->stats.hp;
+    }
+}
 Item Pokemon::get_item() const{
     return this->item;
 }

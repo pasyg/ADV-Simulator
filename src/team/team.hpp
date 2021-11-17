@@ -10,7 +10,7 @@ public:
     Team();
     ~Team();
     void swap(int slot);
-    void team_init(int index);
+    void team_init();
     void get_move_options();
     void decide_move();
     int get_boost(Statname stat);
@@ -20,7 +20,6 @@ public:
 /// TRANSFORM / BIDE / DOOMDESIRE / FUTURE SIGHT / IMPRISON / METRONOME / MIRRORMOVE
     std::array<Pokemon, 6> member;
     int active_pokemon = 0;     // index of currently active pokemon 
-    int index;                  // index of team (1 / 2)
     ///
     /// one turn
     ///

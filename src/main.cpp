@@ -27,6 +27,10 @@ int main(int argc, char** argv[]) {
   //   std::cout << test[i].member[0].get_name() << std::endl;
   // }
 
+for(int i = 0; i < test.size(); ++i){
+  test[i].team_init();
+}
+
 //#ifdef _DEBUG
   for(int j = 0; j < test.size(); ++j){
     for(int i = 0; i < 6; ++i){
@@ -47,6 +51,12 @@ int main(int argc, char** argv[]) {
       file << "satk ivs: " << test[j].member[i].get_ivs().satk << std::endl;
       file << "sdef ivs: " << test[j].member[i].get_ivs().sdef << std::endl;
       file << "spe ivs: " << test[j].member[i].get_ivs().spe << std::endl;
+      file << "hp: " << test[j].member[i].get_stats().hp << std::endl;
+      file << "atk: " << test[j].member[i].get_stats().atk << std::endl;
+      file << "def: " << test[j].member[i].get_stats().def << std::endl;
+      file << "satk: " << test[j].member[i].get_stats().satk << std::endl;
+      file << "sdef: " << test[j].member[i].get_stats().sdef << std::endl;
+      file << "spe: " << test[j].member[i].get_stats().spe << std::endl;
       file << "Move 1: " << to_string(test[j].member[i].get_moveset()[0].get_move())<<std::endl;
       file << "Move 2: " << to_string(test[j].member[i].get_moveset()[1].get_move())<<std::endl;
       file << "Move 3: " << to_string(test[j].member[i].get_moveset()[2].get_move())<<std::endl;

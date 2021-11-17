@@ -1,9 +1,6 @@
 #include "moves.hpp"
 /* 
 	TODO:
-	- Blizzard in Hail
-	- Thunder in Rain
-	- Thunder in Sun
 	- Odor Sleuth
 	- Mimic
 	- Ohko Move
@@ -46,7 +43,7 @@ int move_power(const Move move){
 		case Move::Mega_Kick: 		return 120;
 		case Move::Jump_Kick: 		return 70;
 		case Move::Rolling_Kick: 	return 60;
-		case Move::Sand_Attack: 	return 0;
+		case Move::Sand_Attack: 	return 100;
 		case Move::Headbutt: 		return 70;
 		case Move::Horn_Attack: 	return 65;
 		case Move::Fury_Attack: 	return 15;
@@ -728,7 +725,7 @@ int move_accuracy(const Move move, const Weather weather){
 		case Move::Extrasensory: 	return 100;
 		case Move::Sky_Uppercut: 	return 90;
 		case Move::Sand_Tomb: 		return 70;
-		case Move::Sheer_Cold: 		return -2;
+		case Move::Sheer_Cold: 		return 30;
 		case Move::Muddy_Water: 	return 85;
 		case Move::Bullet_Seed: 	return 100;
 		case Move::Aerial_Ace: 		return -2;
@@ -754,7 +751,7 @@ int move_accuracy(const Move move, const Weather weather){
 		case Move::Water_Pulse: 	return 100;
 		case Move::Doom_Desire: 	return 85;
 		case Move::Psycho_Boost: 	return 90;
-		default: 					return -2;
+		default: 					return -3;
     }
 }
 

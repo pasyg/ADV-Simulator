@@ -27,8 +27,8 @@ public:
     ///
     int get_current_hp();
     void remove_item();
-    void reduce_hp(const int p_damage);
-    void increase_hp(const int p_heal);
+    void reduce_hp(const int damage);
+    void increase_hp(const int heal);
 
     void set_status(const Status p_status);
     void set_revealed(const bool p_revealed);

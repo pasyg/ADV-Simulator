@@ -69,7 +69,7 @@ bool Battle::compare_speed(){
 ///
 /// checks which pokemon moves first, returns 0 (false) for first move for team 1, 1 (true) for first move for team 2
 ///
-bool Battle::move_first(){
+void Battle::calc_first_attacker(){
 
     int prio1 = move_prio(this->team[0].movechoice->get_move());
     int prio2 = move_prio(this->team[1].movechoice->get_move());
@@ -89,12 +89,12 @@ bool Battle::move_first(){
     }
 
     if(prio1 > prio2){
-        return false;
+        this->move_first = false;
     }
     else if(prio1 < prio2){
-        return true;
+        this->move_first = true;
     }
     else{
-        return compare_speed();
+        this->move_first = compare_speed();
     }
 }
