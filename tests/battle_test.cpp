@@ -3,10 +3,15 @@
 
 void battle_test(Team &team1, Team &team2){
     
-    {
-        Timer timer;
-        Battle battle(team1, team2);
-    }
+
+    Timer timer;
+    Battle battle(team1, team2);
+
+    battle.team[0]->movechoice = &battle.team[0]->member[battle.team[0]->active_pokemon].get_moveset()[0];
+
+    battle.calculate_damage(0);
+
+
     // battle.team[0] = &team1;
     // battle.team[1] = &team2;
 

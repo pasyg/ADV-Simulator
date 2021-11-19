@@ -148,8 +148,8 @@ int Battle::calculate_damage(const int patkteam){
         defense = Statname::Def;
         
         // Initialize attack value with boost
-        atk_stat = get_stat_boosted(attack, *
-        atkmon, atkteam->get_boost(attack));
+        atk_stat = get_stat_boosted(attack, *atkmon, atkteam->get_boost(attack));
+        def_stat = get_stat_boosted(defense, *defmon, defteam->get_boost(defense));
         
         // attack boost abilities / items
         if(atkmon->get_item() == Item::Choiceband){
@@ -181,6 +181,7 @@ int Battle::calculate_damage(const int patkteam){
         defense = Statname::Sdef;
         // Initialize attack value with boost
         atk_stat = get_stat_boosted(attack, *atkmon, atkteam->get_boost(attack));
+        def_stat = get_stat_boosted(defense, *defmon, defteam->get_boost(defense));
     }
     else{
         return 0;
@@ -191,22 +192,24 @@ int Battle::calculate_damage(const int patkteam){
     damage = static_cast<int>(damage / 5.0);
     damage += 2;
     damage *= atkteam->movechoice->get_power();
-    damage *= 1;
 
     // Critical Hit / Ignore positive defensive boost
-    if(get_random(0,15) > 0){
+    if(get_random(0,15) == 0){
         if(defteam->defboost >= 0){
-            damage = static_cast<int>(damage / static_cast<float>(def_stat));
+            damage = static_cast<int>((damage * get_stat_boosted(attack, *atkmon, atkteam->get_boost(attack)
+                                       / static_cast<float>(def_stat))));
             damage *= 2;
         }
         else{
-            damage = static_cast<int>(damage / static_cast<float>(((get_stat_boosted(defense, *defmon, defteam->get_boost(defense)) * 50))));
+            damage = static_cast<int>((damage * get_stat_boosted(attack, *atkmon, atkteam->get_boost(attack) 
+                                      / static_cast<float>(get_stat_boosted(defense, *defmon, defteam->get_boost(defense)) * 50))));
             damage *= 2;
         }
     }
     // No Critical Hit
     else{
-    damage = static_cast<int>(damage / static_cast<float>(((get_stat_boosted(defense, *defmon, defteam->get_boost(defense)) * 50))));
+    damage = static_cast<int>(damage * get_stat_boosted(attack, *atkmon, atkteam->get_boost(attack)) 
+                              / static_cast<float>((get_stat_boosted(defense, *defmon, defteam->get_boost(defense)) * 50)));
     }
 
     damage += 2;
@@ -241,11 +244,12 @@ int Battle::calculate_damage(const int patkteam){
     // Item effects
     // outsource / earlier termination
     
-    damage *= static_cast<int>((effectiveness(atkteam->movechoice->get_type(), defmon->get_type()[0]) *
-                                effectiveness(atkteam->movechoice->get_type(), defmon->get_type()[1])));
+    damage = static_cast<int>((effectiveness(atkteam->movechoice->get_type(), defmon->get_type()[0]) *
+                                effectiveness(atkteam->movechoice->get_type(), defmon->get_type()[1]))
+                                * damage);
 
     // Damage Roll
-    damage *= static_cast<int>((get_random(85,100) / 100.0) * damage);
+    damage = static_cast<int>((get_random(85,100) * damage) / 100.0);
 
     return damage;
 }

@@ -25,8 +25,11 @@ int Battle::get_stat_boosted(const Statname stat, const Pokemon &pokemon, const 
             if(boost > 0){
                 return static_cast<int>(pokemon.get_stat(stat) * (2 + boost) / 2.0);
             }
-            if(boost < 0){
+            else if(boost < 0){
                 return static_cast<int>(pokemon.get_stat(stat) * 2 / static_cast<float>(2 + boost));
+            }
+            else{
+                return pokemon.get_stat(stat);
             }
         case Statname::Acc:
         case Statname::Eva:

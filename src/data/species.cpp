@@ -398,5 +398,6 @@ PokemonType pokemon_type(const Species species){
 		case Species::Deoxys_Atk: return {Type::Psychic};
 		case Species::Deoxys_Def: return {Type::Psychic};
 		case Species::Deoxys_Spe: return {Type::Psychic};
+		default: return {Type::Typeless, Type::Typeless};
     }
 }

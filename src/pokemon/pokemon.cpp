@@ -35,8 +35,8 @@ void Pokemon::init(){
 
 
     // sets STAB trait for same type attacks
-    for(int i = 0; i < 4; ++i){    
     // assigns the type and power of hidden power
+    for(int i = 0; i < 4; ++i){    
         if(this->moveset[i].get_type() == Type::Hidden_Power){
             this->moveset[i].set_type(this->hiddenpower);
             this->moveset[i].set_power(this->hiddenpower_power);
@@ -44,10 +44,8 @@ void Pokemon::init(){
         if(this->type[0] == this->moveset[i].get_type()){
             this->moveset[i].set_stab(true);
         }
-        else{        
-            if(this->type[0] == this->moveset[i].get_type()){
+        else if(this->type[0] == this->moveset[i].get_type()){        
                 this->moveset[i].set_stab(true);
-            }
         }
     }
     this->status = Status::Healthy;
