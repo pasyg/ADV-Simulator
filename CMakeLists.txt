@@ -37,6 +37,7 @@ add_executable(Simulator
     src/data/category.cpp
     src/data/item.cpp
     src/data/moves.cpp
+    src/data/species.cpp
 
     src/pokemon/pokemon.cpp
 

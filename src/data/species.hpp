@@ -2,6 +2,13 @@
 
 #include <cstdint>
 
+#include "type.hpp"
+
+struct PokemonType{
+	Type type1;
+	Type type2 = Type::Typeless;
+};
+
 enum class Species : std::uint16_t {
 	no_pokemon,
 	// Generation 1
@@ -879,3 +886,5 @@ enum class Species : std::uint16_t {
 	Exeggutor_Alolan,
 	Marowak_Alolan
 };
+
+PokemonType pokemon_type(const Species species);
