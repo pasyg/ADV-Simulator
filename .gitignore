@@ -1,7 +1,7 @@
 .vscode
 build
-thoughts.txt
+Release
 Debug
 test.txt
 output.txt
-Release/
+thoughts.txt
