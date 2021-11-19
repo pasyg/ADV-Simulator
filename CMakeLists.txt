@@ -10,11 +10,13 @@ INCLUDE_DIRECTORIES(
     ${PROJECT_SOURCE_DIR}/src
     ${PROJECT_SOURCE_DIR}/src/attackmove
     ${PROJECT_SOURCE_DIR}/src/battle
+    
     ${PROJECT_SOURCE_DIR}/src/data
     ${PROJECT_SOURCE_DIR}/src/pokemon
     ${PROJECT_SOURCE_DIR}/src/string_conversions
     ${PROJECT_SOURCE_DIR}/src/team
     ${PROJECT_SOURCE_DIR}/src/tools
+    ${PROJECT_SOURCE_DIR}/tests
 )
 
 add_compile_options("$<$<CONFIG:DEBUG>:-DBENCHMARK>")
@@ -52,4 +54,7 @@ add_executable(Simulator
 
     src/team/team.cpp
 
-    src/main.cpp)
+    src/main.cpp
+    
+    tests/init_test.cpp
+    tests/battle_test.cpp)

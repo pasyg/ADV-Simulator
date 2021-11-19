@@ -24,7 +24,7 @@ public:
     /// one turn
     ///
     bool protect = false;
-    int protect_acc = 0;
+    int protect_acc = 100;
     bool flinch = false;
     bool focuspunch = false;
     bool magiccoat = false;
@@ -35,6 +35,7 @@ public:
     /// static
     ///
     bool wish = false;
+    int wish_recovery = 0;
     int spikes = 0;
     ///
     /// reset on switch
@@ -46,8 +47,8 @@ public:
     int speboost = 0;
     int accboost = 0;
     int evaboost = 0; // evasion
+    
     int reflect = 0;
-
     int lightscreen = 0;
     int perishsong = 0;
     

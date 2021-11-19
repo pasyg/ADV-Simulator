@@ -12,7 +12,7 @@
 #include "string_conversions/type.hpp"
 
 #include "rng.hpp"
-#include "team.hpp"
+#include "battle.hpp"
 
 struct Strstats{
     std::string hp;

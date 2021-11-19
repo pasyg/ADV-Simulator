@@ -1,7 +1,14 @@
 #include "battle.hpp"
 
-Battle::Battle(){
+Battle::Battle(Team &team1, Team &team2){
+    this->team[0] = &team1;
+    this->team[1] = &team2;
 
+    this->team[0]->team_init();
+    this->team[1]->team_init();
+
+    this->weather = Weather::Clear;
+    this->weather_turns = 0;
 }
 
 Battle::~Battle(){
@@ -42,11 +49,11 @@ int Battle::get_stat_boosted(const Statname stat, const Pokemon &pokemon, const 
 ///
 bool Battle::compare_speed(){
 
-    Pokemon* mon1 = &this->team[0].member[this->team[0].active_pokemon];
-    Pokemon* mon2 = &this->team[1].member[this->team[1].active_pokemon];
+    Pokemon* mon1 = &this->team[0]->member[this->team[0]->active_pokemon];
+    Pokemon* mon2 = &this->team[1]->member[this->team[1]->active_pokemon];
 
-    int speed1 = get_stat_boosted(Statname::Spe, *mon1, this->team[0].speboost);
-    int speed2 = get_stat_boosted(Statname::Spe, *mon2, this->team[1].speboost);
+    int speed1 = get_stat_boosted(Statname::Spe, *mon1, this->team[0]->speboost);
+    int speed2 = get_stat_boosted(Statname::Spe, *mon2, this->team[1]->speboost);
 
     //this->team[0}.speboost
 
@@ -71,18 +78,18 @@ bool Battle::compare_speed(){
 ///
 void Battle::calc_first_attacker(){
 
-    int prio1 = move_prio(this->team[0].movechoice->get_move());
-    int prio2 = move_prio(this->team[1].movechoice->get_move());
+    int prio1 = move_prio(this->team[0]->movechoice->get_move());
+    int prio2 = move_prio(this->team[1]->movechoice->get_move());
 
     // quickclaw holders have a 20% chance to move first in their priority bracket
     // in singles formats this equates to moving up one priority bracket
-    if(this->team[0].member[this->team[0].active_pokemon].get_item() == Item::Quickclaw){
+    if(this->team[0]->member[this->team[0]->active_pokemon].get_item() == Item::Quickclaw){
         if(get_random(1,10) < 3){
             prio1 += 1;
         }
     }    
 
-    if(this->team[1].member[this->team[1].active_pokemon].get_item() == Item::Quickclaw){
+    if(this->team[1]->member[this->team[1]->active_pokemon].get_item() == Item::Quickclaw){
         if(get_random(1,10) < 3){
             prio2 += 1;
         }

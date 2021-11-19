@@ -110,12 +110,12 @@ int Battle::calculate_damage(const int patkteam){
 
     // choose correct attacking and defending side
     if(patkteam == 0){
-        atkteam = &this->team[0];
-        defteam = &this->team[1];
+        atkteam = this->team[0];
+        defteam = this->team[1];
     }
     else{
-        atkteam = &this->team[1];
-        defteam = &this->team[0];
+        atkteam = this->team[1];
+        defteam = this->team[0];
     }
 
     if(atkteam->movechoice->get_category() == Category::Status){

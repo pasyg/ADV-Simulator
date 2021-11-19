@@ -37,8 +37,11 @@ public:
 
 
 private:
+    Move move;
+    int pp = 0;
     int power;
-    int accuracy;
+    Type type;
+    Category category;
     int priority;
     bool revealed = false;
     bool damage = false;
@@ -48,8 +51,4 @@ private:
     bool ohko = false;
     #endif
     bool is_stab = false;
-    Move move;
-    int pp = 0;
-    Type type;
-    Category category;
 };

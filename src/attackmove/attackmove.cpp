@@ -9,10 +9,18 @@ AttackMove::~AttackMove(){
 }
 
 void AttackMove::init(){
+    this->pp =  move_pp(this->move);
     this->power = move_power(this->move);
-    this->priority = move_prio(this->move);
     this->type = move_type(this->move);
     this->category = move_category(this->type);
+    this->priority = move_prio(this->move);
+    this->revealed = false;
+    //this->secondary =
+    this->disabled = false;
+    // implement
+    #ifndef OHKO_CLAUSE
+    this->ohko = false;
+    #endif
 }
 
 void AttackMove::set_power(const int power){

@@ -8,14 +8,13 @@
 
 class Battle{
 public:
-    Battle();
+    Battle(Team &team1, Team &team2);
     ~Battle();
-private:
     std::string_view p1 = "p1";
     std::string_view p2 = "p2";
-    std::array<Team, 2> team;
-    Weather weather;
-    int weather_turns;
+    std::array<Team*, 2> team;
+    Weather weather = Weather::Clear;
+    int weather_turns = 0;
     bool move_first;
 
     // battle.cpp
@@ -36,4 +35,5 @@ private:
 
     // use_move.cpp
     void use_move(const int teamindex);
+private:
 };

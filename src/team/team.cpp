@@ -17,16 +17,22 @@ void Team::team_init(){
         switch(i){
         case 0:
             this->switches[i].set_move(Move::Switch0);
+            break;
         case 1:
             this->switches[i].set_move(Move::Switch1);
+            break;
         case 2:
             this->switches[i].set_move(Move::Switch2);
+            break;
         case 3:
             this->switches[i].set_move(Move::Switch3);
+            break;
         case 4:
             this->switches[i].set_move(Move::Switch4);
+            break;
         case 5:
             this->switches[i].set_move(Move::Switch5);
+            break;
         default:
         #ifdef _DEBUG
             debug_log("ERROR TEAM INIT SWITCHES");
@@ -40,6 +46,48 @@ void Team::team_init(){
             this->member[i].init();
         }
     }
+    
+    this->active_pokemon = 0;
+    this->protect = false;
+    this->protect_acc = 100;
+    this->flinch = false;
+    this->focuspunch = false;
+    this->magiccoat = false;
+    this->endure = false;
+    this->grudge = false;
+    this->lastdamage = 0;
+
+    this->wish = false;
+    this->wish_recovery = 0;
+    this->spikes = 0;
+
+    this->atkboost = 0;
+    this->defboost = 0;
+    this->satkboost = 0;
+    this->sdefboost = 0;
+    this->speboost = 0;
+    this->accboost = 0;
+    this->evaboost = 0;
+
+    this->reflect = 0;
+    this->lightscreen = 0;
+    this->perishsong = 0;
+
+    this->trapped = false;
+    this->move_locked = false;
+    this->taunt = false;
+    this->confusion = false;
+    this->ingrain = false;
+    this->yawn = false;
+    this->infatuated = false;
+    this->curse = false;
+    this->leechseed = false;
+    this->block = false;
+    this->targetable = true;
+    this->charge = false;
+    this->foresight = false;
+    this->lockon = false;
+    this->mist = false;
 }
 
 int Team::get_boost(Statname stat){
@@ -101,5 +149,5 @@ void Team::get_move_options(){
 
 // can be rewritten for however one wants to make move decisions
 void Team::decide_move(){
-    movechoice = &move_options[get_random(0, move_options.size()-1)];
+    movechoice = &this->move_options[get_random(0, move_options.size()-1)];
 }

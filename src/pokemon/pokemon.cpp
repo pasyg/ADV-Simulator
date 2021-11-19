@@ -7,7 +7,8 @@ Pokemon::Pokemon(){
 Pokemon::~Pokemon(){
     
 }
-
+// full initilization to prepare for start of a battle
+// puts team always in the same defined state
 void Pokemon::init(){
 
     // stat calculation and initilization
@@ -17,7 +18,9 @@ void Pokemon::init(){
 
     // initialize each move
     for(int i = 0; i < 4; ++i){
-        this->moveset[i].init();
+        if(this->moveset[i].get_move() != Move::None){
+            this->moveset[i].init();
+        }
     }
 
     // assign damage boost trait for items for damage calculation
@@ -25,8 +28,14 @@ void Pokemon::init(){
         this->item_damage_boost = true;
     }
 
+
     // sets STAB trait for same type attacks
     for(int i = 0; i < 4; ++i){    
+    // assigns the type and power of hidden power
+        if(this->moveset[i].get_type() == Type::Hidden_Power){
+            this->moveset[i].set_type(this->hiddenpower);
+            this->moveset[i].set_power(this->hiddenpower_power);
+        }
         if(this->type[0] == this->moveset[i].get_type()){
             this->moveset[i].set_stab(true);
         }
@@ -35,13 +44,9 @@ void Pokemon::init(){
                 this->moveset[i].set_stab(true);
             }
         }
-
-        // assigns the type and power of hidden power
-        if(this->moveset[i].get_type() == Type::Hidden_Power){
-            this->moveset[i].set_type(this->hiddenpower);
-            this->moveset[i].set_power(this->hiddenpower_power);
-        }
     }
+    this->status = Status::Healthy;
+    this->revealed = false;
 }
 
 Stats Pokemon::get_stats() const{
