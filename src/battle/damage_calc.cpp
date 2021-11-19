@@ -197,19 +197,19 @@ int Battle::calculate_damage(const int patkteam){
     if(get_random(0,15) == 0){
         if(defteam->defboost >= 0){
             damage = static_cast<int>((damage * get_stat_boosted(attack, *atkmon, atkteam->get_boost(attack)
-                                       / static_cast<float>(def_stat))));
+                                       / static_cast<float>(def_stat * 50.0))));
             damage *= 2;
         }
         else{
             damage = static_cast<int>((damage * get_stat_boosted(attack, *atkmon, atkteam->get_boost(attack) 
-                                      / static_cast<float>(get_stat_boosted(defense, *defmon, defteam->get_boost(defense)) * 50))));
+                                      / static_cast<float>(get_stat_boosted(defense, *defmon, defteam->get_boost(defense)) * 50.0))));
             damage *= 2;
         }
     }
     // No Critical Hit
     else{
     damage = static_cast<int>(damage * get_stat_boosted(attack, *atkmon, atkteam->get_boost(attack)) 
-                              / static_cast<float>((get_stat_boosted(defense, *defmon, defteam->get_boost(defense)) * 50)));
+                              / static_cast<float>((get_stat_boosted(defense, *defmon, defteam->get_boost(defense)) * 50.0)));
     }
 
     damage += 2;
