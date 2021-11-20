@@ -15,9 +15,7 @@ std::string to_string(Item const item){
         case Item::Chestoberry:     return "Chesto Berry";
         case Item::Dragonfang:      return "Dragon Fang";
         case Item::Ganlonberry:     return "Ganlon Berry";
-        case Item::Grepaberry:      return "Grepa Berry";
         case Item::Hardstone:       return "Hard Stone";
-        case Item::Kelpsyberry:     return "Kelpsy Berry";
         case Item::Kingsrock:       return "Kings Rock";
         case Item::Lansatberry:     return "Lansat Berry";
         case Item::Laxincense:      return "Lax Incense";
@@ -60,7 +58,7 @@ std::string to_string(Item const item){
         case Item::Machobrace:      return "Macho Brace";
         case Item::Magoberry:       return "Mago Berry";
         case Item::Rawstberry:      return "Rawst Berry";
-        case Item::Mentalberry:     return "Mental Berry";
+        case Item::Mentalherb:     return "Mental Herb";
         case Item::Oranberry:       return "Oran Berry";
         case Item::Pechaberry:      return "Pecha Berry";
         case Item::Persimberry:     return "Persim Berry";
@@ -105,15 +103,13 @@ Item item_from_string(std::string_view str){
         { "BrightPowder", Item::Brightpowder },
         { "ChestoBerry", Item::Chestoberry },
         { "GanlonBerry", Item::Ganlonberry },
-        { "GrepaBerry", Item::Grepaberry },
         { "HardStone", Item::Hardstone },
-        { "KelpsyBerry", Item::Kelpsyberry },
         { "KingsRock", Item::Kingsrock },
         { "LansatBerry", Item::Lansatberry },
         { "LaxIncense", Item::Laxincense },
         { "SoulDew", Item::Souldew },
         { "LeppaBerry", Item::Leppaberry },
-        { "LiechiBerr", Item::Liechiberry },
+        { "LiechiBerry", Item::Liechiberry },
         { "Mail", Item::Mail },
         { "PetayaBerry", Item::Petayaberry },
         { "QuickClaw", Item::Quickclaw },
@@ -131,7 +127,7 @@ Item item_from_string(std::string_view str){
         { "IapapaBerry", Item::Iapapaberry },
         { "MachoBrace", Item::Machobrace },
         { "MagoBerry", Item::Magoberry },
-        { "MentalBerry", Item::Mentalberry },
+        { "MentalHerb", Item::Mentalherb },
         { "OranBerry", Item::Oranberry },
         { "PechaBerry", Item::Pechaberry },
         { "PersimBerry", Item::Persimberry },

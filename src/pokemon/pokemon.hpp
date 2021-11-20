@@ -81,6 +81,8 @@ private:
     Species species;
     Gender gender;
     Item item;
+    Item previous_item = Item::None;
+    bool knocked_off = false;
     bool item_damage_boost;
     Ability ability;
     int level = 100;

@@ -67,6 +67,7 @@ std::string Pokemon::get_name() const{
 int Pokemon::get_current_hp(){
     return this->current_hp;    
 }
+
 void Pokemon::set_status(const Status p_status){
     this->status = p_status;
 }
@@ -120,6 +121,7 @@ void Pokemon::increase_hp(const int heal){
         this->current_hp = this->stats.hp;
     }
 }
+
 Item Pokemon::get_item() const{
     return this->item;
 }
@@ -175,9 +177,11 @@ int Pokemon::get_hiddenpower_power() const{
 Type Pokemon::get_hiddenpower_type() const{
     return this->hiddenpower;
 }
+
 ///
 /// initilization relevant
 ///
+
 void Pokemon::set_name(const std::string name){
     this->name = name;
 }
@@ -239,6 +243,7 @@ void Pokemon::set_hiddenpower(const Type p_type, const int p_power){
     this->hiddenpower = p_type;
     this->hiddenpower_power = p_power;
 }
+
 ///
 /// calculates the pokemon objects stats from
 /// base stats / EVs / IVs / nature
@@ -352,9 +357,11 @@ void Pokemon::stat_init(){
     this->calc_hiddenpower_power();
     this->calc_hiddenpower_type();
 }
+
 ///
 /// stat calculations for initilization
 ///
+
 void Pokemon::calc_hp(){
     this->stats.hp = 2 * this->basestats.hp;
     this->stats.hp += this->IVs.hp;
@@ -408,10 +415,12 @@ void Pokemon::calc_spe(){
     this->stats.spe = static_cast<int>(this->stats.spe/100.0);
     this->stats.spe += 5;
 }
+
 ///
 /// determinies the power of hidden power by summing up
 /// differently weighted IV LSBs and normalizing between 30-70
 ///
+
 void Pokemon::calc_hiddenpower_power(){
     int sum = 0;
 
@@ -438,11 +447,13 @@ void Pokemon::calc_hiddenpower_power(){
     sum = static_cast<int>(sum / 63.0);
     this->hiddenpower_power = sum + 30;
 }
+
 ///
 /// determines the type of hidden power by summing up 
 /// differently weighted IV LSBs and normalizing between 
 /// 0-15 to pick from a simple table
 ///
+
 void Pokemon::calc_hiddenpower_type(){
 
     int sum = 0;

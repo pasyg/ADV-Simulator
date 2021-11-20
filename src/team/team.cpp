@@ -114,6 +114,171 @@ int Team::get_boost(Statname stat){
     }
 }
 
+void Team::set_boost(Statname stat, int boost){
+    switch(stat){
+        case Statname::Acc:
+            this->accboost += boost;
+            if(this->accboost > 6){
+                this->accboost = 6;
+            }
+            if(this->accboost < -6){
+                this->accboost = -6;
+            }
+            return;
+        case Statname::Atk:
+            this->atkboost += boost;
+            if(this->atkboost > 6){
+                this->atkboost = 6;
+            }
+            if(this->atkboost < -6){
+                this->atkboost = -6;
+            }
+            return;
+        case Statname::Def:
+            this->defboost += boost;
+            if(this->defboost > 6){
+                this->defboost = 6;
+            }
+            if(this->defboost < -6){
+                this->defboost = -6;
+            }
+            return;
+        case Statname::Eva:
+            this->evaboost += boost;
+            if(this->evaboost > 6){
+                this->evaboost = 6;
+            }
+            if(this->evaboost < -6){
+                this->evaboost = -6;
+            }
+            return;
+        case Statname::Satk:
+            this->satkboost += boost;
+            if(this->satkboost > 6){
+                this->satkboost = 6;
+            }
+            if(this->satkboost < -6){
+                this->satkboost = -6;
+            }
+            return;
+        case Statname::Sdef:
+            this->sdefboost += boost;
+            if(this->sdefboost > 6){
+                this->sdefboost = 6;
+            }
+            if(this->sdefboost < -6){
+                this->sdefboost = -6;
+            }
+            return;
+        case Statname::Spe:
+            this->speboost += boost;
+            if(this->speboost > 6){
+                this->speboost = 6;
+            }
+            if(this->speboost < -6){
+                this->speboost = -6;
+            }
+            return;
+    }
+}
+
+void Team::use_pinch_berry(){
+    if(this->member[this->active_pokemon].get_current_hp() < 
+        (this->member[this->active_pokemon].get_stats().hp / 4.0)){
+        switch(this->member[this->active_pokemon].get_item()){
+            case Item::Liechiberry:
+                this->set_boost(Statname::Atk, 1);
+                this->member[this->active_pokemon].remove_item();
+                return;
+            case Item::Ganlonberry:
+                this->set_boost(Statname::Def, 1);
+                this->member[this->active_pokemon].remove_item();
+                return;
+            case Item::Petayaberry:
+                this->set_boost(Statname::Satk, 1);
+                this->member[this->active_pokemon].remove_item();
+                return;
+            case Item::Apicotberry:
+                this->set_boost(Statname::Sdef, 1);
+                this->member[this->active_pokemon].remove_item();
+                return;
+            case Item::Salacberry:
+                this->set_boost(Statname::Spe, 1);
+                this->member[this->active_pokemon].remove_item();
+                return;
+        }
+    }
+}
+
+void Team::set_confusion(){
+    this->confusion = get_random(2,5);
+}
+
+void Team::use_hp_berry(){
+    if(this->member[this->active_pokemon].get_current_hp() < 
+        (this->member[this->active_pokemon].get_stats().hp / 2.0)){
+        switch(this->member[this->active_pokemon].get_item()){
+            case Item::Aguavberry:
+                switch(this->member[this->active_pokemon].get_nature()){
+                    case Nature::Naughty:
+                    case Nature::Rash:
+                    case Nature::Naive:
+                    case Nature::Lax:
+                        this->set_confusion();
+                }
+                goto berry_heal;
+
+            case Item::Figyberry:
+                switch(this->member[this->active_pokemon].get_nature()){
+                    case Nature::Modest:
+                    case Nature::Timid:
+                    case Nature::Calm:
+                    case Nature::Bold:
+                        this->set_confusion();
+                }
+                goto berry_heal;
+
+            case Item::Iapapaberry:
+                switch(this->member[this->active_pokemon].get_nature()){
+                    case Nature::Lonely:
+                    case Nature::Mild:
+                    case Nature::Gentle:
+                    case Nature::Hasty:
+                        this->set_confusion();
+                }
+                goto berry_heal;
+
+            case Item::Magoberry:
+                switch(this->member[this->active_pokemon].get_nature()){
+                    case Nature::Brave:
+                    case Nature::Quiet:
+                    case Nature::Sassy:
+                    case Nature::Relaxed:
+                        this->set_confusion();
+                }
+                goto berry_heal;
+
+            case Item::Wikiberry:
+                switch(this->member[this->active_pokemon].get_nature()){
+                    case Nature::Adamant:
+                    case Nature::Jolly:
+                    case Nature::Careful:
+                    case Nature::Impish:
+                        this->set_confusion();
+                }
+
+            berry_heal:
+                this->member[this->active_pokemon].increase_hp(
+                    static_cast<int>(this->member[this->active_pokemon].get_stats().hp / 8.0)
+                );
+            case Item::Oranberry:
+                this->member[this->active_pokemon].increase_hp(10);
+            case Item::Sitrusberry:
+                this->member[this->active_pokemon].increase_hp(30);
+        }
+    }
+}
+
 void Team::get_move_options(){
 
     const Pokemon activemon = this->member[this->active_pokemon];

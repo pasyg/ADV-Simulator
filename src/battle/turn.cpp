@@ -34,10 +34,24 @@ bool Battle::check_fainted(){
 }
 
 void Battle::end_of_turn(){
-    Pokemon *pokemon1 = &this->team[this->move_first]->member[this->team[this->move_first]->active_pokemon];
-    Pokemon *pokemon2 = &this->team[!(this->move_first)]->member[this->team[!(this->move_first)]->active_pokemon];
+    Team* team1 = this->team[this->move_first];
+    Team* team2 = this->team[!(this->move_first)];
 
-    // wish
+    Pokemon* pokemon1 = &this->team[this->move_first]->member[this->team[this->move_first]->active_pokemon];
+    Pokemon* pokemon2 = &this->team[!(this->move_first)]->member[this->team[!(this->move_first)]->active_pokemon];
+
+    this->move_first = this->compare_speed();
+    // wish recovers 50% of the original users max HP to the pokemon that receives it
+    if(team1->wish == true){
+        pokemon1->increase_hp(team1->wish_recovery);
+        team1->wish = false;
+    }
+    if(team2->wish == true){
+        pokemon2->increase_hp(team2->wish_recovery);
+        team2->wish = false;
+    }
+    this->move_first = this->compare_speed();
+    // weather damage
     switch(this->weather){
         case Weather::Clear:
         case Weather::Rain:
@@ -59,32 +73,63 @@ void Battle::end_of_turn(){
     if(weather_turns == 0){
         this->weather = Weather::Clear;
     }
-    // pokemon faint
-    // ingrain
-    // rain dish
-    // speed boost
-    // truant
-    // shed skin
-    // leftovers
-    // berry and herbs
-    // leech seed
-    // poison
-    // toxic
-    // burn
-    // nightmare
-    // curse
-    // multi turn attacks
-    // uproar
-    // outrage/petaldance/thrash
-    // decrement disable
-    // encore
-    // taunt / lock-on / mindreader
-    // yawn
-    // future sight / doom desire
-    // perish song
-    // 
-    // game decided after both fsight/DD AND perishsong
-    // not inbetween
+    ///
+    ///
+    /// pokemon faint
+    ///
+    ///
+    this->move_first = this->compare_speed();
+    for(int i = 0; i<2; ++i){
+        // ingrain heals the currently active pokemon for 1/16th at the end of every turn
+        if(team1->ingrain == true){
+            pokemon1->increase_hp(static_cast<int>(pokemon1->get_stats().hp / 16.0));
+        }
+        
+        // rain dish
+        if(this->weather == Weather::Rain){
+            if(pokemon1->get_ability() == Ability::Rain_Dish){
+                pokemon1->increase_hp(static_cast<int>(pokemon1->get_stats().hp / 16.0));
+            }
+        }
+        // speed boost
+        if(pokemon1->get_ability() == Ability::Speed_Boost){
+            team1->set_boost(Statname::Spe, 1);
+        }
+        // truant
+        if(pokemon1->get_ability() == Ability::Truant){
+            team1->truant = !team1->truant;
+        }
+        // shed skin
+        if(pokemon1->get_ability() == Ability::Shed_Skin){
+            if(get_random(0,2) > 0){
+                pokemon1->set_status(Status::Healthy);
+            }
+        }
+        // leftovers
+        if(pokemon1->get_item() == Item::Leftovers){
+            pokemon1->increase_hp(static_cast<int>(pokemon1->get_stats().hp / 16.0));
+        }
+        // berry and herbs
+        // leech seed
+        // poison
+        // toxic
+        // burn
+        // nightmare
+        // curse
+        // multi turn attacks
+        // uproar
+        // outrage/petaldance/thrash
+        // decrement disable
+        // encore
+        // taunt / lock-on / mindreader
+        // yawn
+        // future sight / doom desire
+        // perish song
+        // 
+        // game decided after both fsight/DD AND perishsong
+        // not inbetween
+        this->move_first = !this->move_first;
+    }
 }
 
 void Battle::switch_in_checks(){

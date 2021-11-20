@@ -13,3 +13,13 @@ A battle simulator for the third generation of the pokemon games.
   most values have to be set for later initialization
   
 Structural Inspiration: [Technical Machine](https://github.com/davidstone/technical-machine)
+
+Sources:
+End of turn mechanics:
+https://pastebin.com/HbcXtCN7
+
+Damage calculation:
+https://bulbapedia.bulbagarden.net/wiki/Damage
+
+Hidden Power calculation:
+https://bulbapedia.bulbagarden.net/wiki/Hidden_Power_(move)/Calculation

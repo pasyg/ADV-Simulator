@@ -14,6 +14,12 @@ public:
     void get_move_options();
     void decide_move();
     int get_boost(Statname stat);
+    void set_boost(Statname stat, int boost);
+    void set_confusion();
+    // if a pokemon is below 25% health, some berries will activate
+    // at the end of turn
+    void use_pinch_berry();
+    void use_hp_berry();
     AttackMove* movechoice;
     std::array<AttackMove, 6> switches;
     std::vector<AttackMove> move_options;
@@ -30,6 +36,7 @@ public:
     bool magiccoat = false;
     bool endure = false;
     bool grudge = false;
+    bool truant = false;
     int lastdamage = 0;
     ///
     /// static
@@ -51,12 +58,12 @@ public:
     int reflect = 0;
     int lightscreen = 0;
     int perishsong = 0;
+    int confusion = 0;
     
     bool trapped = false;
     bool move_locked = false;
     AttackMove locked_move;
     bool taunt = false;
-    bool confusion = false;
     bool ingrain = false;
     bool yawn = false;
     bool infatuated = false;
