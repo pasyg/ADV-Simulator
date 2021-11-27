@@ -59,13 +59,18 @@ public:
     int lightscreen = 0;
     int perishsong = 0;
     int confusion = 0;
+    int selflock = 0; // outrage, petaldance, thrash
+    int turns_on_the_field = 0;
+    int uproar = 0;
+    int encore = 0;
+    int taunt = 0;
+    int lockon = 0;
+    int yawn = false;  
     
     bool trapped = false;
     bool move_locked = false;
     AttackMove locked_move;
-    bool taunt = false;
     bool ingrain = false;
-    bool yawn = false;
     bool infatuated = false;
     bool curse = false;
     bool leechseed = false;
@@ -73,6 +78,5 @@ public:
     bool targetable = true; // bounce, dig, etc.
     bool charge = false;
     bool foresight = false;
-    bool lockon = false;
     bool mist = false;
 };

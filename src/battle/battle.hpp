@@ -3,7 +3,7 @@
 #include "effectiveness.hpp"
 #include "team.hpp"
 #include "rng.hpp"
-
+#include "benchmark.hpp"
 #include "weather.hpp"
 
 class Battle{
@@ -17,8 +17,6 @@ public:
     int weather_turns = 0;
     bool move_first;
 
-    Pokemon* active_1 = &this->team[0]->member[this->team[0]->active_pokemon];
-    Pokemon* active_2 = &this->team[1]->member[this->team[1]->active_pokemon];
 
     // battle.cpp
     int get_stat_boosted(const Statname stat, const Pokemon &pokemon, const int boost);

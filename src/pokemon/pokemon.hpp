@@ -12,6 +12,7 @@
 #include "species.hpp"
 #include "statnames.hpp"
 #include "status.hpp"
+#include "rng.hpp"
 
 
 class Pokemon{
@@ -90,11 +91,12 @@ private:
     Stats EVs = {0,0,0,0,0,0};
     Nature nature;
     Stats IVs = {31,31,31,31,31,31};
+    Status status = Status::Healthy;
+    int sleep_turns = 0;
     ///
     /// implied / initialized
     ///
     Stats basestats;
-    Status status = Status::Healthy;
     std::array<AttackMove, 4> moveset;
     std::array<Type, 2> type = {Type::Typeless, Type::Typeless};
     bool revealed = false;

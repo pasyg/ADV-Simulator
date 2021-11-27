@@ -50,7 +50,6 @@ void Battle::end_of_turn(){
         pokemon2->increase_hp(team2->wish_recovery);
         team2->wish = false;
     }
-    this->move_first = this->compare_speed();
     // weather damage
     switch(this->weather){
         case Weather::Clear:
@@ -110,19 +109,61 @@ void Battle::end_of_turn(){
             pokemon1->increase_hp(static_cast<int>(pokemon1->get_stats().hp / 16.0));
         }
         // berry and herbs
-        // leech seed
-        // poison
-        // toxic
+        team1->use_hp_berry();
+        team1->use_pinch_berry();
+        // leech seed, opponent regenerates the amount of hp the affected pokemon loses
+        if(team1->leechseed == true){
+            pokemon1->reduce_hp(pokemon1->get_stats().hp / 8.0);
+            pokemon2->increase_hp(pokemon1->get_stats().hp / 8.0);
+        }
+        // poison, fixed damage of 1/8th
+        if(pokemon1->get_status() == Status::Poison){
+            pokemon1->reduce_hp(pokemon1->get_stats().hp / 8.0);
+        }
+        // toxic, pokemon takes an escalating amount of damage, 
+        // increases by 1/16th every consecutive turn on the field
+        if(pokemon1->get_status() == Status::Toxic_poison){
+            pokemon1->reduce_hp(team1->turns_on_the_field * (pokemon1->get_stats().hp / 8.0));
+        }
         // burn
+        if(pokemon1->get_status() == Status::Burn){
+            pokemon1->reduce_hp(pokemon1->get_stats().hp / 8.0);
+        }
         // nightmare
         // curse
-        // multi turn attacks
+        if(team1->curse == true){
+            pokemon1->reduce_hp(pokemon1->get_stats().hp / 4.0);
+        }
+        // multi turn attacks ??????
         // uproar
-        // outrage/petaldance/thrash
+        if(team1->uproar > 0){
+            if(pokemon1->get_status() == Status::Sleep_inflicted || pokemon1->get_status() == Status::Sleep_self){
+                pokemon1->set_status(Status::Healthy);
+            }
+            if(pokemon2->get_status() == Status::Sleep_inflicted || pokemon2->get_status() == Status::Sleep_self){
+                pokemon2->set_status(Status::Healthy);
+            }
+        }
+        // outrage/petaldance/thrash, user gets confused and end of the move counter (2-3 turns)
+        if(team1->selflock > 0){
+            --team1->selflock;
+            if(team1->selflock == 0){
+                team1->set_confusion();
+            }
+        }
         // decrement disable
+
         // encore
+        --team1->encore;
         // taunt / lock-on / mindreader
+        -- team1->taunt;
+        -- team1->lockon;
         // yawn
+        if(team1->yawn == 1){
+            if(pokemon1->get_status() == Status::Healthy){
+                pokemon1->set_status(Status::Sleep_inflicted);
+            }
+        }
         // future sight / doom desire
         // perish song
         // 

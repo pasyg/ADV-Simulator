@@ -56,10 +56,10 @@ bool Battle::compare_speed(){
     int speed2 = get_stat_boosted(Statname::Spe, this->team[1]->member[this->team[1]->active_pokemon], this->team[1]->speboost);
 
 
-    if(this->active_1->get_status() == Status::Paralysis){
+    if(this->team[0]->member[this->team[0]->active_pokemon].get_status() == Status::Paralysis){
         speed1 = static_cast<int>(speed1 / 4.0);
     }
-    if(this->active_2->get_status() == Status::Paralysis){
+    if(this->team[1]->member[this->team[1]->active_pokemon].get_status() == Status::Paralysis){
         speed2 = static_cast<int>(speed2 / 4.0);
     }
     if(speed1 > speed2){
@@ -82,13 +82,13 @@ void Battle::calc_first_attacker(){
 
     // quickclaw holders have a 20% chance to move first in their priority bracket
     // in singles formats this equates to moving up one priority bracket
-    if(this->active_1->get_item() == Item::Quickclaw){
+    if(this->team[0]->member[this->team[0]->active_pokemon].get_item() == Item::Quickclaw){
         if(get_random(1,10) < 3){
             prio1 += 1;
         }
     }    
 
-    if(this->active_2->get_item() == Item::Quickclaw){
+    if(this->team[1]->member[this->team[1]->active_pokemon].get_item() == Item::Quickclaw){
         if(get_random(1,10) < 3){
             prio2 += 1;
         }

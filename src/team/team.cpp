@@ -211,7 +211,9 @@ void Team::use_pinch_berry(){
 }
 
 void Team::set_confusion(){
-    this->confusion = get_random(2,5);
+    if(this->confusion < 1){
+        this->confusion = get_random(2,5);
+    }
 }
 
 void Team::use_hp_berry(){

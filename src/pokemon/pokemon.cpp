@@ -70,6 +70,12 @@ int Pokemon::get_current_hp(){
 
 void Pokemon::set_status(const Status p_status){
     this->status = p_status;
+    if(p_status == Status::Sleep_self){
+        this->sleep_turns = 2;
+    }
+    if(p_status == Status::Sleep_inflicted){
+        this->sleep_turns = get_random(2,5);
+    }
 }
 
 void Pokemon::set_revealed(const bool p_revealed){

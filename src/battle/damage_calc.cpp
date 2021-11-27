@@ -118,13 +118,6 @@ int Battle::calculate_damage(const int patkteam){
         defteam = this->team[0];
     }
 
-    if(atkteam->movechoice->get_category() == Category::Status){
-    #ifdef _DEBUG
-        debug_log("ERROR CATEGORY DAMAGE CALC battle.cpp");
-    #endif
-        return 0;
-    }
-
     atkmon = &atkteam->member[atkteam->active_pokemon];
     defmon = &defteam->member[defteam->active_pokemon];
 

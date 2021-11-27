@@ -18,7 +18,7 @@ int main(int argc, char** argv[]) {
   // IMPORT TEAMS, INIT IN BATTLE CONSTRUCTOR
     std::vector<Team> test;
     // file must consist of packed teams (packed showdown format) and be line by line
-    test = import_team("sample");
+  test = import_team("sample");
 
   battle_test(test[0], test[1]);
 
