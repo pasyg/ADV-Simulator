@@ -1,7 +1,7 @@
 #include "effectiveness.hpp"
 
 
-const float effectiveness(Type const atktype, Type const deftype){
+const float effectiveness(Type const &atktype, Type const &deftype){
     switch (atktype) {
 		case Type::Bug: switch (deftype) {
 			case Type::Bug: return regular;

@@ -12,19 +12,17 @@ public:
     ~Battle();
     std::string_view p1 = "p1";
     std::string_view p2 = "p2";
-    std::array<Team*, 2> team;
+    std::array<Team*, 2> team = {};
     Weather weather = Weather::Clear;
     int weather_turns = 0;
-    bool move_first;
-
+    bool move_first = true;
 
     // battle.cpp
-    int get_stat_boosted(const Statname stat, const Pokemon &pokemon, const int boost);
+    int get_stat_boosted(const Statname &stat, const Pokemon &pokemon, const int &boost);
     bool compare_speed();
     void calc_first_attacker();
 
     // damage_calc.cpp
-    int item_ability_mult(int damage, const AttackMove &movechoice, const Pokemon &atkmon, const Pokemon &defmon);
     int calculate_damage(const int patkteam);
 
     // turn.cpp

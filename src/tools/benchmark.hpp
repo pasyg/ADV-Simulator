@@ -24,7 +24,7 @@ class Timer{
         auto end = std::chrono::time_point_cast<std::chrono::microseconds>(endTimepoint).time_since_epoch().count();
 
         auto duration = end - start;
-        double us = duration;
+        double us = static_cast<double>(duration);
         double ms = us * 0.001;
         double s = ms * 0.001;
         std::cout << duration << " us" << std::endl;

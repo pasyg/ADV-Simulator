@@ -2,7 +2,6 @@
 
 #include <cstdint>
 
-#include "data/category.hpp"
 #include "data/moves.hpp"
 #include "data/type.hpp"
 
@@ -23,7 +22,6 @@ public:
     void set_priority(const int prio);
     void set_disabled(const bool disable);
     void set_move(const Move move);
-    void set_category(const Category category);
 
     int get_power() const;
     bool get_stab() const;
@@ -33,7 +31,6 @@ public:
     int get_priority() const;
     bool get_disabled() const;
     Move get_move();
-    Category get_category() const;
 
 
 private:
@@ -41,7 +38,6 @@ private:
     int pp = 0;
     int power;
     Type type;
-    Category category;
     int priority;
     bool revealed = false;
     bool damage = false;

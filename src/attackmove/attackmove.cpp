@@ -12,7 +12,6 @@ void AttackMove::init(){
     this->pp =  move_pp(this->move);
     this->power = move_power(this->move);
     this->type = move_type(this->move);
-    this->category = move_category(this->type);
     this->priority = move_prio(this->move);
     this->revealed = false;
     //this->secondary =
@@ -81,14 +80,6 @@ void AttackMove::set_priority(const int prio){
 
 void AttackMove::set_disabled(const bool disable){
     this->disabled = disable;
-}
-
-void AttackMove::set_category(const Category category){
-    this->category = category;
-}
-
-Category AttackMove::get_category() const{
-    return this->category;
 }
 
 int AttackMove::get_power() const{

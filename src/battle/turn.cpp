@@ -113,26 +113,26 @@ void Battle::end_of_turn(){
         team1->use_pinch_berry();
         // leech seed, opponent regenerates the amount of hp the affected pokemon loses
         if(team1->leechseed == true){
-            pokemon1->reduce_hp(pokemon1->get_stats().hp / 8.0);
-            pokemon2->increase_hp(pokemon1->get_stats().hp / 8.0);
+            pokemon1->reduce_hp(static_cast<int>(pokemon1->get_stats().hp / 8.0));
+            pokemon2->increase_hp(static_cast<int>(pokemon1->get_stats().hp / 8.0));
         }
         // poison, fixed damage of 1/8th
         if(pokemon1->get_status() == Status::Poison){
-            pokemon1->reduce_hp(pokemon1->get_stats().hp / 8.0);
+            pokemon1->reduce_hp(static_cast<int>(pokemon1->get_stats().hp / 8.0));
         }
         // toxic, pokemon takes an escalating amount of damage, 
         // increases by 1/16th every consecutive turn on the field
         if(pokemon1->get_status() == Status::Toxic_poison){
-            pokemon1->reduce_hp(team1->turns_on_the_field * (pokemon1->get_stats().hp / 8.0));
+            pokemon1->reduce_hp(static_cast<int>(team1->turns_on_the_field * (pokemon1->get_stats().hp / 8.0)));
         }
         // burn
         if(pokemon1->get_status() == Status::Burn){
-            pokemon1->reduce_hp(pokemon1->get_stats().hp / 8.0);
+            pokemon1->reduce_hp(static_cast<int>(pokemon1->get_stats().hp / 8.0));
         }
         // nightmare
         // curse
         if(team1->curse == true){
-            pokemon1->reduce_hp(pokemon1->get_stats().hp / 4.0);
+            pokemon1->reduce_hp(static_cast<int>(pokemon1->get_stats().hp / 4.0));
         }
         // multi turn attacks ??????
         // uproar

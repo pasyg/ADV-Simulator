@@ -15,7 +15,7 @@ Battle::~Battle(){
 
 }
 
-int Battle::get_stat_boosted(const Statname stat, const Pokemon &pokemon, const int boost){
+int Battle::get_stat_boosted(const Statname &stat, const Pokemon &pokemon, const int &boost){
     switch(stat){
         case Statname::Atk:
         case Statname::Def:
