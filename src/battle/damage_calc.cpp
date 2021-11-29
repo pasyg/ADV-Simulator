@@ -16,6 +16,7 @@ int Battle::calculate_damage(const int patkteam){
     int atk_stat = 0;
     int def_stat = 0;
 
+    int crit_chance = 0;
     int damage = 0;
     int burn = 1;
     double other = 1;
@@ -81,6 +82,9 @@ int Battle::calculate_damage(const int patkteam){
             if(defmon->get_ability() == Ability::Flash_Fire){
                 return 0;
             }
+            if(defmon->get_ability() == Ability::Thick_Fat){
+                other /= 2.0;
+            }
             if(atkmon->get_item() == Item::Charcoal){
                 other *= 1.1;
             }
@@ -115,6 +119,9 @@ int Battle::calculate_damage(const int patkteam){
             }
             break;
         case Type::Ice:
+            if(defmon->get_ability() == Ability::Thick_Fat){
+                other /= 2.0;
+            }
             if(atkmon->get_item() == Item::Nevermeltice){
                 other *= 1.1;
             }
@@ -204,30 +211,57 @@ int Battle::calculate_damage(const int patkteam){
                     }
                 default: break;
                 }
+            switch(atkmon->get_ability()){
+                case Ability::Pure_Power:
+                case Ability::Huge_Power:
+                    atk_stat *= 2;
+                    break;
+                case Ability::Hustle:
+                    atk_stat *= 1.5;
+                    break;
+                case Ability::Guts:
+                    if(atkmon->get_status() != Status::Healthy){
+                        burn = 1;
+                        atk_stat *= 1.5;
+                        break;
+                    }
+                case Ability::Swarm:
+                    if(atkteam->movechoice->get_type() == Type::Bug){
+                        if(atkmon->get_current_hp() < (atkmon->get_stats().hp / 3)){
+                            other *= 1.5;
+                        }
+                    }
+                }
+            if(defmon->get_ability() == Ability::Marvel_Scale){
+                if(defmon->get_status() != Status::Healthy){
+                    def_stat *= 1.5;
+                }
+            }
+            break;
+        case Type::Fire:
+            if(atkmon->get_ability() == Ability::Blaze){
+                if(atkmon->get_current_hp() < (atkmon->get_stats().hp / 3)){
+                    other *= 1.5;
+                }
+            }
+        case Type::Water:
+            if(atkmon->get_ability() == Ability::Torrent){
+                if(atkmon->get_current_hp() < (atkmon->get_stats().hp / 3)){
+                    other *= 1.5;
+                }
+            }
+        case Type::Grass:
+            if(atkmon->get_ability() == Ability::Overgrow){
+                if(atkmon->get_current_hp() < (atkmon->get_stats().hp / 3)){
+                    other *= 1.5;
+                }
+            }
         default:
             attack = Statname::Satk;
             defense = Statname::Sdef;
             // Initialize attack value with boost
             atk_stat = get_stat_boosted(attack, *atkmon, atkteam->get_boost(attack));
             def_stat = get_stat_boosted(defense, *defmon, defteam->get_boost(defense));
-
-    }
-    // Check for physical / special
-    if(0){
-        if((atkmon->get_ability() == Ability::Huge_Power) || 
-           (atkmon->get_ability() == Ability::Pure_Power)){
-            atk_stat *= 2;
-        }
-        else if(atkmon->get_ability() == Ability::Guts){
-            if(atkmon->get_status() != Status::Healthy){
-                atk_stat *= 2;
-            }
-        }
-        if(atkmon->get_status() == Status::Burn){
-            if(atkmon->get_ability() != Ability::Guts){
-                burn = 2;
-            }
-        }
     }
 
     // basic damage formula from: https://bulbapedia.bulbagarden.net/wiki/Damage
