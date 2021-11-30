@@ -26,6 +26,7 @@ public:
     int calculate_damage(const int patkteam);
 
     // turn.cpp
+    bool can_move(const bool teamindex);
     bool check_fainted();
     void play_turn();
     void switch_in_checks();

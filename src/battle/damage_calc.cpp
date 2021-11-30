@@ -22,12 +22,18 @@ int Battle::calculate_damage(const int patkteam){
     double other = 1;
 
     // choose correct attacking and defending side
-    if(patkteam == 0){
-        atkteam = this->team[0];
-        defteam = this->team[1];
+    if(this->team[patkteam]->movechoice->get_move() != Move::Hit_Self){
+        if(patkteam == 0){
+            atkteam = this->team[0];
+            defteam = this->team[1];
+        }
+        else{
+            atkteam = this->team[1];
+            defteam = this->team[0];
+        }
     }
     else{
-        atkteam = this->team[1];
+        atkteam = this->team[0];
         defteam = this->team[0];
     }
 
@@ -298,6 +304,8 @@ int Battle::calculate_damage(const int patkteam){
 
     // Damage Roll
     damage = static_cast<int>((get_random(85,100) * damage) / 100.0);
-
+    if(damage < 1){
+        return 1;
+    }
     return damage;
 }

@@ -42,9 +42,10 @@ public:
     ///
     /// static
     ///
+    bool sleep_inflict = false;
+    int spikes = 0;
     int wish = 0;
     int wish_recovery = 0;
-    int spikes = 0;
     ///
     /// reset on switch
     ///

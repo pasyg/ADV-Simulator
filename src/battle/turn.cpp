@@ -13,11 +13,41 @@ void Battle::play_turn(){
     this->calc_first_attacker();
 
     // move for the faster mon
-    use_move(move_first);
-    
-    if(check_fainted()){
+    if(can_move(move_first)){
+        use_move(move_first);
+    }
+
     // slower mon moves if the turn hasnt been stopped yet
-    use_move(!move_first);
+    if(check_fainted()){
+        if(can_move(!move_first)){
+            use_move(!move_first);
+        }
+    }
+}
+// checks if the pokemon is able to use a move
+bool Battle::can_move(const bool teamindex){
+    switch (this->team[teamindex]->mon_in_battle->get_status())
+    {
+        case Status::Freeze:
+        case Status::Sleep_inflicted:
+        case Status::Sleep_self:
+            return false;
+        case Status::Paralysis:
+            if(get_random(1,100) < 26){
+                return false;
+            }
+        default: 
+            break;
+    }
+    if(this->team[teamindex]->truant == true){
+        return false;
+    }
+    if(this->team[teamindex]->confusion > 0){
+        if(get_random(1,2) == 1){
+            this->team[teamindex]->movechoice->set_move(Move::Hit_Self);
+            this->team[teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
+            return false;
+        }
     }
 }
 

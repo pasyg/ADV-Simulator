@@ -54,7 +54,7 @@ enum class Item : std::uint8_t {
     Deepseascale,
     Deepseatooth,
     Focusband,
-    Kingsrock
+    Kingsrock,
     Laxincense,
     Lightball,
     Luckypunch,
@@ -69,7 +69,7 @@ enum class Item : std::uint8_t {
     Souldew,
     Stick,
     Thickclub,
-    Whiteherb,
+    Whiteherb
 };
 
 bool const damage_boosting(const Item item);
