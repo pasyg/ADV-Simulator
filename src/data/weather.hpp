@@ -4,8 +4,8 @@
 
 enum class Weather : uint8_t{
     Clear,
-    Sand,
-    Rain,
-    Sun,
     Hail
+    Rain,
+    Sand,
+    Sun,
 };

@@ -33,6 +33,6 @@ public:
     void end_of_turn();
 
     // use_move.cpp
-    void use_move(const int teamindex);
+    void use_move(const bool teamindex);
 private:
 };
