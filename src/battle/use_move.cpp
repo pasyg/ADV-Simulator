@@ -2,7 +2,7 @@
 
 void Battle::use_move(const bool teamindex){
     int dmg = 0;
-    
+
     switch(this->team[teamindex]->movechoice->get_move()){
         ///
         /// switches
