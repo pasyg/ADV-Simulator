@@ -29,9 +29,14 @@ bool Battle::can_move(const bool teamindex){
     switch (this->team[teamindex]->mon_in_battle->get_status())
     {
         case Status::Freeze:
+            return false;
         case Status::Sleep_inflicted:
         case Status::Sleep_self:
-            return false;
+            if(this->team[teamindex]->movechoice->get_move() != Move::Sleep_Talk){
+                return false;
+            }else{
+                break;
+            }
         case Status::Paralysis:
             if(get_random(1,100) < 26){
                 return false;
@@ -49,6 +54,7 @@ bool Battle::can_move(const bool teamindex){
             return false;
         }
     }
+    return true;
 }
 
 // checks turn state after a move and returns true if the second mon can move
@@ -72,11 +78,11 @@ void Battle::end_of_turn(){
 
     this->move_first = this->compare_speed();
     // wish recovers 50% of the original users max HP to the pokemon that receives it
-    if(team1->wish == true){
+    if(team1->wish == 1){
         pokemon1->increase_hp(team1->wish_recovery);
         team1->wish = false;
     }
-    if(team2->wish == true){
+    if(team2->wish == 1){
         pokemon2->increase_hp(team2->wish_recovery);
         team2->wish = false;
     }

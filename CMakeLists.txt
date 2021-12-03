@@ -24,37 +24,39 @@ add_compile_options("$<$<CONFIG:RELEASE>:-DBENCHMARK>")
 
 set(EXECUTABLE_OUTPUT_PATH ../)
 
-add_executable(Simulator 
-    src/attackmove/attackmove.cpp
-    src/attackmove/effectiveness.cpp
+set(Simulator_SOURCES
+    "src/attackmove/attackmove.cpp"
+    "src/attackmove/effectiveness.cpp"
 
-    src/battle/battle.cpp
-    src/battle/damage_calc.cpp
-    src/battle/turn.cpp
-    src/battle/use_move.cpp
+    "src/battle/battle.cpp"
+    "src/battle/damage_calc.cpp"
+    "src/battle/turn.cpp"
+    "src/battle/use_move.cpp"
 
-    src/data/base_stats.cpp
-    src/data/item.cpp
-    src/data/moves.cpp
-    src/data/species.cpp
+    "src/data/base_stats.cpp"
+    "src/data/item.cpp"
+    "src/data/moves.cpp"
+    "src/data/species.cpp"
 
-    src/pokemon/pokemon.cpp
+    "src/pokemon/pokemon.cpp"
 
-    src/string_conversions/ability.cpp
-    src/string_conversions/gender.cpp
-    src/string_conversions/item.cpp
-    src/string_conversions/moves.cpp
-    src/string_conversions/nature.cpp
-    src/string_conversions/species.cpp
-    src/string_conversions/status.cpp
-    src/string_conversions/type.cpp
+    "src/string_conversions/ability.cpp"
+    "src/string_conversions/gender.cpp"
+    "src/string_conversions/item.cpp"
+    "src/string_conversions/moves.cpp"
+    "src/string_conversions/nature.cpp"
+    "src/string_conversions/species.cpp"
+    "src/string_conversions/status.cpp"
+    "src/string_conversions/type.cpp"
 
-    src/tools/import.cpp
-    src/tools/rng.cpp
+    "src/tools/import.cpp"
+    "src/tools/rng.cpp"
 
-    src/team/team.cpp
+    "src/team/team.cpp"
 
-    src/main.cpp
+    "src/main.cpp"
     
-    tests/init_test.cpp
-    tests/battle_test.cpp)
+    "tests/init_test.cpp"
+    "tests/battle_test.cpp")
+
+add_executable(Simulator ${Simulator_SOURCES})

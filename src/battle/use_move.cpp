@@ -1,5 +1,6 @@
 #include "battle.hpp"
 
+
 void Battle::use_move(const bool teamindex){
     int dmg = 0;
 
@@ -31,26 +32,29 @@ void Battle::use_move(const bool teamindex){
         /// basic damage moves without further effects
         ///
         case Move::Super_Fang:
+            dmg = static_cast<int>(this->team[!teamindex]->member[this->team[!teamindex]->active_pokemon].get_current_hp() / 2.0);
             if(this->team[!teamindex]->mon_in_battle->get_type()[0] != Type::Ghost &&
                this->team[!teamindex]->mon_in_battle->get_type()[0] != Type::Ghost){
-                this->team[!teamindex]->member[this->team[!teamindex]->active_pokemon].reduce_hp(
-                    this->team[!teamindex]->member[this->team[!teamindex]->active_pokemon].get_current_hp() / 2);
+                this->team[!teamindex]->member[this->team[!teamindex]->active_pokemon].reduce_hp(dmg);
             }
             return;
         case Move::Seismic_Toss:
+            dmg = 100;
             if(this->team[!teamindex]->mon_in_battle->get_type()[0] != Type::Ghost &&
                this->team[!teamindex]->mon_in_battle->get_type()[0] != Type::Ghost){
-                this->team[!teamindex]->member[this->team[!teamindex]->active_pokemon].reduce_hp(100);
+                this->team[!teamindex]->member[this->team[!teamindex]->active_pokemon].reduce_hp(dmg);
             }
             return;
         case Move::Night_Shade:
+            dmg = 100;
             if(this->team[!teamindex]->mon_in_battle->get_type()[0] != Type::Normal &&
                this->team[!teamindex]->mon_in_battle->get_type()[0] != Type::Normal){
-                this->team[!teamindex]->member[this->team[!teamindex]->active_pokemon].reduce_hp(100);
+                this->team[!teamindex]->member[this->team[!teamindex]->active_pokemon].reduce_hp(dmg);
             }	
             return;
         case Move::Aerial_Ace:
         case Move::Aeroblast:
+        case Move::Air_Cutter:
         case Move::Brick_Break:
         case Move::Crabhammer:
         case Move::Cross_Chop:
@@ -95,12 +99,17 @@ void Battle::use_move(const bool teamindex){
         case Move::Water_Gun:
         case Move::Waterfall:
         case Move::Wing_Attack:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
+            dmg = calculate_damage(teamindex);
+            this->team[!teamindex]->mon_in_battle->reduce_hp(dmg);
             return;
         ///
         /// secondary effect damage moves
         ///
+        // leech moves
         case Move::Absorb:
+        case Move::Giga_Drain:
+        case Move::Leech_Life:
+        case Move::Mega_Drain:
             dmg = calculate_damage(teamindex);
             this->team[!teamindex]->mon_in_battle->reduce_hp(dmg);
             if(dmg > 1){
@@ -111,281 +120,391 @@ void Battle::use_move(const bool teamindex){
             }
                 return;
         case Move::Acid:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
-            return;
-        case Move::Air_Cutter:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
+            dmg = calculate_damage(teamindex);
+            this->team[!teamindex]->mon_in_battle->reduce_hp(dmg);
+            if(dmg > 0){
+                if(get_random(1,10) == 1){
+                    this->team[!teamindex]->set_boost(Statname::Def, -1);
+                }
+            }
             return;
         case Move::Ancient_Power:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
-            return;
-        case Move::Arm_Thrust:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
-            return;
-        case Move::Astonish:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
+            dmg = calculate_damage(teamindex);
+            this->team[!teamindex]->mon_in_battle->reduce_hp(dmg);
+            if(dmg > 0){
+                if(get_random(1,10) == 1){
+                    this->team[!teamindex]->set_boost(Statname::Atk, 1);
+                    this->team[!teamindex]->set_boost(Statname::Def, 1);
+                    this->team[!teamindex]->set_boost(Statname::Satk, 1);
+                    this->team[!teamindex]->set_boost(Statname::Sdef, 1);
+                    this->team[!teamindex]->set_boost(Statname::Spe, 1);
+                }
+            }
             return;
         case Move::Aurora_Beam:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
+            dmg = calculate_damage(teamindex);
+            this->team[!teamindex]->mon_in_battle->reduce_hp(dmg);
+            if(get_random(1,10) == 1){
+                this->team[!teamindex]->set_boost(Statname::Atk, 1);
+            }
             return;
+        case Move::Astonish:
         case Move::Bite:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
+        case Move::Rock_Slide:
+            dmg = calculate_damage(teamindex);
+            if(dmg > 0){
+                this->team[!teamindex]->mon_in_battle->reduce_hp(dmg);
+                if(get_random(1,10) < 4){
+                    this->team[!teamindex]->flinch = true;
+                }
+            }
             return;
         case Move::Blast_Burn:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
+        case Move::Frenzy_Plant:
+        case Move::Hydro_Cannon:
+        case Move::Hyper_Beam:
+            dmg = calculate_damage(teamindex);
+            if(dmg > 0){
+                this->team[!teamindex]->mon_in_battle->reduce_hp(dmg);
+                this->team[teamindex]->recharge = 2;
+            }
             return;
         case Move::Blaze_Kick:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
+        case Move::Ember:
+        case Move::Fire_Blast:
+        case Move::Fire_Punch:
+        case Move::Flamethrower:
+        case Move::Heat_Wave:
+            dmg = calculate_damage(teamindex);
+            this->team[!teamindex]->mon_in_battle->reduce_hp(dmg);
+            if(dmg > 0){
+                if(get_random(1,10)){
+                    if(this->team[!teamindex]->mon_in_battle->get_status() == Status::Healthy){
+                        this->team[!teamindex]->mon_in_battle->set_status(Status::Burn);
+                    }
+                }
+            }
             return;
         case Move::Blizzard:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
+        case Move::Ice_Beam:
+        case Move::Ice_Punch:
+            dmg = calculate_damage(teamindex);
+            this->team[!teamindex]->mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Body_Slam:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
+        case Move::Thunder:
+            dmg = calculate_damage(teamindex);
+            if(dmg > 0){
+                this->team[!teamindex]->mon_in_battle->reduce_hp(dmg);
+                if(this->team[!teamindex]->mon_in_battle->get_status() == Status::Healthy){
+                    if(get_random(1,10) < 4){
+                        this->team[!teamindex]->mon_in_battle->set_status(Status::Paralysis);
+                    }
+                }
+            }
             return;
+        ////////////////// done until here
         case Move::Bone_Club:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
+            dmg = calculate_damage(teamindex);
+            this->team[!teamindex]->mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Bubble:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
+            dmg = calculate_damage(teamindex);
+            this->team[!teamindex]->mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Bubble_Beam:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
+            dmg = calculate_damage(teamindex);
+            this->team[!teamindex]->mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Confusion:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
+            dmg = calculate_damage(teamindex);
+            this->team[!teamindex]->mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Constrict:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
+            dmg = calculate_damage(teamindex);
+            this->team[!teamindex]->mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Crunch:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
+            dmg = calculate_damage(teamindex);
+            this->team[!teamindex]->mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Crush_Claw:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
+            dmg = calculate_damage(teamindex);
+            this->team[!teamindex]->mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Dizzy_Punch:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
+            dmg = calculate_damage(teamindex);
+            this->team[!teamindex]->mon_in_battle->reduce_hp(dmg);
+            return;
+        case Move::Doom_Desire:
+        case Move::Future_Sight:
             return;
         case Move::Double_Edge:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
+            dmg = calculate_damage(teamindex);
+            this->team[!teamindex]->mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Dragon_Breath:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
+            dmg = calculate_damage(teamindex);
+            this->team[!teamindex]->mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Dream_Eater:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
+            dmg = calculate_damage(teamindex);
+            this->team[!teamindex]->mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Dynamic_Punch:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
+            dmg = calculate_damage(teamindex);
+            this->team[!teamindex]->mon_in_battle->reduce_hp(dmg);
             return;
-        case Move::Ember:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
+        case Move::Eruption:
+        case Move::Flail:
+        case Move::Reversal:
+        case Move::Water_Spout:
             return;
         case Move::Explosion:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
+            dmg = calculate_damage(teamindex);
+            this->team[!teamindex]->mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Extrasensory:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
+            dmg = calculate_damage(teamindex);
+            this->team[!teamindex]->mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Facade:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
+            dmg = calculate_damage(teamindex);
+            this->team[!teamindex]->mon_in_battle->reduce_hp(dmg);
             return;
         case Move::False_Swipe:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
+            dmg = calculate_damage(teamindex);
+            this->team[!teamindex]->mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Feint_Attack:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
-            return;
-        case Move::Fire_Blast:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
-            return;
-        case Move::Fire_Punch:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
-            return;
-        case Move::Flamethrower:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
-            return;
-        case Move::Frenzy_Plant:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
-            return;
-        case Move::Giga_Drain:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
+            dmg = calculate_damage(teamindex);
+            this->team[!teamindex]->mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Headbutt:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
-            return;
-        case Move::Heat_Wave:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
+            dmg = calculate_damage(teamindex);
+            this->team[!teamindex]->mon_in_battle->reduce_hp(dmg);
             return;
         case Move::High_Jump_Kick:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
-            return;
-        case Move::Hydro_Cannon:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
-            return;
-        case Move::Hyper_Beam:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
-            return;
-        case Move::Ice_Beam:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
-            return;
-        case Move::Ice_Punch:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
+            dmg = calculate_damage(teamindex);
+            this->team[!teamindex]->mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Icy_Wind:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
+            dmg = calculate_damage(teamindex);
+            this->team[!teamindex]->mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Iron_Tail:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
+            dmg = calculate_damage(teamindex);
+            this->team[!teamindex]->mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Knock_Off:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
+            dmg = calculate_damage(teamindex);
+            this->team[!teamindex]->mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Leaf_Blade:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
-            return;
-        case Move::Leech_Life:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
+            dmg = calculate_damage(teamindex);
+            this->team[!teamindex]->mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Lick:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
+            dmg = calculate_damage(teamindex);
+            this->team[!teamindex]->mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Magical_Leaf:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
+            dmg = calculate_damage(teamindex);
+            this->team[!teamindex]->mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Magnitude:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
-            return;
-        case Move::Mega_Drain:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
+            dmg = calculate_damage(teamindex);
+            this->team[!teamindex]->mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Metal_Claw:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
+            dmg = calculate_damage(teamindex);
+            this->team[!teamindex]->mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Meteor_Mash:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
+            dmg = calculate_damage(teamindex);
+            this->team[!teamindex]->mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Nature_Power:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
+            dmg = calculate_damage(teamindex);
+            this->team[!teamindex]->mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Needle_Arm:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
+            dmg = calculate_damage(teamindex);
+            this->team[!teamindex]->mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Octazooka:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
+            dmg = calculate_damage(teamindex);
+            this->team[!teamindex]->mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Overheat:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
+            dmg = calculate_damage(teamindex);
+            this->team[!teamindex]->mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Poison_Fang:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
+            dmg = calculate_damage(teamindex);
+            this->team[!teamindex]->mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Poison_Tail:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
+            dmg = calculate_damage(teamindex);
+            this->team[!teamindex]->mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Powder_Snow:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
+            dmg = calculate_damage(teamindex);
+            this->team[!teamindex]->mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Psychic:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
+            dmg = calculate_damage(teamindex);
+            this->team[!teamindex]->mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Pursuit:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
+            dmg = calculate_damage(teamindex);
+            this->team[!teamindex]->mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Rapid_Spin:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
+            dmg = calculate_damage(teamindex);
+            this->team[!teamindex]->mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Razor_Leaf:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
-            return;
-        case Move::Rock_Slide:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
+            dmg = calculate_damage(teamindex);
+            this->team[!teamindex]->mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Rock_Smash:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
+            dmg = calculate_damage(teamindex);
+            this->team[!teamindex]->mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Rock_Tomb:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
+            dmg = calculate_damage(teamindex);
+            this->team[!teamindex]->mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Sacred_Fire:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
+            dmg = calculate_damage(teamindex);
+            this->team[!teamindex]->mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Secret_Power:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
+            dmg = calculate_damage(teamindex);
+            this->team[!teamindex]->mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Self_Destruct:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
+            dmg = calculate_damage(teamindex);
+            this->team[!teamindex]->mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Shadow_Ball:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
+            dmg = calculate_damage(teamindex);
+            this->team[!teamindex]->mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Shadow_Punch:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
+            dmg = calculate_damage(teamindex);
+            this->team[!teamindex]->mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Signal_Beam:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
+            dmg = calculate_damage(teamindex);
+            this->team[!teamindex]->mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Silver_Wind:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
+            dmg = calculate_damage(teamindex);
+            this->team[!teamindex]->mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Sludge:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
+            dmg = calculate_damage(teamindex);
+            this->team[!teamindex]->mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Sludge_Bomb:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
+            dmg = calculate_damage(teamindex);
+            this->team[!teamindex]->mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Smog:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
+            dmg = calculate_damage(teamindex);
+            this->team[!teamindex]->mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Spark:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
+            dmg = calculate_damage(teamindex);
+            this->team[!teamindex]->mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Steel_Wing:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
+            dmg = calculate_damage(teamindex);
+            this->team[!teamindex]->mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Struggle:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
+            dmg = calculate_damage(teamindex);
+            this->team[!teamindex]->mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Submission:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
+            dmg = calculate_damage(teamindex);
+            this->team[!teamindex]->mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Superpower:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
+            dmg = calculate_damage(teamindex);
+            this->team[!teamindex]->mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Take_Down:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
+            dmg = calculate_damage(teamindex);
+            this->team[!teamindex]->mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Thief:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
-            return;
-        case Move::Thunder:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
+            dmg = calculate_damage(teamindex);
+            this->team[!teamindex]->mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Thunder_Punch:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
-            return;
         case Move::Thunder_Shock:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
-            return;
         case Move::Thunderbolt:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
+            dmg = calculate_damage(teamindex);
+            this->team[!teamindex]->mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Tri_Attack:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
+            dmg = calculate_damage(teamindex);
+            this->team[!teamindex]->mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Twister:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
+            dmg = calculate_damage(teamindex);
+            this->team[!teamindex]->mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Volt_Tackle:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
+            dmg = calculate_damage(teamindex);
+            this->team[!teamindex]->mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Water_Pulse:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
+            dmg = calculate_damage(teamindex);
+            this->team[!teamindex]->mon_in_battle->reduce_hp(dmg);
             return;
+        ////////////////// 
         case Move::Zap_Cannon:
-            this->team[!teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
+            dmg = calculate_damage(teamindex);
+            this->team[!teamindex]->mon_in_battle->reduce_hp(dmg);
+            if(this->team[!teamindex]->mon_in_battle->get_status() == Status::Healthy){
+                this->team[!teamindex]->mon_in_battle->set_status(Status::Paralysis);
+            }
             return;
+        ///
+        /// multihit
+        ///
+        case Move::Arm_Thrust:
+        case Move::Barrage:
+        case Move::Bone_Rush:
+        case Move::Bonemerang:
+        case Move::Bullet_Seed:
+        case Move::Comet_Punch:
+        case Move::Double_Kick:
+        case Move::Double_Slap:
+        case Move::Fury_Attack:
+        case Move::Fury_Swipes:
+        case Move::Ice_Ball: // ewww
+        case Move::Icicle_Spear:
+        case Move::Pin_Missile:
+        case Move::Rock_Blast:
+        case Move::Rollout: // ewww
+        case Move::Spike_Cannon:
+        case Move::Triple_Kick:
+        case Move::Twineedle:
+
+
+        ///
+        /// selflock
+        ///
+
+        ///
+        /// multiturn
+        ///
+        
         ///
         /// boost affecting moves
         ///
@@ -498,15 +617,11 @@ void Battle::use_move(const bool teamindex){
             return;
 
         case Move::Fake_Tears:
-            this->team[!teamindex]->set_boost(Statname::Sdef, -2);
-            return;
         case Move::Metal_Sound:
             this->team[!teamindex]->set_boost(Statname::Sdef, -2);
             return;
 
         case Move::Cotton_Spore:
-            this->team[!teamindex]->set_boost(Statname::Spe, -2);
-            return;
         case Move::Scary_Face:
             this->team[!teamindex]->set_boost(Statname::Spe, -2);
             return;
@@ -515,14 +630,8 @@ void Battle::use_move(const bool teamindex){
             return;
 
         case Move::Flash:
-            this->team[!teamindex]->set_boost(Statname::Acc, -1);
-            return;
         case Move::Kinesis:
-            this->team[!teamindex]->set_boost(Statname::Acc, -1);
-            return;
         case Move::Sand_Attack:
-            this->team[!teamindex]->set_boost(Statname::Acc, -1);
-            return;
         case Move::Smokescreen:
             this->team[!teamindex]->set_boost(Statname::Acc, -1);
             return;
@@ -567,34 +676,46 @@ void Battle::use_move(const bool teamindex){
         ///
         /// status moves
         ///
-        case Move::Hypnosis:
+        case Move::Glare:
             if(this->team[!teamindex]->mon_in_battle->get_status() != Status::Healthy){
-                this->team[!teamindex]->mon_in_battle->set_status(Status::Sleep_inflicted);
+                switch(this->team[!teamindex]->mon_in_battle->get_type()[0]){
+                    case Type::Ghost:
+                        return;
+                    default:
+                        switch(this->team[!teamindex]->mon_in_battle->get_type()[1]){
+                            case Type::Ghost:
+                                return;
+                            default:
+                                this->team[!teamindex]->mon_in_battle->set_status(Status::Paralysis);
+                        }
+                }
             }
             return;
+        case Move::Grass_Whistle:
+        case Move::Hypnosis:
         case Move::Lovely_Kiss:
+        case Move::Sing:
+        case Move::Sleep_Powder:
+        case Move::Spore:
             if(this->team[!teamindex]->mon_in_battle->get_status() != Status::Healthy){
                 this->team[!teamindex]->mon_in_battle->set_status(Status::Sleep_inflicted);
             }
             return;
         case Move::Poison_Powder:
             if(this->team[!teamindex]->mon_in_battle->get_status() != Status::Healthy){
-                this->team[!teamindex]->mon_in_battle->set_status(Status::Poison);
-            }
-            return;
-        case Move::Sing:
-            if(this->team[!teamindex]->mon_in_battle->get_status() != Status::Healthy){
-                this->team[!teamindex]->mon_in_battle->set_status(Status::Sleep_inflicted);
-            }
-            return;
-        case Move::Sleep_Powder:
-            if(this->team[!teamindex]->mon_in_battle->get_status() != Status::Healthy){
-                this->team[!teamindex]->mon_in_battle->set_status(Status::Sleep_inflicted);
-            }
-            return;
-        case Move::Spore:
-            if(this->team[!teamindex]->mon_in_battle->get_status() != Status::Healthy){
-                this->team[!teamindex]->mon_in_battle->set_status(Status::Sleep_inflicted);
+                switch(this->team[!teamindex]->mon_in_battle->get_type()[0]){
+                    case Type::Poison:
+                    case Type::Steel:
+                        return;
+                    default:
+                        switch(this->team[!teamindex]->mon_in_battle->get_type()[1]){
+                            case Type::Poison:
+                            case Type::Steel:
+                                return;
+                            default:
+                                this->team[!teamindex]->mon_in_battle->set_status(Status::Poison);
+                        }
+                }
             }
             return;
         case Move::Stun_Spore:
@@ -604,17 +725,49 @@ void Battle::use_move(const bool teamindex){
             return;
         case Move::Thunder_Wave:
             if(this->team[!teamindex]->mon_in_battle->get_status() != Status::Healthy){
-                this->team[!teamindex]->mon_in_battle->set_status(Status::Paralysis);
+                switch(this->team[!teamindex]->mon_in_battle->get_type()[0]){
+                    case Type::Ground:
+                        return;
+                    default:
+                        switch(this->team[!teamindex]->mon_in_battle->get_type()[1]){
+                            case Type::Ground:
+                                return;
+                            default:
+                                this->team[!teamindex]->mon_in_battle->set_status(Status::Paralysis);
+                        }
+                }
             }
             return;
         case Move::Toxic:
             if(this->team[!teamindex]->mon_in_battle->get_status() != Status::Healthy){
-                this->team[!teamindex]->mon_in_battle->set_status(Status::Toxic_poison);
+                switch(this->team[!teamindex]->mon_in_battle->get_type()[0]){
+                    case Type::Poison:
+                    case Type::Steel:
+                        return;
+                    default:
+                        switch(this->team[!teamindex]->mon_in_battle->get_type()[1]){
+                            case Type::Poison:
+                            case Type::Steel:
+                                return;
+                            default:
+                                this->team[!teamindex]->mon_in_battle->set_status(Status::Toxic_poison);
+                        }
+                }
             }
             return;
         case Move::Will_O_Wisp:
             if(this->team[!teamindex]->mon_in_battle->get_status() != Status::Healthy){
-                this->team[!teamindex]->mon_in_battle->set_status(Status::Burn);
+                switch(this->team[!teamindex]->mon_in_battle->get_type()[0]){
+                    case Type::Fire:
+                        return;
+                    default:
+                        switch(this->team[!teamindex]->mon_in_battle->get_type()[1]){
+                            case Type::Fire:
+                                return;
+                            default:
+                                this->team[!teamindex]->mon_in_battle->set_status(Status::Burn);
+                        }
+                }
             }
             return;
         case Move::Yawn:
@@ -695,6 +848,28 @@ void Battle::use_move(const bool teamindex){
         case Move::Sunny_Day:
             this->weather = Weather::Sun;
             this->weather_turns = 5;
+            return;
+        ///
+        /// weird sh*t
+        ///
+        case Move::Assist:
+        case Move::Attract:
+        case Move::Baton_Pass:
+        case Move::Beat_Up:
+        case Move::Bide:
+        case Move::Camouflage:
+        case Move::Charge:
+        case Move::Conversion:
+        case Move::Conversion_2:
+        case Move::Counter:
+        case Move::Covet:
+        case Move::Destiny_Bond:
+        case Move::Detect:
+        case Move::Disable:
+        case Move::Encore:
+        case Move::Endure:
+        case Move::Flatter:
+        case Move::Foresight:
             return;
     }
 }

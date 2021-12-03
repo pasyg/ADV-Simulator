@@ -223,12 +223,12 @@ int Battle::calculate_damage(const int patkteam){
                     atk_stat *= 2;
                     break;
                 case Ability::Hustle:
-                    atk_stat *= 1.5;
+                    atk_stat = static_cast<int>(atk_stat * 1.5);
                     break;
                 case Ability::Guts:
                     if(atkmon->get_status() != Status::Healthy){
                         burn = 1;
-                        atk_stat *= 1.5;
+                        atk_stat = static_cast<int>(atk_stat * 1.5);
                         break;
                     }
                 case Ability::Swarm:
@@ -240,7 +240,7 @@ int Battle::calculate_damage(const int patkteam){
                 }
             if(defmon->get_ability() == Ability::Marvel_Scale){
                 if(defmon->get_status() != Status::Healthy){
-                    def_stat *= 1.5;
+                    def_stat = static_cast<int>(def_stat * 1.5);
                 }
             }
             break;
@@ -279,12 +279,12 @@ int Battle::calculate_damage(const int patkteam){
     // Critical Hit / Ignore positive defensive boost
     if(get_random(0,15) == 0){
         if(defteam->defboost >= 0){
-            damage = static_cast<int>(damage * get_stat_boosted(attack, *atkmon, atkteam->get_boost(attack)
+            damage = static_cast<int>(static_cast<int>(damage * get_stat_boosted(attack, *atkmon, atkteam->get_boost(attack))
                                        / static_cast<float>(def_stat * 50.0)));
             damage *= 2;
         }
         else{
-            damage = static_cast<int>(damage * get_stat_boosted(attack, *atkmon, atkteam->get_boost(attack) 
+            damage = static_cast<int>(static_cast<int>(damage * get_stat_boosted(attack, *atkmon, atkteam->get_boost(attack)) 
                                       / static_cast<float>(get_stat_boosted(defense, *defmon, defteam->get_boost(defense)) * 50.0)));
             damage *= 2;
         }

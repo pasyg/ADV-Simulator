@@ -1523,5 +1523,6 @@ int move_pp(const Move move){
 		case Move::Water_Pulse: return 20;
 		case Move::Doom_Desire: return 5;
 		case Move::Psycho_Boost: return 5;
+		default: return -1;
 		}
 }
