@@ -12,7 +12,7 @@
 class Timer{
     public:
     Timer(){
-        auto StartTimepoint = std::chrono::steady_clock::now();
+        StartTimepoint = std::chrono::steady_clock::now();
     }
     ~Timer(){
         Stop();
