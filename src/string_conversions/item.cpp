@@ -1,6 +1,6 @@
 #include "string_conversions/item.hpp"
 
-std::string to_string(Item const item){
+std::string_view to_string(Item const item){
     switch(item){
         case Item::None:            return "none";
         case Item::Choiceband:      return "Leftovers";

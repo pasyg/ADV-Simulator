@@ -1,6 +1,6 @@
 #include "string_conversions/gender.hpp"
 
-std::string to_string(Gender const name){
+std::string_view to_string(Gender const name){
     switch (name)
     {
     case Gender::Male: return "M";

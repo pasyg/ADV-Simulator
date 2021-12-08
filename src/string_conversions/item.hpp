@@ -5,6 +5,6 @@
 
 #include "data/item.hpp"
 
-std::string to_string(Item const name);
+std::string_view to_string(Item const name);
 
 Item item_from_string(std::string_view const str);
