@@ -1,11 +1,10 @@
 ///
 /// simple timer for benchmark testing
-/// use by creating Timer object within a defined scope
-/// will be destructed and shows needed time by itself
+/// use by creating Timer object within a scope
+/// will be destructed at the end of the scope
+/// and shows needed time by itself
 ///
 #pragma once
-
-#ifdef BENCHMARK
 
 #include <chrono>
 
@@ -34,4 +33,3 @@ class Timer{
     private:
     std::chrono::time_point<std::chrono::steady_clock> StartTimepoint;
 };
-#endif
