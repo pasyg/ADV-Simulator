@@ -116,8 +116,23 @@ int Pokemon::get_stat(const Statname stat) const{
     }
 }
 
+void Pokemon::create_substitute(){
+    if(this->current_hp >= static_cast<int>(this->stats.hp / 4.0)){
+        this->substitute = true;
+        substitute_hp = static_cast<int>(this->stats.hp / 4.0);
+    }
+}
+
 void Pokemon::reduce_hp(const int damage){
-    this->current_hp -= damage;
+    if(this->substitute){
+        substitute_hp -= damage;
+        if(substitute_hp <= 0){
+            substitute = false;
+        }
+    }
+    else{
+        this->current_hp -= damage;
+    }
 }
 
 void Pokemon::increase_hp(const int heal){
@@ -523,4 +538,17 @@ void Pokemon::calc_hiddenpower_type(){
     default: std::cout << "ERROR HIDDEN POWER TYPE" << std::endl;
         break;
     }
+}
+
+bool Pokemon::operator== (const Type _type){
+    if(this->type[0] == _type || this->type[1] == _type){
+        return true;
+    }
+    return false;
+}
+bool Pokemon::operator!= (const Type _type){
+    if(this->type[0] != _type && this->type[1] != _type){
+        return true;
+    }
+    return false;
 }

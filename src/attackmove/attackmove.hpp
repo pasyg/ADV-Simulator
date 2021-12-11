@@ -32,6 +32,10 @@ public:
     bool get_disabled() const;
     Move get_move();
 
+    bool operator== (const Move _move);
+    bool operator!= (const Move _move);
+    bool operator== (const Type _type);
+    bool operator!= (const Type _type);
 
 private:
     Move move;

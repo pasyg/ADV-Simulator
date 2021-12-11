@@ -1,5 +1,6 @@
 #include "battle.hpp"
 
+#define ATKTYPE atkteam->movechoice->get_type()
 
 int Battle::calculate_damage(const int patkteam){
     // Air Lock not implemented
@@ -42,7 +43,7 @@ int Battle::calculate_damage(const int patkteam){
     
     // just for shedinja
     if(defmon->get_ability() == Ability::Wonder_Guard){
-        switch(atkteam->movechoice->get_type()){
+        switch(ATKTYPE){
         case Type::Dark:
         case Type::Fire:
         case Type::Flying:
@@ -55,7 +56,7 @@ int Battle::calculate_damage(const int patkteam){
     }
 
     // type immunity, item type boost, weather boost
-    switch(atkteam->movechoice->get_type()){
+    switch(ATKTYPE){
         case Type::Bug:
             if(atkmon->get_item() == Item::Silverpowder){
                 other *= 1.1;
@@ -176,10 +177,10 @@ int Battle::calculate_damage(const int patkteam){
             break;
     }
     
-    other *= effectiveness(atkteam->movechoice->get_type(), defmon->get_type()[0]);
-    other *= effectiveness(atkteam->movechoice->get_type(), defmon->get_type()[1]);
+    other *= effectiveness(ATKTYPE, defmon->get_type()[0]);
+    other *= effectiveness(ATKTYPE, defmon->get_type()[1]);
 
-    switch(atkteam->movechoice->get_type()){
+    switch(ATKTYPE){
         case Type::Bug:
         case Type::Fighting:
         case Type::Flying:
@@ -232,7 +233,7 @@ int Battle::calculate_damage(const int patkteam){
                         break;
                     }
                 case Ability::Swarm:
-                    if(atkteam->movechoice->get_type() == Type::Bug){
+                    if(ATKTYPE == Type::Bug){
                         if(atkmon->get_current_hp() < (atkmon->get_stats().hp / 3)){
                             other *= 1.5;
                         }

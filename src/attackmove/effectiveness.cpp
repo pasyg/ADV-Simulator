@@ -500,7 +500,7 @@ const float effectiveness(Type const &atktype, Type const &deftype){
 		
 		default:
 			#ifdef _DEBUG
-			debug_log("ERROR ATKTYPE effectiveness.cpp");
+			//debug_log("ERROR ATKTYPE effectiveness.cpp");
 			#endif
 			return 0; 
 	}

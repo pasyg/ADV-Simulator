@@ -89,3 +89,28 @@ int AttackMove::get_power() const{
 bool AttackMove::get_disabled() const{
     return this->disabled;
 }
+
+bool AttackMove::operator== (const Move _move){
+    if(this->move == _move){
+        return true;
+    }
+    return false;
+}
+bool AttackMove::operator!= (const Move _move){
+    if(this->move != _move){
+        return true;
+    }
+    return false;
+}
+bool AttackMove::operator== (const Type _type){
+    if(this->type == _type){
+        return true;
+    }
+    return false;
+}
+bool AttackMove::operator!= (const Type _type){
+    if(this->type != _type){
+        return true;
+    }
+    return false;
+}

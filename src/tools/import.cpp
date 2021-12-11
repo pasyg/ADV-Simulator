@@ -90,8 +90,8 @@ void set_ivs(std::string &ivs, Pokemon &pokemon){
     pokemon.set_ivs(stats);
 }
 
-std::vector<Team> import_team(std::string const path){
-    std::ifstream file("../teams/packed/sample.txt");
+std::vector<Team> import_team(std::string_view path){
+    std::ifstream file("sample.txt");
     
     std::string line = "";
     std::string delimiter1 = "]";
@@ -108,7 +108,6 @@ std::vector<Team> import_team(std::string const path){
     size_t j = 0;
 
     while(getline(file, line)){
-        
         size_t i = 0;
         line += "]";
 

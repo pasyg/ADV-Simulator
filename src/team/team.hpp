@@ -29,7 +29,8 @@ public:
 /// TRANSFORM / BIDE / DOOMDESIRE / FUTURE SIGHT / IMPRISON / METRONOME / MIRRORMOVE
     std::array<Pokemon, 6> member;
     int active_pokemon = 0;     // index of currently active pokemon
-    Pokemon* mon_in_battle = &this->member[this->active_pokemon]; // reference to active pokemon 
+    Pokemon* mon_in_battle = &this->member[this->active_pokemon]; // pointer to active pokemon 
+
     ///
     /// one turn
     ///
