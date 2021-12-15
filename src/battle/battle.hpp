@@ -11,6 +11,9 @@
 class Battle{
 public:
     Battle(Team &team1, Team &team2);
+
+    bool play_turn();
+    
     ~Battle();
     std::string_view p1 = "p1";
     std::string_view p2 = "p2";
@@ -28,14 +31,13 @@ public:
     int calculate_damage(const int patkteam);
 
     // turn.cpp
+    bool game_end(int teamindex);
     bool can_move(const bool teamindex);
     bool check_fainted();
-    void play_turn();
     void switch_in_checks();
     void weather_damage(const Weather weather, Pokemon &pokemon);
     void end_of_turn();
 
     // use_move.cpp
     void use_move(const bool teamindex);
-private:
 };

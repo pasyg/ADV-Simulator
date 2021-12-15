@@ -207,7 +207,7 @@ void Battle::use_move(const bool teamindex){
             if(dmg > 0){
                 if(get_random(1,10)){
                     if(DEFMON->get_status() == Status::Healthy){
-                        DEFMON->set_status(Status::Burn);
+                        DEFMON->set_status(Status::Burn, DEFTEAM->safeguard);
                     }
                 }
             }
@@ -225,7 +225,7 @@ void Battle::use_move(const bool teamindex){
                 DEFMON->reduce_hp(dmg);
                 if(DEFMON->get_status() == Status::Healthy){
                     if(get_random(1,10) < 4){
-                        DEFMON->set_status(Status::Paralysis);
+                        DEFMON->set_status(Status::Paralysis, DEFTEAM->safeguard);
                     }
                 }
             }
@@ -497,7 +497,7 @@ void Battle::use_move(const bool teamindex){
             dmg = calculate_damage(teamindex);
             DEFMON->reduce_hp(dmg);
             if(DEFMON->get_status() == Status::Healthy){
-                DEFMON->set_status(Status::Paralysis);
+                DEFMON->set_status(Status::Paralysis, DEFTEAM->safeguard);
             }
             return;	
         case Move::Luster_Purge:
@@ -545,13 +545,26 @@ void Battle::use_move(const bool teamindex){
         case Move::Pin_Missile:
         case Move::Rock_Blast:
         case Move::Spike_Cannon:
-
+            for(int i = 0; i < get_random(2,5); ++i){
+                dmg = calculate_damage(teamindex);
+                DEFMON->reduce_hp(dmg);
+            }
+            return;
         case Move::Bonemerang:
         case Move::Double_Kick:
         case Move::Double_Slap:
         case Move::Twineedle:
-
+            for(int i = 0; i < 2; ++i){
+                dmg = calculate_damage(teamindex);
+                DEFMON->reduce_hp(dmg);
+            }
+            return;
         case Move::Triple_Kick:
+            for(int i = 0; i < 3; ++i){
+                dmg = calculate_damage(teamindex);
+                DEFMON->reduce_hp(dmg);
+            }
+            return;
 
         case Move::Rollout: // ewww
         case Move::Ice_Ball: // ewww
@@ -574,6 +587,14 @@ void Battle::use_move(const bool teamindex){
         case Move::Skull_Bash:
         case Move::Sky_Attack:
         case Move::Solar_Beam:
+            if(ATKTEAM->charged == 0){
+                ATKTEAM->charged = 1;
+            }
+            else{
+                dmg = calculate_damage(teamindex);
+                DEFMON->reduce_hp(dmg);
+            }
+            return;
         ///
         /// boost affecting moves
         ///
@@ -770,19 +791,19 @@ void Battle::use_move(const bool teamindex){
         case Move::Glare:
             if(DEFMON->get_status() != Status::Healthy){
                 if(*DEFMON != Type::Ghost){
-                    DEFMON->set_status(Status::Paralysis);
+                    DEFMON->set_status(Status::Paralysis, DEFTEAM->safeguard);
                 }
             }
             return;
         case Move::Stun_Spore:
             if(DEFMON->get_status() != Status::Healthy){
-                DEFMON->set_status(Status::Paralysis);
+                DEFMON->set_status(Status::Paralysis, DEFTEAM->safeguard);
             }
             return;
         case Move::Thunder_Wave:
             if(DEFMON->get_status() != Status::Healthy){
                 if(*DEFMON != Type::Ground){
-                    DEFMON->set_status(Status::Paralysis);
+                    DEFMON->set_status(Status::Paralysis, DEFTEAM->safeguard);
                 }
             }
             return;
@@ -794,7 +815,7 @@ void Battle::use_move(const bool teamindex){
         case Move::Sleep_Powder:
         case Move::Spore:
             if(DEFMON->get_status() != Status::Healthy){
-                DEFMON->set_status(Status::Sleep_inflicted);
+                DEFMON->set_status(Status::Sleep_inflicted, DEFTEAM->safeguard);
             }
             return;
         case Move::Yawn:
@@ -812,14 +833,14 @@ void Battle::use_move(const bool teamindex){
         case Move::Poison_Powder:
             if(DEFMON->get_status() != Status::Healthy){
                 if(*DEFMON != Type::Steel && *DEFMON != Type::Poison){
-                    DEFMON->set_status(Status::Poison);
+                    DEFMON->set_status(Status::Poison, DEFTEAM->safeguard);
                 }
             }
             return;
         case Move::Toxic:
             if(DEFMON->get_status() != Status::Healthy){
                 if(*DEFMON != Type::Steel && *DEFMON != Type::Poison){
-                    DEFMON->set_status(Status::Toxic_poison);
+                    DEFMON->set_status(Status::Toxic_poison, DEFTEAM->safeguard);
                 }
             }
             return;
@@ -827,7 +848,7 @@ void Battle::use_move(const bool teamindex){
         case Move::Will_O_Wisp:
             if(DEFMON->get_status() != Status::Healthy){
                 if(*DEFMON != Type::Fire){
-                    DEFMON->set_status(Status::Burn);
+                    DEFMON->set_status(Status::Burn, DEFTEAM->safeguard);
                 }
             }
             return;
@@ -835,7 +856,7 @@ void Battle::use_move(const bool teamindex){
             if(ATKMON->get_status() != Status::Freeze){
                 if(ATKMON->get_status() != Status::Sleep_inflicted){
                     if(ATKMON->get_status() != Status::Sleep_self){
-                        ATKMON->set_status(Status::Healthy);
+                        ATKMON->set_status(Status::Healthy, false);
                     }
                 }
             }
@@ -852,12 +873,13 @@ void Battle::use_move(const bool teamindex){
         case Move::Heal_Bell:
             for(int i = 0; i < 6; ++i){
                 if(ATKTEAM->member[i].get_status() != Status::Fainted){
-                    ATKTEAM->member[i].set_status(Status::Healthy);
+                    ATKTEAM->member[i].set_status(Status::Healthy, false);
                 }
             }
             ATKTEAM->sleep_inflict = false;
             return;    
-        case Move::Safeguard:        
+        case Move::Safeguard:     
+            ATKTEAM->safeguard = true;   
         ///
         /// healing moves
         ///
@@ -886,7 +908,7 @@ void Battle::use_move(const bool teamindex){
         case Move::Rest:
             if(ATKMON->get_status() != Status::Sleep_inflicted &&
                 ATKMON->get_status() != Status::Sleep_self){
-                    ATKMON->set_status(Status::Sleep_self);
+                    ATKMON->set_status(Status::Sleep_self, false);
                     ATKMON->increase_hp(999);
                 }
             return;
@@ -953,11 +975,19 @@ void Battle::use_move(const bool teamindex){
         case Move::Helping_Hand:
         case Move::Imprison:
         case Move::Leech_Seed:
+            DEFTEAM->leechseed = true;
+            return;
         case Move::Light_Screen:
+            ATKTEAM->lightscreen = true;
+            return;
         case Move::Lock_On:
         case Move::Low_Kick:
         case Move::Magic_Coat:
         case Move::Memento:
+            ATKMON->reduce_hp(999);
+            DEFTEAM->set_boost(Statname::Atk, 2);
+            DEFTEAM->set_boost(Statname::Satk, 2);
+            return;
         case Move::Mimic:
         case Move::Mind_Reader:
         case Move::Mirror_Coat:

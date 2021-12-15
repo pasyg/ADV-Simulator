@@ -37,7 +37,7 @@ public:
     void reduce_hp(const int damage);
     void increase_hp(const int heal);
 
-    void set_status(const Status p_status);
+    void set_status(const Status p_status, const bool safeguard);
     void set_revealed(const bool p_revealed);
     void set_item(const Item p_item);
     

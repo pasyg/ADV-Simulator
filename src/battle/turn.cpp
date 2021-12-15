@@ -1,6 +1,6 @@
 #include "battle.hpp"
 
-void Battle::play_turn(){
+bool Battle::play_turn(){
     // calculates which moves either side can use
     this->team[0]->get_move_options();
     this->team[1]->get_move_options();
@@ -16,6 +16,16 @@ void Battle::play_turn(){
     if(can_move(move_first)){
         use_move(move_first);
     }
+    if(this->team[move_first]->mon_in_battle->get_current_hp() <= 0){
+        if(game_end(move_first)){
+            return move_first;
+        }
+    }
+    if(this->team[!move_first]->mon_in_battle->get_current_hp() <= 0){
+        if(game_end(!move_first)){
+            return !move_first;
+        }
+    }
 
     // slower mon moves if the turn hasnt been stopped yet
     if(check_fainted()){
@@ -23,6 +33,16 @@ void Battle::play_turn(){
             use_move(!move_first);
         }
     }
+    return true;
+}
+
+bool Battle::game_end(int teamindex){
+    for(int i = 0; i < 6; ++i){
+        if(this->team[teamindex]->member[i].get_current_hp() > 0){
+            return false;
+        }
+    }
+    return true;
 }
 // checks if the pokemon is able to use a move
 bool Battle::can_move(const bool teamindex){
@@ -137,7 +157,7 @@ void Battle::end_of_turn(){
         // shed skin
         if(pokemon1->get_ability() == Ability::Shed_Skin){
             if(get_random(0,2) > 0){
-                pokemon1->set_status(Status::Healthy);
+                pokemon1->set_status(Status::Healthy, false);
             }
         }
         // leftovers
@@ -174,10 +194,10 @@ void Battle::end_of_turn(){
         // uproar
         if(team1->uproar > 0){
             if(pokemon1->get_status() == Status::Sleep_inflicted || pokemon1->get_status() == Status::Sleep_self){
-                pokemon1->set_status(Status::Healthy);
+                pokemon1->set_status(Status::Healthy, false);
             }
             if(pokemon2->get_status() == Status::Sleep_inflicted || pokemon2->get_status() == Status::Sleep_self){
-                pokemon2->set_status(Status::Healthy);
+                pokemon2->set_status(Status::Healthy, false);
             }
         }
         // outrage/petaldance/thrash, user gets confused and end of the move counter (2-3 turns)
@@ -197,7 +217,7 @@ void Battle::end_of_turn(){
         // yawn
         if(team1->yawn == 1){
             if(pokemon1->get_status() == Status::Healthy){
-                pokemon1->set_status(Status::Sleep_inflicted);
+                pokemon1->set_status(Status::Sleep_inflicted, false);
             }
         }
         // future sight / doom desire

@@ -317,5 +317,5 @@ void Team::get_move_options(){
 // can be rewritten for however one wants to make move decisions
 void Team::decide_move(){
     prev_movechoice = movechoice;
-    movechoice = &this->move_options[get_random(0, move_options.size()-1)];
+    movechoice = &this->move_options[get_random(0, static_cast<int>(move_options.size()) - 1)];
 }

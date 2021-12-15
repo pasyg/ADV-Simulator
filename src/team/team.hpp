@@ -34,6 +34,7 @@ public:
     ///
     /// one turn
     ///
+    bool charged = false; // charge moves (solarbeam, fly,...)
     bool endure = false;
     bool flinch = false;
     bool focuspunch = false;
@@ -41,6 +42,7 @@ public:
     bool magiccoat = false;
     bool protect = false;
     bool truant = false;
+    bool safeguard = false;
     int lastdamage = 0;
     int protect_acc = 100;
     ///

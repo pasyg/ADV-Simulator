@@ -68,7 +68,10 @@ int Pokemon::get_current_hp(){
     return this->current_hp;    
 }
 
-void Pokemon::set_status(const Status p_status){
+void Pokemon::set_status(const Status p_status, const bool safeguard){
+    if(safeguard){
+        return;
+    }
     this->status = p_status;
     if(p_status == Status::Sleep_self){
         this->sleep_turns = 2;
@@ -125,9 +128,9 @@ void Pokemon::create_substitute(){
 
 void Pokemon::reduce_hp(const int damage){
     if(this->substitute){
-        substitute_hp -= damage;
-        if(substitute_hp <= 0){
-            substitute = false;
+        this->substitute_hp -= damage;
+        if(this->substitute_hp <= 0){
+            this->substitute = false;
         }
     }
     else{

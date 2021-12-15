@@ -26,8 +26,8 @@ class Timer{
         double us = static_cast<double>(duration);
         double ms = us * 0.001;
         double s = ms * 0.001;
-        std::cout << duration << " us" << std::endl;
-        std::cout << ms << " ms" << std::endl;
+        std::cout << duration << " us\n";
+        std::cout << ms << " ms\n";
         std::cout << s << " s" << std::endl;
     }
     private:
