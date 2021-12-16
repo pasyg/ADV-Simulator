@@ -9,7 +9,7 @@ bool Battle::play_turn(){
     this->team[0]->decide_move();
     this->team[1]->decide_move();
 
-    // false, team1 moves first, true, team2 moves first
+    // false: team1 moves first, true: team2 moves first
     this->calc_first_attacker();
 
     // move for the faster mon
@@ -18,12 +18,15 @@ bool Battle::play_turn(){
     }
     if(this->team[move_first]->mon_in_battle->get_current_hp() <= 0){
         if(game_end(move_first)){
-            return move_first;
+            this->winner = !move_first;
+            return true;
         }
+
     }
     if(this->team[!move_first]->mon_in_battle->get_current_hp() <= 0){
         if(game_end(!move_first)){
-            return !move_first;
+            this->winner = move_first;
+            return true;
         }
     }
 
@@ -33,7 +36,6 @@ bool Battle::play_turn(){
             use_move(!move_first);
         }
     }
-    return true;
 }
 
 bool Battle::game_end(int teamindex){
@@ -220,6 +222,7 @@ void Battle::end_of_turn(){
                 pokemon1->set_status(Status::Sleep_inflicted, false);
             }
         }
+        team1->flinch = false;
         // future sight / doom desire
         // perish song
         // 

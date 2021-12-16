@@ -19,6 +19,7 @@ class Pokemon{
 public:
     Pokemon();
     ~Pokemon();
+    Ability former_ability;
     // in this class, because of reduce_hp(), reset on switch
     // pass over to incoming on baton pass
     bool substitute = false;

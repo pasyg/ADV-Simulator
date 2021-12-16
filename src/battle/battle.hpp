@@ -21,6 +21,7 @@ public:
     Weather weather = Weather::Clear;
     int weather_turns = 0;
     bool move_first = true;
+    bool winner = false; // false: team 1, true: team 2
 
     // battle.cpp
     int get_stat_boosted(const Statname &stat, const Pokemon &pokemon, const int &boost);

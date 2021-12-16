@@ -308,5 +308,12 @@ int Battle::calculate_damage(const int patkteam){
     if(damage < 1){
         return 1;
     }
+    if(damage > 0){
+        if(atkmon->get_item() == Item::Kingsrock){
+            if(get_random(0,9) == 0){
+                defteam->flinch = true;
+            }
+        }
+    }
     return damage;
 }

@@ -9,35 +9,57 @@ void Battle::use_move(const bool teamindex){
     int dmg = 0;
     int switch_target = 0;
 
-    if(*ATKTEAM->movechoice == Move::Fire_Spin){
-        std::cout << "YAY\n";
-    }
-    else{
-        std::cout << "NOOO" << std::endl;
-    }
-
     switch(ATKTEAM->movechoice->get_move()){
         ///
         /// switches
         ///
         case Move::Switch0:
+            ATKMON->set_ability(ATKMON->former_ability);
             ATKTEAM->active_pokemon = 0;
-            return;
+            goto SWITCHIN;
         case Move::Switch1:
+            ATKMON->set_ability(ATKMON->former_ability);
             ATKTEAM->active_pokemon = 1;
-            return;
+            goto SWITCHIN;
         case Move::Switch2:
+            ATKMON->set_ability(ATKMON->former_ability);
             ATKTEAM->active_pokemon = 2;
-            return;
+            goto SWITCHIN;
         case Move::Switch3:
+            ATKMON->set_ability(ATKMON->former_ability);
             ATKTEAM->active_pokemon = 3;
-            return;
+            goto SWITCHIN;
         case Move::Switch4:
+            ATKMON->set_ability(ATKMON->former_ability);
             ATKTEAM->active_pokemon = 4;
-            return;
+            goto SWITCHIN;
         case Move::Switch5:
+            ATKMON->set_ability(ATKMON->former_ability);
             ATKTEAM->active_pokemon = 5;
-            return;
+        SWITCHIN:
+            switch (ATKMON->get_ability())
+            {
+            case Ability::Drizzle:
+                this->weather = Weather::Rain;
+                break;
+            case Ability::Drought:
+                this->weather = Weather::Sun;
+                break;
+            case Ability::Forecast:
+                break;
+            case Ability::Intimidate:
+                DEFTEAM->set_boost(Statname::Atk, -1);
+                break;
+            case Ability::Sand_Stream:
+                this->weather = Weather::Sand;
+                break;
+            case Ability::Trace:
+                ATKMON->former_ability = Ability::Trace;
+                ATKMON->set_ability(DEFMON->get_ability());
+                break;
+            default:
+                break;
+            }
         // splash...
         case Move::Splash: 
         case Move::Teleport: return;
@@ -269,6 +291,7 @@ void Battle::use_move(const bool teamindex){
         case Move::Double_Edge:
             dmg = calculate_damage(teamindex);
             DEFMON->reduce_hp(dmg);
+            ATKMON->reduce_hp(static_cast<int>(dmg/3.0));
             return;
         case Move::Dragon_Breath:
             dmg = calculate_damage(teamindex);

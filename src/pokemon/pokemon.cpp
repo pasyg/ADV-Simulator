@@ -33,7 +33,6 @@ void Pokemon::init(){
         this->item_damage_boost = true;
     }
 
-
     // sets STAB trait for same type attacks
     // assigns the type and power of hidden power
     for(int i = 0; i < 4; ++i){    
@@ -50,6 +49,7 @@ void Pokemon::init(){
     }
     this->status = Status::Healthy;
     this->revealed = false;
+    this->former_ability = this->ability;
 }
 
 Stats Pokemon::get_stats() const{
