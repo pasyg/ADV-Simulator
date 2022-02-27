@@ -36,6 +36,7 @@ bool Battle::play_turn(){
         if(can_move(!move_first)){
             use_move(!move_first);
         }
+        return true;
     }
 }
 

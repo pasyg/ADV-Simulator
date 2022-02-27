@@ -11,7 +11,7 @@ AttackMove::~AttackMove(){
 
 void AttackMove::init(){
     this->pp = move_pp(this->move);
-    this->pp += constants::pp_up * 0.2 * this->pp;
+    this->pp += static_cast<int>(constants::pp_up * 0.2 * this->pp);
     this->power = move_power(this->move);
     this->type = move_type(this->move);
     this->priority = move_prio(this->move);
