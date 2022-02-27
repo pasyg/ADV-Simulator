@@ -2,6 +2,7 @@
 #include <vector>
 
 #include "define.hpp"
+#include "string_conversions/moves.hpp"
 
 #include "pokemon.hpp"
 
@@ -9,6 +10,7 @@ class Team{
 public:
     Team();
     ~Team();
+    void print_team();
     int get_boost(Statname stat);
     void decide_move();
     void get_move_options();

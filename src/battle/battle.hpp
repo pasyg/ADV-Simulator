@@ -11,8 +11,6 @@
 class Battle{
 public:
     Battle(Team &team1, Team &team2);
-
-    bool play_turn();
     
     ~Battle();
     std::string_view p1 = "p1";
@@ -24,6 +22,7 @@ public:
     bool winner = false; // false: team 1, true: team 2
 
     // battle.cpp
+    int play_battle();
     int get_stat_boosted(const Statname &stat, const Pokemon &pokemon, const int &boost);
     bool compare_speed();
     void calc_first_attacker();
@@ -32,6 +31,7 @@ public:
     int calculate_damage(const int patkteam);
 
     // turn.cpp
+    bool play_turn();
     bool game_end(int teamindex);
     bool can_move(const bool teamindex);
     bool check_fainted();

@@ -1,4 +1,5 @@
 #include "attackmove.hpp"
+#include "constants.hpp"
 
 AttackMove::AttackMove(){
 
@@ -9,17 +10,14 @@ AttackMove::~AttackMove(){
 }
 
 void AttackMove::init(){
-    this->pp =  move_pp(this->move);
+    this->pp = move_pp(this->move);
+    this->pp += constants::pp_up * 0.2 * this->pp;
     this->power = move_power(this->move);
     this->type = move_type(this->move);
     this->priority = move_prio(this->move);
     this->revealed = false;
     //this->secondary =
     this->disabled = false;
-    // implement
-    #ifndef OHKO_CLAUSE
-    this->ohko = false;
-    #endif
 }
 
 void AttackMove::set_power(const int power){

@@ -15,16 +15,16 @@ void Pokemon::init(){
     PokemonType p_type = pokemon_type(this->species);
     this->type[0] = p_type.type1;
     this->type[1] = p_type.type2;
-
+    
+    
     this->basestats = base_stats(this->species);
     this->stat_init();
     this->current_hp = this->stats.hp;
-    
 
     // initialize each move
-    for(int i = 0; i < 4; ++i){
-        if(this->moveset[i].get_move() != Move::None){
-            this->moveset[i].init();
+    for(auto&& move : this->moveset){
+        if(move.get_move() != Move::None){
+            move.init();
         }
     }
 
@@ -35,16 +35,16 @@ void Pokemon::init(){
 
     // sets STAB trait for same type attacks
     // assigns the type and power of hidden power
-    for(int i = 0; i < 4; ++i){    
-        if(this->moveset[i].get_type() == Type::Hidden_Power){
-            this->moveset[i].set_type(this->hiddenpower);
-            this->moveset[i].set_power(this->hiddenpower_power);
+    for(auto move : this->moveset){    
+        if(move.get_type() == Type::Hidden_Power){
+            move.set_type(this->hiddenpower);
+            move.set_power(this->hiddenpower_power);
         }
-        if(this->type[0] == this->moveset[i].get_type()){
-            this->moveset[i].set_stab(true);
+        if(this->type[0] == move.get_type()){
+            move.set_stab(true);
         }
-        else if(this->type[0] == this->moveset[i].get_type()){        
-                this->moveset[i].set_stab(true);
+        else if(this->type[0] == move.get_type()){        
+                move.set_stab(true);
         }
     }
     this->status = Status::Healthy;
@@ -103,6 +103,8 @@ Stats Pokemon::get_ivs() const{
 
 int Pokemon::get_stat(const Statname stat) const{
     switch(stat){
+        case Statname::HP:
+            return this->stats.hp;
         case Statname::Atk:
             return this->stats.atk;
         case Statname::Def:

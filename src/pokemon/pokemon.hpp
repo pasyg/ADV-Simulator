@@ -82,7 +82,7 @@ public:
 
     bool operator== (const Type _type);
     bool operator!= (const Type _type);
-private:
+//private:
     int current_hp = 0;
     ///
     /// given by import
@@ -97,9 +97,9 @@ private:
     Ability ability;
     int level = 100;
     int happiness = 255;
-    Stats EVs = {0,0,0,0,0,0};
+    Stats EVs = { 0, 0, 0, 0, 0, 0 };
     Nature nature;
-    Stats IVs = {31,31,31,31,31,31};
+    Stats IVs = { 31, 31, 31, 31, 31, 31 };
     Status status = Status::Healthy;
     int sleep_turns = 0;
     ///

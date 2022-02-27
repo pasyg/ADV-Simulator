@@ -16,13 +16,14 @@ bool Battle::play_turn(){
     if(can_move(move_first)){
         use_move(move_first);
     }
+
     if(this->team[move_first]->mon_in_battle->get_current_hp() <= 0){
         if(game_end(move_first)){
             this->winner = !move_first;
             return true;
         }
-
     }
+
     if(this->team[!move_first]->mon_in_battle->get_current_hp() <= 0){
         if(game_end(!move_first)){
             this->winner = move_first;
@@ -31,7 +32,7 @@ bool Battle::play_turn(){
     }
 
     // slower mon moves if the turn hasnt been stopped yet
-    if(check_fainted()){
+    if(!check_fainted()){
         if(can_move(!move_first)){
             use_move(!move_first);
         }
@@ -83,12 +84,12 @@ bool Battle::can_move(const bool teamindex){
 // and false if the turn will be ended
 bool Battle::check_fainted(){
     if(this->team[0]->member[this->team[0]->active_pokemon].get_current_hp() <= 0){
-        return false;
+        return true;
     }
     if(this->team[1]->member[this->team[1]->active_pokemon].get_current_hp() <= 0){
-        return false;
+        return true;
     }
-    return true;
+    return false;
 }
 
 void Battle::end_of_turn(){
