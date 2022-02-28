@@ -35,7 +35,7 @@ void Pokemon::init(){
 
     // sets STAB trait for same type attacks
     // assigns the type and power of hidden power
-    for(auto move : this->moveset){    
+    for(auto&& move : this->moveset){    
         if(move.get_type() == Type::Hidden_Power){
             move.set_type(this->hiddenpower);
             move.set_power(this->hiddenpower_power);

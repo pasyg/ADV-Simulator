@@ -10,15 +10,18 @@ Team::~Team(){
 }
 /////////////////////////////////////////////////////
 void Team::print_team(){
-    for(auto pokemon : this->member){
+    for(auto&& pokemon : this->member){
         std::cout << "Name: " << pokemon.get_name() << "\n";
         std::cout << "HP: " << pokemon.get_current_hp() << "/" << pokemon.get_stat(Statname::HP) << "\n";
-        std::cout << "stats HP: " << pokemon.stats.hp << "\n";
-        std::cout << "Atk: " << pokemon.get_stat(Statname::Atk) << "\n";
-        std::cout << "Base Atk: " << pokemon.basestats.atk << "\n";
+        std::cout << "Atk: " << pokemon.get_stat(Statname::Atk) << "\t\t"
+                  << "Def: " << pokemon.get_stat(Statname::Def) <<  "\t"
+                  << "SAtk: " << pokemon.get_stat(Statname::Satk) << "\t"
+                  << "SDef: " << pokemon.get_stat(Statname::Sdef) << "\t"
+                  << "Spe: " << pokemon.get_stat(Statname::Spe) << "\n";
         for(auto move : pokemon.get_moveset()){
             std::cout << "Move: " << to_string(move.get_move());
-            std::cout << " " << move.get_pp() << "\n";
+            std::cout << " " << move.get_pp() 
+                      << "/" << move.base_pp << "\n";
         }
     }
 }
@@ -58,6 +61,7 @@ void Team::team_init(){
     for(auto&& pokemon : this->member){
         if(pokemon.get_species() != Species::no_pokemon){
             pokemon.init();
+            std::cout << "HP" << pokemon.stats.hp << "\n";
         }
     }
     

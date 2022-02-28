@@ -37,9 +37,10 @@ public:
     bool operator== (const Type _type);
     bool operator!= (const Type _type);
 
-private:
+//private:
     Move move;
     int pp = 0;
+    int base_pp = 0;
     int power;
     Type type;
     int priority;

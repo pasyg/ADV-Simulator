@@ -1,5 +1,6 @@
 #include "attackmove.hpp"
 #include "constants.hpp"
+#include "iostream"
 
 AttackMove::AttackMove(){
 
@@ -10,8 +11,8 @@ AttackMove::~AttackMove(){
 }
 
 void AttackMove::init(){
-    this->pp = move_pp(this->move);
-    this->pp += static_cast<int>(constants::pp_up * 0.2 * this->pp);
+    this->base_pp = static_cast<int>(move_pp(this->move) * (constants::pp_up * 0.2 + 1));
+    this->pp = this->base_pp;
     this->power = move_power(this->move);
     this->type = move_type(this->move);
     this->priority = move_prio(this->move);

@@ -16,12 +16,15 @@ int main(int argc, char* argv[]) {
   
   //Battle tbattle(test[2], test[3]);
 
-  test[2].team_init();
+  for(auto&& team : test){
+    team.team_init();
+  }
+
   test[2].print_team();
 
   // Pokemon Tyranitar;
   // Stats IVs = { 31, 30, 30, 31, 30, 31 };
-  // Stats EVs = { 248, 252, 0, 0, 8, 0};
+  // Stats EVs = { 248, 252, 0, 0, 8, 0 };
   // std::array<Move, 4> moveset = { Move::Dragon_Dance, 
   //                                 Move::Rock_Slide,
   //                                 Move::Earthquake,
