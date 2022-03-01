@@ -10,7 +10,6 @@ void set_moves(std::string &moves, Pokemon &pokemon){
     size_t posmoves = 0;
     size_t moveindex = 0;
     moves += ",";
-    
     while((posmoves = moves.find(delimiter)) != std::string::npos){
         moveset[moveindex].set_move(move_from_string(moves.substr(0, posmoves)));
         moves.erase(0, posmoves + delimiter.length());
@@ -94,71 +93,66 @@ std::vector<Team> import_team(std::string_view path){
     std::ifstream file("../teams/packed/sample.txt");
 
     if(file.is_open()){
-    
-    std::string line = "";
-    std::string delimiter1 = "]";
-    std::string delimiter2 = "|";
-    size_t pos1 = 0;
-    size_t pos2 = 0;
+        std::string line = "";
+        std::string delimiter1 = "]";
+        std::string delimiter2 = "|";
+        size_t pos1 = 0;
+        size_t pos2 = 0;
 
-    std::array<std::string, 6> pokemon;
-    std::array<std::array<std::string, 12>, 6> data;
+        std::array<std::string, 6> pokemon;
+        std::array<std::array<std::string, 12>, 6> data;
 
-    Team importteam;
-    std::vector<Team> teams;
+        Team importteam;
+        std::vector<Team> teams;
 
-    size_t j = 0;
+        size_t j = 0;
+        while(getline(file, line)){
+            size_t i = 0;
+            line += "]";
 
-    while(getline(file, line)){
-        size_t i = 0;
-        line += "]";
+            // split packed in 6 pokemon
+            while((pos1 = line.find(delimiter1)) != std::string::npos){
+                pokemon[i] = line.substr(0, pos1);
+                line.erase(0, pos1 + delimiter1.length());
+                ++i;
+            }
 
-        // split packed in 6 pokemon
-        while((pos1 = line.find(delimiter1)) != std::string::npos){
-            pokemon[i] = line.substr(0, pos1);
-            //std::cout << pokemon[i] << std::endl;
-            line.erase(0, pos1 + delimiter1.length());
-            ++i;
+            // split every pokemon into subcategories
+            for(int i = 0; i < 6; ++i){
+                j = 0;
+                while((pos2 = pokemon[i].find(delimiter2)) != std::string::npos){
+                    data[i][j] = pokemon[i].substr(0, pos2);
+                    pokemon[i].erase(0, pos2 + delimiter2.length());
+                    ++j;
+                }
+            }
+            for(int i = 0; i < 6; ++i){
+                if(data[i][1] == ""){
+                    importteam.member[i].set_species(species_from_string(data[i][0]));
+                    importteam.member[i].set_name(data[i][0]);
+                }
+                else{
+                    importteam.member[i].set_species(species_from_string(data[i][1]));
+                    importteam.member[i].set_name(data[i][1]);
+                }
+                importteam.member[i].set_item(item_from_string(data[i][2]));
+                importteam.member[i].set_ability(ability_from_string(data[i][3]));
+                set_moves(data[i][4], importteam.member[i]);
+                importteam.member[i].set_nature(nature_from_string(data[i][5]));
+                set_evs(data[i][6], importteam.member[i]);
+                importteam.member[i].set_gender(gender_from_string(data[i][7]));
+                set_ivs(data[i][8], importteam.member[i]);
+                if(data[i][10] == ""){
+                    // defaults to level 100
+                }
+                else{
+                    importteam.member[i].set_level(stoi(data[i][10]));
+                }
+            }
+            teams.push_back(importteam);
         }
 
-        // split every pokemon into subcategories
-        for(int i = 0; i < 6; ++i){
-            j = 0;
-            while((pos2 = pokemon[i].find(delimiter2)) != std::string::npos){
-                data[i][j] = pokemon[i].substr(0, pos2);
-                //std::cout << data[i][j] << std::endl;
-                pokemon[i].erase(0, pos2 + delimiter2.length());
-                ++j;
-            }
-        }
-
-        for(int i = 0; i < 6; ++i){
-            if(data[i][1] == ""){
-                importteam.member[i].set_species(species_from_string(data[i][0]));
-                importteam.member[i].set_name(data[i][0]);
-            }
-            else{
-                importteam.member[i].set_species(species_from_string(data[i][1]));
-                importteam.member[i].set_name(data[i][1]);
-            }
-            importteam.member[i].set_item(item_from_string(data[i][2]));
-            importteam.member[i].set_ability(ability_from_string(data[i][3]));
-            set_moves(data[i][4], importteam.member[i]);
-            importteam.member[i].set_nature(nature_from_string(data[i][5]));
-            set_evs(data[i][6], importteam.member[i]);
-            importteam.member[i].set_gender(gender_from_string(data[i][7]));
-            set_ivs(data[i][8], importteam.member[i]);
-            if(data[i][10] == ""){
-                // defaults to level 100
-            }
-            else{
-                importteam.member[i].set_level(stoi(data[i][10]));
-            }
-        }
-        teams.push_back(importteam);
-    }
-
-    return teams;
+        return teams;
     }
     else{
         std::cout << "ERROR import team" << std::endl;

@@ -1,7 +1,6 @@
 #include "battle.hpp"
 
 Battle::Battle(Team &team1, Team &team2){
-    std::cout << "TEST BATTLE CONSTRUCTOR" << std::endl;
     this->team[0] = &team1;
     this->team[1] = &team2;
     this->team[0]->team_init();

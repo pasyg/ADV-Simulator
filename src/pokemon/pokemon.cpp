@@ -16,7 +16,6 @@ void Pokemon::init(){
     this->type[0] = p_type.type1;
     this->type[1] = p_type.type2;
     
-    
     this->basestats = base_stats(this->species);
     this->stat_init();
     this->current_hp = this->stats.hp;

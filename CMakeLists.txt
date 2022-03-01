@@ -19,7 +19,7 @@ INCLUDE_DIRECTORIES(
     ${PROJECT_SOURCE_DIR}/src/string_conversions
     ${PROJECT_SOURCE_DIR}/src/team
     ${PROJECT_SOURCE_DIR}/src/tools
-    ${PROJECT_SOURCE_DIR}/tests
+    ${PROJECT_SOURCE_DIR}/src/test 
 )
 
 
@@ -57,7 +57,6 @@ set(Simulator_SOURCES
 
     "src/main.cpp"
     
-    "tests/init_test.cpp"
-    "tests/battle_test.cpp")
+    "src/test/test.cpp")
 
 add_executable(Simulator ${Simulator_SOURCES})

@@ -61,7 +61,6 @@ void Team::team_init(){
     for(auto&& pokemon : this->member){
         if(pokemon.get_species() != Species::no_pokemon){
             pokemon.init();
-            std::cout << "HP" << pokemon.stats.hp << "\n";
         }
     }
     
@@ -303,7 +302,11 @@ void Team::get_move_options(){
 
     const Pokemon activemon = this->member[this->active_pokemon];
     const std::array<AttackMove, 4> moves = activemon.get_moveset();
-    
+    bool has_to_struggle = false;
+    static AttackMove struggle;
+    struggle.set_move(Move::Struggle);
+    struggle.set_pp(9999);
+
     // free the vector from previous options
     this->move_options.clear();
     
@@ -314,9 +317,17 @@ void Team::get_move_options(){
         for(int i = 0; i<4; ++i){
             if(moves[i].get_pp() > 0 && !moves[i].get_disabled()){
                 this->move_options.push_back(moves[i]);
+                has_to_struggle = false;
+            }
+            else{
+                has_to_struggle = true;
             }
         }
     }
+    if(has_to_struggle){
+        this->move_options.push_back(struggle);
+    }
+
     if(this->trapped){
         return;
     }
@@ -334,6 +345,6 @@ void Team::get_move_options(){
 
 // can be rewritten for however one wants to make move decisions
 void Team::decide_move(){
-    prev_movechoice = movechoice;
-    movechoice = &this->move_options[get_random(0, static_cast<int>(move_options.size()) - 1)];
+    this->prev_movechoice = this->movechoice;
+    this->movechoice = &this->move_options[get_random(0, static_cast<int>(move_options.size()) - 1)];
 }
