@@ -22,4 +22,4 @@ Damage calculation:
 https://bulbapedia.bulbagarden.net/wiki/Damage
 
 Hidden Power calculation:
-https://bulbapedia.bulbagarden.net/wiki/Hidden_Power_(move)/Calculation
+https://bulbapedia.bulbagarden.net/wiki/Hidden_Power_(move)/Calculation#Damage
