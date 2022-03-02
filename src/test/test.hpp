@@ -25,8 +25,13 @@ public:
     void check(std::string functionname, std::function<bool()> function);
     bool test_import();
     bool test_team_init();
+    bool test_move_options();
 private:
     std::vector<Team> teams;
     bool import_test;
     bool team_init_test;
+    bool init_test_species();
+    bool init_test_stats();
+    bool init_test_moves();
+    bool init_test_hidden_power();
 };

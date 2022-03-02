@@ -442,29 +442,35 @@ void Pokemon::calc_spe(){
 }
 
 ///
-/// determinies the power of hidden power by summing up
-/// differently weighted IV LSBs and normalizing between 30-70
+/// calculate power of hidden power according to:
+/// https://bulbapedia.bulbagarden.net/wiki/Hidden_Power_(move)/Calculation#Damage
 ///
 
 void Pokemon::calc_hiddenpower_power(){
     int sum = 0;
 
-    if(this->IVs.hp % 2 != 0){
+    if(this->IVs.hp % 4 == 2 ||
+       this->IVs.hp % 4 == 3){
         sum += 1;
     }
-    if(this->IVs.atk % 2 != 0){
+    if(this->IVs.atk % 4 == 2 ||
+       this->IVs.atk % 4 == 3){
         sum += 2;
     }
-    if(this->IVs.def % 2 != 0){
+    if(this->IVs.def % 4 == 2 ||
+       this->IVs.def % 4 == 3){
         sum += 4;
     }
-    if(this->IVs.spe % 2 != 0){
+    if(this->IVs.spe % 4 == 2 ||
+       this->IVs.spe % 4 == 3){
         sum += 8;
     }
-    if(this->IVs.satk % 2 != 0){
+    if(this->IVs.satk % 4 == 2 ||
+       this->IVs.satk % 4 == 3){
         sum += 16;
     }
-    if(this->IVs.sdef % 2 != 0){
+    if(this->IVs.sdef % 4 == 2 ||
+       this->IVs.sdef % 4 == 3){
         sum += 32;
     }
 
