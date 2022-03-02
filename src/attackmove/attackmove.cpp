@@ -66,7 +66,13 @@ Type AttackMove::get_type() const{
 }
 
 void AttackMove::reduce_pp(const int x = 1){
+    std::cout << this->pp << "\n";
     this->pp -= x;
+    std::cout << this->pp << "\n";
+    if(this->pp < 0){
+        this->pp = 0;
+    }
+    std::cout << this->pp << "\n";
 }
 
 int AttackMove::get_priority() const{

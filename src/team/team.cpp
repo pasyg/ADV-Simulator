@@ -314,9 +314,9 @@ void Team::get_move_options(){
         this->move_options.push_back(this->locked_move);
     }
     else{
-        for(int i = 0; i<4; ++i){
-            if(moves[i].get_pp() > 0 && !moves[i].get_disabled()){
-                this->move_options.push_back(moves[i]);
+        for(auto&& move : this->member[this->active_pokemon].get_moveset()){
+            if(move.get_pp() > 0 && !move.get_disabled()){
+                this->move_options.push_back(move);
                 has_to_struggle = false;
             }
             else{
@@ -327,7 +327,6 @@ void Team::get_move_options(){
     if(has_to_struggle){
         this->move_options.push_back(struggle);
     }
-
     if(this->trapped){
         return;
     }

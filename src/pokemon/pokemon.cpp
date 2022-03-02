@@ -132,10 +132,15 @@ void Pokemon::reduce_hp(const int damage){
         this->substitute_hp -= damage;
         if(this->substitute_hp <= 0){
             this->substitute = false;
+            this->substitute_hp = 0;
         }
     }
     else{
         this->current_hp -= damage;
+    }
+    if(this->current_hp < 0){
+        this->set_status(Status::Fainted, false);
+        this->current_hp = 0;
     }
 }
 

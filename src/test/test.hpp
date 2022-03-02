@@ -34,4 +34,5 @@ private:
     bool init_test_stats();
     bool init_test_moves();
     bool init_test_hidden_power();
+    bool test_switch();
 };

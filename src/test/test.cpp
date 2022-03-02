@@ -8,6 +8,7 @@ void Test::test_all(){
     check("import", std::bind(&Test::test_import, this));
     check("team init", std::bind(&Test::test_team_init, this));
     check("move options", std::bind(&Test::test_move_options, this));
+    check("switch", std::bind(&Test::test_switch, this));
 }
 
 void Test::check(std::string funcname, std::function<bool()> func){
@@ -100,52 +101,52 @@ bool Test::init_test_species(){
 bool Test::init_test_stats(){
 
     std::cout << "stat test ..." << "\n";
-    if( this->teams[0].member[0].get_stats().hp !=   341   ||
-        this->teams[0].member[0].get_stats().atk !=  202   ||
-        this->teams[0].member[0].get_stats().def !=  217   ||
-        this->teams[0].member[0].get_stats().satk != 269   ||
-        this->teams[0].member[0].get_stats().sdef != 216   ||
-        this->teams[0].member[0].get_stats().spe !=  240 ){
+    if( this->teams[0].member[0].get_stats().hp   != 341 ||
+        this->teams[0].member[0].get_stats().atk  != 202 ||
+        this->teams[0].member[0].get_stats().def  != 217 ||
+        this->teams[0].member[0].get_stats().satk != 269 ||
+        this->teams[0].member[0].get_stats().sdef != 216 ||
+        this->teams[0].member[0].get_stats().spe  != 240 ){
             return false;
     }
-    if( this->teams[0].member[4].get_stats().hp !=   301   ||
-        this->teams[0].member[4].get_stats().atk !=  308  ||
-        this->teams[0].member[4].get_stats().def !=  165  ||
+    if( this->teams[0].member[4].get_stats().hp   != 301 ||
+        this->teams[0].member[4].get_stats().atk  != 308 ||
+        this->teams[0].member[4].get_stats().def  != 165 ||
         this->teams[0].member[4].get_stats().satk != 140 ||
         this->teams[0].member[4].get_stats().sdef != 186 ||
-        this->teams[0].member[4].get_stats().spe !=  394 ){
+        this->teams[0].member[4].get_stats().spe  != 394 ){
             return false;
         }
-    if( this->teams[16].member[0].get_stats().hp !=   301   ||
-        this->teams[16].member[0].get_stats().atk !=  153  ||
-        this->teams[16].member[0].get_stats().def !=  219  ||
+    if( this->teams[16].member[0].get_stats().hp   != 301 ||
+        this->teams[16].member[0].get_stats().atk  != 153 ||
+        this->teams[16].member[0].get_stats().def  != 219 ||
         this->teams[16].member[0].get_stats().satk != 298 ||
         this->teams[16].member[0].get_stats().sdef != 250 ||
-        this->teams[16].member[0].get_stats().spe !=  250 ){
+        this->teams[16].member[0].get_stats().spe  != 250 ){
             return false;
         }
-    if( this->teams[16].member[4].get_stats().hp !=   356   ||
-        this->teams[16].member[4].get_stats().atk !=  405  ||
-        this->teams[16].member[4].get_stats().def !=  296  ||
+    if( this->teams[16].member[4].get_stats().hp   != 356 ||
+        this->teams[16].member[4].get_stats().atk  != 405 ||
+        this->teams[16].member[4].get_stats().def  != 296 ||
         this->teams[16].member[4].get_stats().satk != 203 ||
         this->teams[16].member[4].get_stats().sdef != 216 ||
-        this->teams[16].member[4].get_stats().spe !=  185 ){
+        this->teams[16].member[4].get_stats().spe  != 185 ){
             return false;
         }
-    if( this->teams[27].member[0].get_stats().hp !=   404   ||
-        this->teams[27].member[0].get_stats().atk !=  184  ||
-        this->teams[27].member[0].get_stats().def !=  262  ||
+    if( this->teams[27].member[0].get_stats().hp   != 404 ||
+        this->teams[27].member[0].get_stats().atk  != 184 ||
+        this->teams[27].member[0].get_stats().def  != 262 ||
         this->teams[27].member[0].get_stats().satk != 236 ||
         this->teams[27].member[0].get_stats().sdef != 236 ||
-        this->teams[27].member[0].get_stats().spe !=  301 ){
+        this->teams[27].member[0].get_stats().spe  != 301 ){
             return false;
         }
-    if( this->teams[27].member[5].get_stats().hp !=   391   ||
-        this->teams[27].member[5].get_stats().atk !=  112  ||
-        this->teams[27].member[5].get_stats().def !=  276  ||
+    if( this->teams[27].member[5].get_stats().hp   != 391 ||
+        this->teams[27].member[5].get_stats().atk  != 112 ||
+        this->teams[27].member[5].get_stats().def  != 276 ||
         this->teams[27].member[5].get_stats().satk != 236 ||
         this->teams[27].member[5].get_stats().sdef != 286 ||
-        this->teams[27].member[5].get_stats().spe !=  208 ){
+        this->teams[27].member[5].get_stats().spe  != 208 ){
             return false;
         }
     return true;
@@ -264,25 +265,58 @@ bool Test::test_team_init(){
 }
 
 bool Test::test_move_options(){
-    this->teams[0].member[0].get_moveset()[0].reduce_pp(9999);
-    this->teams[0].member[0].get_moveset()[1].reduce_pp(9999);
+    this->teams[0].member[0].get_moveset()[0].reduce_pp(999);
+    this->teams[0].member[0].get_moveset()[1].reduce_pp(999);
     this->teams[0].get_move_options();
-    this->teams[0].decide_move();
-    for(int i = 0; i < 200; ++i){
-        if(this->teams[0].movechoice->get_move() == Move::Hydro_Pump ||
-           this->teams[0].movechoice->get_move() == Move::Ice_Beam){
-               return false;
-           }
+    std::cout << "Swampert pp hydro " << this->teams[0].member[0].get_moveset()[0].get_pp() << "\n";
+    std::cout << "Swampert pp icebeam " << this->teams[0].member[0].get_moveset()[1].get_pp() << "\n";
+    for(auto&& option : this->teams[0].move_options){
+        if(option.get_move() == Move::Hydro_Pump || option.get_move() == Move::Ice_Beam){
+            return false;
         }
+    }
+
     this->teams[1].member[2].reduce_hp(999);
     this->teams[1].member[4].reduce_hp(999);
     this->teams[1].get_move_options();
-    this->teams[1].decide_move();
-    for(int i = 0; i < 200; ++i){
-        if(this->teams[1].movechoice->get_move() == Move::Switch2 ||
-           this->teams[1].movechoice->get_move() == Move::Switch4){
-               return false;
-           }
+    for(auto&& option : this->teams[1].move_options){
+        std::cout << to_string(option.get_move()) << "\n";
+    }
+    return true;
+}
+
+bool Test::test_switch(){
+    if(this->team_init_test){
+        if(this->teams[0].member[this->teams[0].active_pokemon].get_species() != Species::Swampert){
+            return false;
         }
+        if(this->teams[5].member[this->teams[5].active_pokemon].get_species() != Species::Salamence){
+            return false;
+        }
+        if(this->teams[18].member[this->teams[18].active_pokemon].get_species() != Species::Tyranitar){
+            return false;
+        }
+        if(this->teams[27].member[this->teams[27].active_pokemon].get_species() != Species::Celebi){
+            return false;
+        }
+
+        this->teams[0].active_pokemon = 2;
+        this->teams[5].active_pokemon = 4;
+        this->teams[18].active_pokemon = 5;
+        this->teams[27].active_pokemon = 0;
+
+        if(this->teams[0].member[this->teams[0].active_pokemon].get_species() != Species::Metagross){
+            return false;
+        }
+        if(this->teams[5].member[this->teams[5].active_pokemon].get_species() != Species::Jirachi){
+            return false;
+        }
+        if(this->teams[18].member[this->teams[18].active_pokemon].get_species() != Species::Skarmory){
+            return false;
+        }
+        if(this->teams[27].member[this->teams[27].active_pokemon].get_species() != Species::Celebi){
+            return false;
+        }
+    }
     return true;
 }
