@@ -2,6 +2,7 @@
 
 #include <cstdint>
 
+#include "data/movecategory.hpp"
 #include "data/moves.hpp"
 #include "data/type.hpp"
 
@@ -39,6 +40,7 @@ public:
 
 //private:
     Move move;
+    MoveCategory category;
     int pp = 0;
     int base_pp = 0;
     int power;

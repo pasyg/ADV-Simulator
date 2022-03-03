@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 
+#include "tools/benchmark.hpp"
 #include "tools/import.hpp"
 
 #include "data/base_stats.hpp"
@@ -35,4 +36,6 @@ private:
     bool init_test_moves();
     bool init_test_hidden_power();
     bool test_switch();
+    bool test_substitute();
+    bool test_calc();
 };

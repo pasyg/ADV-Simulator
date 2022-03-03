@@ -2,6 +2,107 @@
 
 #define ATKTYPE atkteam->movechoice->get_type()
 
+
+int Battle::calculate_damage(const Team &atkteam, const Team &defteam){
+    return 1;
+}
+
+float Battle::crit_multiplier(const Team &atkteam, const Team &defteam){
+    return 1;
+}
+
+float Battle::ability_multiplier(const Team &atkteam, const Team &defteam){
+    return 1;
+}
+
+float Battle::item_multiplier(const Team &atkteam){
+    switch(atkteam.member[atkteam.active_pokemon].get_item()){
+        case Item::Blackbelt:
+        case Item::Blackglasses:
+        case Item::Charcoal:
+        case Item::Choiceband:
+        case Item::Deepseascale:
+        case Item::Deepseatooth:
+        case Item::Dragonfang:
+        case Item::Hardstone:
+        case Item::Lightball:
+            if(atkteam.movechoice->category == MoveCategory::Special &&
+               atkteam.member[atkteam.active_pokemon].get_species() == Species::Pikachu){
+                   return 2;
+               }
+        case Item::Magnet:
+            if(atkteam.movechoice->get_type() == Type::Electric){
+                return 1.1f;
+            }
+        case Item::Metalcoat:
+            if(atkteam.movechoice->get_type() == Type::Steel){
+                return 1.1f;
+            }
+        case Item::Miracleseed:
+            if(atkteam.movechoice->get_type() == Type::Grass){
+                return 1.1f;
+            }
+        case Item::Mysticwater:
+            if(atkteam.movechoice->get_type() == Type::Water){
+                return 1.1f;
+            }
+        case Item::Nevermeltice:
+            if(atkteam.movechoice->get_type() == Type::Ice){
+                return 1.1f;
+            }
+        case Item::Poisonbarb:
+            if(atkteam.movechoice->get_type() == Type::Poison){
+                return 1.1f;
+            }
+        case Item::Silkscarf:
+            if(atkteam.movechoice->get_type() == Type::Normal){
+                return 1.1f;
+            }
+        case Item::Softsand:
+            if(atkteam.movechoice->get_type() == Type::Ground){
+                return 1.1f;
+            }
+        case Item::Spelltag:
+            if(atkteam.movechoice->get_type() == Type::Ghost){
+                return 1.1f;
+            }
+        case Item::Thickclub:
+            if(atkteam.movechoice->category == MoveCategory::Physical &&
+              (atkteam.member[atkteam.active_pokemon].get_species() == Species::Cubone ||
+               atkteam.member[atkteam.active_pokemon].get_species() == Species::Marowak)){
+                   return 2;
+               }
+        case Item::Twistedspoon:
+            if(atkteam.movechoice->get_type() == Type::Psychic){
+                return 1.1f;
+            }
+            else{
+                return 1;
+            }
+        default: return 1;
+    }
+}
+
+float Battle::weather_multiplier(const Team &atkteam){
+    switch(this->weather){
+        case Weather::Sun:
+            if(atkteam.movechoice->type == Type::Fire){
+                return 2.0;
+            }
+            if(atkteam.movechoice->type == Type::Water){
+                return 0.5;
+            }
+        case Weather::Rain:
+            if(atkteam.movechoice->type == Type::Fire){
+                return 0.5;
+            }
+            if(atkteam.movechoice->type == Type::Water){
+                return 2;
+            }
+        default: return 1;
+    }
+}
+
 int Battle::calculate_damage(const int patkteam){
     // Air Lock not implemented
     // Crits (shellarmor, scopelens, etc.)
@@ -306,7 +407,7 @@ int Battle::calculate_damage(const int patkteam){
     // Damage Roll
     damage = static_cast<int>((get_random(85,100) * damage) / 100.0);
     if(damage < 1){
-        return 1;
+        damage = 1;
     }
     if(damage > 0){
         if(atkmon->get_item() == Item::Kingsrock){

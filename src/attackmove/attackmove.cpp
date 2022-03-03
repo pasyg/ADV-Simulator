@@ -19,6 +19,23 @@ void AttackMove::init(){
     this->revealed = false;
     //this->secondary =
     this->disabled = false;
+    switch(this->type){
+        case Type::Bug:
+        case Type::Fighting:
+        case Type::Flying:
+        case Type::Ghost:
+        case Type::Ground:
+        case Type::Hidden_Power:
+        case Type::Normal:
+        case Type::Poison:
+        case Type::Rock:
+        case Type::Steel:
+        case Type::Typeless:
+            this->category = MoveCategory::Physical;
+            break;
+        default:
+            this->category = MoveCategory::Special;
+    }
 }
 
 void AttackMove::set_power(const int power){
@@ -66,13 +83,10 @@ Type AttackMove::get_type() const{
 }
 
 void AttackMove::reduce_pp(const int x = 1){
-    std::cout << this->pp << "\n";
     this->pp -= x;
-    std::cout << this->pp << "\n";
     if(this->pp < 0){
         this->pp = 0;
     }
-    std::cout << this->pp << "\n";
 }
 
 int AttackMove::get_priority() const{

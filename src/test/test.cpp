@@ -5,10 +5,13 @@ Test::Test(){}
 Test::~Test(){}
 
 void Test::test_all(){
+    Timer timer;
     check("import", std::bind(&Test::test_import, this));
     check("team init", std::bind(&Test::test_team_init, this));
     check("move options", std::bind(&Test::test_move_options, this));
     check("switch", std::bind(&Test::test_switch, this));
+    check("substitute", std::bind(&Test::test_substitute, this));
+    check("damage calculation", std::bind(&Test::test_calc, this));
 }
 
 void Test::check(std::string funcname, std::function<bool()> func){
@@ -265,11 +268,9 @@ bool Test::test_team_init(){
 }
 
 bool Test::test_move_options(){
-    this->teams[0].member[0].get_moveset()[0].reduce_pp(999);
-    this->teams[0].member[0].get_moveset()[1].reduce_pp(999);
+    this->teams[0].member[0].moveset[0].reduce_pp(999);
+    this->teams[0].member[0].moveset[1].reduce_pp(999);
     this->teams[0].get_move_options();
-    std::cout << "Swampert pp hydro " << this->teams[0].member[0].get_moveset()[0].get_pp() << "\n";
-    std::cout << "Swampert pp icebeam " << this->teams[0].member[0].get_moveset()[1].get_pp() << "\n";
     for(auto&& option : this->teams[0].move_options){
         if(option.get_move() == Move::Hydro_Pump || option.get_move() == Move::Ice_Beam){
             return false;
@@ -318,5 +319,38 @@ bool Test::test_switch(){
             return false;
         }
     }
+    return true;
+}
+
+bool Test::test_substitute(){
+    this->teams[0].member[0].create_substitute();
+    if(this->teams[0].member[0].substitute_hp != 85){
+        return false;
+    }
+    this->teams[0].member[0].reduce_hp(999);
+    if(this->teams[0].member[0].get_status() == Status::Fainted ||
+       this->teams[0].member[0].current_hp != 341){
+           return false;
+       }
+       return true;
+}
+
+bool Test::test_calc(){
+    Battle battle1(this->teams[0], this->teams[1]);
+
+    this->teams[0].movechoice = &this->teams[0].member[0].moveset[0];
+    int damage = battle1.calculate_damage(0);
+    std::cout << damage << std::endl;
+    if(damage < 112 || damage > 132){
+        //return false;
+    }
+
+    this->teams[0].movechoice = &this->teams[0].member[0].moveset[1];
+    damage = battle1.calculate_damage(0);
+    std::cout << damage << std::endl;
+    if(damage < 238 || damage > 280){
+        return false;
+    }
+
     return true;
 }

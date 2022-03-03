@@ -28,7 +28,12 @@ public:
     void calc_first_attacker();
 
     // damage_calc.cpp
-    int calculate_damage(const int patkteam);
+    int calculate_damage(const int atkteam);
+    int calculate_damage(const Team &atkteam, const Team &defteam);
+    float crit_multiplier(const Team &atkteam, const Team &defteam);
+    float ability_multiplier(const Team &atkteam, const Team &defteam);
+    float item_multiplier(const Team &atkteam);
+    float weather_multiplier(const Team &atkteam);
 
     // turn.cpp
     bool play_turn();

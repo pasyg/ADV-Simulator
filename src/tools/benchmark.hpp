@@ -8,6 +8,8 @@
 
 #include <chrono>
 
+#include <iostream>
+
 class Timer{
     public:
     Timer(){
