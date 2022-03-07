@@ -14,7 +14,7 @@ bool Battle::play_turn(){
 
     // move for the faster mon
     if(can_move(move_first)){
-        use_move(move_first);
+        use_move(*this->team[move_first], *this->team[!move_first]);
     }
 
     if(this->team[move_first]->mon_in_battle->get_current_hp() <= 0){
@@ -34,7 +34,7 @@ bool Battle::play_turn(){
     // slower mon moves if the turn hasnt been stopped yet
     if(!check_fainted()){
         if(can_move(!move_first)){
-            use_move(!move_first);
+            use_move(*this->team[!move_first], *this->team[move_first]);
         }
         return true;
     }
@@ -74,7 +74,7 @@ bool Battle::can_move(const bool teamindex){
     if(this->team[teamindex]->confusion > 0){
         if(get_random(1,2) == 1){
             this->team[teamindex]->movechoice->set_move(Move::Hit_Self);
-            this->team[teamindex]->mon_in_battle->reduce_hp(calculate_damage(teamindex));
+            this->team[teamindex]->mon_in_battle->reduce_hp(calculate_damage(*this->team[teamindex], *this->team[!teamindex]));
             return false;
         }
     }

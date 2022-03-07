@@ -1,43 +1,38 @@
 #include "battle.hpp"
 
-#define ATKTEAM this->team[teamindex]
-#define DEFTEAM this->team[!teamindex]
-#define ATKMON  this->team[teamindex]->mon_in_battle
-#define DEFMON  this->team[!teamindex]->mon_in_battle
-
-void Battle::use_move(const bool teamindex){
+void Battle::use_move(Team &atkteam, Team &defteam){
     int dmg = 0;
     int switch_target = 0;
 
-    switch(ATKTEAM->movechoice->get_move()){
+    switch(atkteam.movechoice->get_move()){
         ///
         /// switches
         ///
         case Move::Switch0:
-            ATKMON->set_ability(ATKMON->former_ability);
-            ATKTEAM->active_pokemon = 0;
+            atkteam.mon_in_battle->set_ability(atkteam.mon_in_battle->former_ability);
+            atkteam.active_pokemon = 0;
             goto SWITCHIN;
         case Move::Switch1:
-            ATKMON->set_ability(ATKMON->former_ability);
-            ATKTEAM->active_pokemon = 1;
+            atkteam.mon_in_battle->set_ability(atkteam.mon_in_battle->former_ability);
+            atkteam.active_pokemon = 1;
             goto SWITCHIN;
         case Move::Switch2:
-            ATKMON->set_ability(ATKMON->former_ability);
-            ATKTEAM->active_pokemon = 2;
+            atkteam.mon_in_battle->set_ability(atkteam.mon_in_battle->former_ability);
+            atkteam.active_pokemon = 2;
             goto SWITCHIN;
         case Move::Switch3:
-            ATKMON->set_ability(ATKMON->former_ability);
-            ATKTEAM->active_pokemon = 3;
+            atkteam.mon_in_battle->set_ability(atkteam.mon_in_battle->former_ability);
+            atkteam.active_pokemon = 3;
             goto SWITCHIN;
         case Move::Switch4:
-            ATKMON->set_ability(ATKMON->former_ability);
-            ATKTEAM->active_pokemon = 4;
+            atkteam.mon_in_battle->set_ability(atkteam.mon_in_battle->former_ability);
+            atkteam.active_pokemon = 4;
             goto SWITCHIN;
         case Move::Switch5:
-            ATKMON->set_ability(ATKMON->former_ability);
-            ATKTEAM->active_pokemon = 5;
+            atkteam.mon_in_battle->set_ability(atkteam.mon_in_battle->former_ability);
+            atkteam.active_pokemon = 5;
         SWITCHIN:
-            switch (ATKMON->get_ability())
+            switch (atkteam.mon_in_battle->get_ability())
             {
             case Ability::Drizzle:
                 this->weather = Weather::Rain;
@@ -48,14 +43,14 @@ void Battle::use_move(const bool teamindex){
             case Ability::Forecast:
                 break;
             case Ability::Intimidate:
-                DEFTEAM->set_boost(Statname::Atk, -1);
+                defteam.set_boost(Statname::Atk, -1);
                 break;
             case Ability::Sand_Stream:
                 this->weather = Weather::Sand;
                 break;
             case Ability::Trace:
-                ATKMON->former_ability = Ability::Trace;
-                ATKMON->set_ability(DEFMON->get_ability());
+                atkteam.mon_in_battle->former_ability = Ability::Trace;
+                atkteam.mon_in_battle->set_ability(defteam.mon_in_battle->get_ability());
                 break;
             default:
                 break;
@@ -67,37 +62,37 @@ void Battle::use_move(const bool teamindex){
         /// basic damage moves without further effects
         ///
         case Move::Super_Fang:
-            dmg = static_cast<int>(DEFMON->get_current_hp() / 2.0);
-            if(*DEFMON != Type::Ghost){
-                DEFMON->reduce_hp(dmg);
+            dmg = static_cast<int>(defteam.mon_in_battle->get_current_hp() / 2.0);
+            if(*defteam.mon_in_battle != Type::Ghost){
+                defteam.mon_in_battle->reduce_hp(dmg);
             }
             return;
         case Move::Dragon_Rage:
             dmg = 40;
-            DEFMON->reduce_hp(dmg);
+            defteam.mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Seismic_Toss:
             dmg = 100;
-            if(*DEFMON != Type::Ghost){
-                DEFMON->reduce_hp(dmg);
+            if(*defteam.mon_in_battle != Type::Ghost){
+                defteam.mon_in_battle->reduce_hp(dmg);
             }
             return;
         case Move::Night_Shade:
             dmg = 100;
-            if(*DEFMON != Type::Normal){
-                DEFMON->reduce_hp(dmg);
+            if(*defteam.mon_in_battle != Type::Normal){
+                defteam.mon_in_battle->reduce_hp(dmg);
             }	
             return;
         case Move::Sonic_Boom:
             dmg = 20;
-            if(*DEFMON != Type::Ghost){
-                DEFMON->reduce_hp(dmg);
+            if(*defteam.mon_in_battle != Type::Ghost){
+                defteam.mon_in_battle->reduce_hp(dmg);
             }
             return;
         case Move::Endeavor:
-            if(ATKMON->get_current_hp() < DEFMON->get_current_hp()){
-                DEFMON->reduce_hp(
-                    DEFMON->get_current_hp() - ATKMON->get_current_hp()
+            if(atkteam.mon_in_battle->get_current_hp() < defteam.mon_in_battle->get_current_hp()){
+                defteam.mon_in_battle->reduce_hp(
+                    defteam.mon_in_battle->get_current_hp() - atkteam.mon_in_battle->get_current_hp()
                 );
             }
         return;
@@ -148,8 +143,8 @@ void Battle::use_move(const bool teamindex){
         case Move::Water_Gun:
         case Move::Waterfall:
         case Move::Wing_Attack:
-            dmg = calculate_damage(teamindex);
-            DEFMON->reduce_hp(dmg);
+            dmg = calculate_damage(atkteam, defteam);
+            defteam.mon_in_battle->reduce_hp(dmg);
             return;
         ///
         /// secondary effect damage moves
@@ -159,52 +154,52 @@ void Battle::use_move(const bool teamindex){
         case Move::Giga_Drain:
         case Move::Leech_Life:
         case Move::Mega_Drain:
-            dmg = calculate_damage(teamindex);
-            DEFMON->reduce_hp(dmg);
+            dmg = calculate_damage(atkteam, defteam);
+            defteam.mon_in_battle->reduce_hp(dmg);
             if(dmg > 1){
-                ATKMON->increase_hp(static_cast<int>(dmg / 2.0));
+                atkteam.mon_in_battle->increase_hp(static_cast<int>(dmg / 2.0));
             }
             else{
-                ATKMON->increase_hp(static_cast<int>(1));
+                atkteam.mon_in_battle->increase_hp(static_cast<int>(1));
             }
                 return;
         case Move::Acid:
-            dmg = calculate_damage(teamindex);
-            DEFMON->reduce_hp(dmg);
+            dmg = calculate_damage(atkteam, defteam);
+            defteam.mon_in_battle->reduce_hp(dmg);
             if(dmg > 0){
                 if(get_random(1,10) == 1){
-                    DEFTEAM->set_boost(Statname::Def, -1);
+                    defteam.set_boost(Statname::Def, -1);
                 }
             }
             return;
         case Move::Ancient_Power:
-            dmg = calculate_damage(teamindex);
-            DEFMON->reduce_hp(dmg);
+            dmg = calculate_damage(atkteam, defteam);
+            defteam.mon_in_battle->reduce_hp(dmg);
             if(dmg > 0){
                 if(get_random(1,10) == 1){
-                    DEFTEAM->set_boost(Statname::Atk, 1);
-                    DEFTEAM->set_boost(Statname::Def, 1);
-                    DEFTEAM->set_boost(Statname::Satk, 1);
-                    DEFTEAM->set_boost(Statname::Sdef, 1);
-                    DEFTEAM->set_boost(Statname::Spe, 1);
+                    defteam.set_boost(Statname::Atk, 1);
+                    defteam.set_boost(Statname::Def, 1);
+                    defteam.set_boost(Statname::Satk, 1);
+                    defteam.set_boost(Statname::Sdef, 1);
+                    defteam.set_boost(Statname::Spe, 1);
                 }
             }
             return;
         case Move::Aurora_Beam:
-            dmg = calculate_damage(teamindex);
-            DEFMON->reduce_hp(dmg);
+            dmg = calculate_damage(atkteam, defteam);
+            defteam.mon_in_battle->reduce_hp(dmg);
             if(get_random(1,10) == 1){
-                DEFTEAM->set_boost(Statname::Atk, 1);
+                defteam.set_boost(Statname::Atk, 1);
             }
             return;
         case Move::Astonish:
         case Move::Bite:
         case Move::Rock_Slide:
-            dmg = calculate_damage(teamindex);
+            dmg = calculate_damage(atkteam, defteam);
             if(dmg > 0){
-                DEFMON->reduce_hp(dmg);
+                defteam.mon_in_battle->reduce_hp(dmg);
                 if(get_random(1,10) < 4){
-                    DEFTEAM->flinch = true;
+                    defteam.flinch = true;
                 }
             }
             return;
@@ -212,10 +207,10 @@ void Battle::use_move(const bool teamindex){
         case Move::Frenzy_Plant:
         case Move::Hydro_Cannon:
         case Move::Hyper_Beam:
-            dmg = calculate_damage(teamindex);
+            dmg = calculate_damage(atkteam, defteam);
             if(dmg > 0){
-                DEFMON->reduce_hp(dmg);
-                ATKTEAM->recharge = 2;
+                defteam.mon_in_battle->reduce_hp(dmg);
+                atkteam.recharge = 2;
             }
             return;
         case Move::Blaze_Kick:
@@ -224,12 +219,12 @@ void Battle::use_move(const bool teamindex){
         case Move::Fire_Punch:
         case Move::Flamethrower:
         case Move::Heat_Wave:
-            dmg = calculate_damage(teamindex);
-            DEFMON->reduce_hp(dmg);
+            dmg = calculate_damage(atkteam, defteam);
+            defteam.mon_in_battle->reduce_hp(dmg);
             if(dmg > 0){
                 if(get_random(1,10)){
-                    if(DEFMON->get_status() == Status::Healthy){
-                        DEFMON->set_status(Status::Burn, DEFTEAM->safeguard);
+                    if(defteam.mon_in_battle->get_status() == Status::Healthy){
+                        defteam.mon_in_battle->set_status(Status::Burn, defteam.safeguard);
                     }
                 }
             }
@@ -237,73 +232,73 @@ void Battle::use_move(const bool teamindex){
         case Move::Blizzard:
         case Move::Ice_Beam:
         case Move::Ice_Punch:
-            dmg = calculate_damage(teamindex);
-            DEFMON->reduce_hp(dmg);
+            dmg = calculate_damage(atkteam, defteam);
+            defteam.mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Body_Slam:
         case Move::Thunder:
-            dmg = calculate_damage(teamindex);
+            dmg = calculate_damage(atkteam, defteam);
             if(dmg > 0){
-                DEFMON->reduce_hp(dmg);
-                if(DEFMON->get_status() == Status::Healthy){
+                defteam.mon_in_battle->reduce_hp(dmg);
+                if(defteam.mon_in_battle->get_status() == Status::Healthy){
                     if(get_random(1,10) < 4){
-                        DEFMON->set_status(Status::Paralysis, DEFTEAM->safeguard);
+                        defteam.mon_in_battle->set_status(Status::Paralysis, defteam.safeguard);
                     }
                 }
             }
             return;
         ////////////////// done until here
         case Move::Bone_Club:
-            dmg = calculate_damage(teamindex);
-            DEFMON->reduce_hp(dmg);
+            dmg = calculate_damage(atkteam, defteam);
+            defteam.mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Bubble:
-            dmg = calculate_damage(teamindex);
-            DEFMON->reduce_hp(dmg);
+            dmg = calculate_damage(atkteam, defteam);
+            defteam.mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Bubble_Beam:
-            dmg = calculate_damage(teamindex);
-            DEFMON->reduce_hp(dmg);
+            dmg = calculate_damage(atkteam, defteam);
+            defteam.mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Confusion:
-            dmg = calculate_damage(teamindex);
-            DEFMON->reduce_hp(dmg);
+            dmg = calculate_damage(atkteam, defteam);
+            defteam.mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Constrict:
-            dmg = calculate_damage(teamindex);
-            DEFMON->reduce_hp(dmg);
+            dmg = calculate_damage(atkteam, defteam);
+            defteam.mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Crunch:
-            dmg = calculate_damage(teamindex);
-            DEFMON->reduce_hp(dmg);
+            dmg = calculate_damage(atkteam, defteam);
+            defteam.mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Crush_Claw:
-            dmg = calculate_damage(teamindex);
-            DEFMON->reduce_hp(dmg);
+            dmg = calculate_damage(atkteam, defteam);
+            defteam.mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Dizzy_Punch:
-            dmg = calculate_damage(teamindex);
-            DEFMON->reduce_hp(dmg);
+            dmg = calculate_damage(atkteam, defteam);
+            defteam.mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Doom_Desire:
         case Move::Future_Sight:
             return;
         case Move::Double_Edge:
-            dmg = calculate_damage(teamindex);
-            DEFMON->reduce_hp(dmg);
-            ATKMON->reduce_hp(static_cast<int>(dmg/3.0));
+            dmg = calculate_damage(atkteam, defteam);
+            defteam.mon_in_battle->reduce_hp(dmg);
+            atkteam.mon_in_battle->reduce_hp(static_cast<int>(dmg/3.0));
             return;
         case Move::Dragon_Breath:
-            dmg = calculate_damage(teamindex);
-            DEFMON->reduce_hp(dmg);
+            dmg = calculate_damage(atkteam, defteam);
+            defteam.mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Dream_Eater:
-            dmg = calculate_damage(teamindex);
-            DEFMON->reduce_hp(dmg);
+            dmg = calculate_damage(atkteam, defteam);
+            defteam.mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Dynamic_Punch:
-            dmg = calculate_damage(teamindex);
-            DEFMON->reduce_hp(dmg);
+            dmg = calculate_damage(atkteam, defteam);
+            defteam.mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Eruption:
         case Move::Flail:
@@ -311,216 +306,216 @@ void Battle::use_move(const bool teamindex){
         case Move::Water_Spout:
             return;
         case Move::Explosion:
-            dmg = calculate_damage(teamindex);
-            DEFMON->reduce_hp(dmg);
+            dmg = calculate_damage(atkteam, defteam);
+            defteam.mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Extrasensory:
-            dmg = calculate_damage(teamindex);
-            DEFMON->reduce_hp(dmg);
+            dmg = calculate_damage(atkteam, defteam);
+            defteam.mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Facade:
-            dmg = calculate_damage(teamindex);
-            DEFMON->reduce_hp(dmg);
+            dmg = calculate_damage(atkteam, defteam);
+            defteam.mon_in_battle->reduce_hp(dmg);
             return;
         case Move::False_Swipe:
-            dmg = calculate_damage(teamindex);
-            DEFMON->reduce_hp(dmg);
+            dmg = calculate_damage(atkteam, defteam);
+            defteam.mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Feint_Attack:
-            dmg = calculate_damage(teamindex);
-            DEFMON->reduce_hp(dmg);
+            dmg = calculate_damage(atkteam, defteam);
+            defteam.mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Headbutt:
-            dmg = calculate_damage(teamindex);
-            DEFMON->reduce_hp(dmg);
+            dmg = calculate_damage(atkteam, defteam);
+            defteam.mon_in_battle->reduce_hp(dmg);
             return;
         case Move::High_Jump_Kick:
-            dmg = calculate_damage(teamindex);
-            DEFMON->reduce_hp(dmg);
+            dmg = calculate_damage(atkteam, defteam);
+            defteam.mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Icy_Wind:
-            dmg = calculate_damage(teamindex);
-            DEFMON->reduce_hp(dmg);
+            dmg = calculate_damage(atkteam, defteam);
+            defteam.mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Iron_Tail:
-            dmg = calculate_damage(teamindex);
-            DEFMON->reduce_hp(dmg);
+            dmg = calculate_damage(atkteam, defteam);
+            defteam.mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Knock_Off:
-            dmg = calculate_damage(teamindex);
-            DEFMON->reduce_hp(dmg);
+            dmg = calculate_damage(atkteam, defteam);
+            defteam.mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Leaf_Blade:
-            dmg = calculate_damage(teamindex);
-            DEFMON->reduce_hp(dmg);
+            dmg = calculate_damage(atkteam, defteam);
+            defteam.mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Lick:
-            dmg = calculate_damage(teamindex);
-            DEFMON->reduce_hp(dmg);
+            dmg = calculate_damage(atkteam, defteam);
+            defteam.mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Magical_Leaf:
-            dmg = calculate_damage(teamindex);
-            DEFMON->reduce_hp(dmg);
+            dmg = calculate_damage(atkteam, defteam);
+            defteam.mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Magnitude:
-            dmg = calculate_damage(teamindex);
-            DEFMON->reduce_hp(dmg);
+            dmg = calculate_damage(atkteam, defteam);
+            defteam.mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Metal_Claw:
-            dmg = calculate_damage(teamindex);
-            DEFMON->reduce_hp(dmg);
+            dmg = calculate_damage(atkteam, defteam);
+            defteam.mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Meteor_Mash:
-            dmg = calculate_damage(teamindex);
-            DEFMON->reduce_hp(dmg);
+            dmg = calculate_damage(atkteam, defteam);
+            defteam.mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Nature_Power:
-            dmg = calculate_damage(teamindex);
-            DEFMON->reduce_hp(dmg);
+            dmg = calculate_damage(atkteam, defteam);
+            defteam.mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Needle_Arm:
-            dmg = calculate_damage(teamindex);
-            DEFMON->reduce_hp(dmg);
+            dmg = calculate_damage(atkteam, defteam);
+            defteam.mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Octazooka:
-            dmg = calculate_damage(teamindex);
-            DEFMON->reduce_hp(dmg);
+            dmg = calculate_damage(atkteam, defteam);
+            defteam.mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Poison_Fang:
-            dmg = calculate_damage(teamindex);
-            DEFMON->reduce_hp(dmg);
+            dmg = calculate_damage(atkteam, defteam);
+            defteam.mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Poison_Tail:
-            dmg = calculate_damage(teamindex);
-            DEFMON->reduce_hp(dmg);
+            dmg = calculate_damage(atkteam, defteam);
+            defteam.mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Powder_Snow:
-            dmg = calculate_damage(teamindex);
-            DEFMON->reduce_hp(dmg);
+            dmg = calculate_damage(atkteam, defteam);
+            defteam.mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Psychic:
-            dmg = calculate_damage(teamindex);
-            DEFMON->reduce_hp(dmg);
+            dmg = calculate_damage(atkteam, defteam);
+            defteam.mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Pursuit:
-            dmg = calculate_damage(teamindex);
-            DEFMON->reduce_hp(dmg);
+            dmg = calculate_damage(atkteam, defteam);
+            defteam.mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Rapid_Spin:
-            dmg = calculate_damage(teamindex);
-            DEFMON->reduce_hp(dmg);
+            dmg = calculate_damage(atkteam, defteam);
+            defteam.mon_in_battle->reduce_hp(dmg);
             if(dmg > 0){
                 
             }
             return;
         case Move::Razor_Leaf:
-            dmg = calculate_damage(teamindex);
-            DEFMON->reduce_hp(dmg);
+            dmg = calculate_damage(atkteam, defteam);
+            defteam.mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Rock_Smash:
-            dmg = calculate_damage(teamindex);
-            DEFMON->reduce_hp(dmg);
+            dmg = calculate_damage(atkteam, defteam);
+            defteam.mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Rock_Tomb:
-            dmg = calculate_damage(teamindex);
-            DEFMON->reduce_hp(dmg);
+            dmg = calculate_damage(atkteam, defteam);
+            defteam.mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Sacred_Fire:
-            dmg = calculate_damage(teamindex);
-            DEFMON->reduce_hp(dmg);
+            dmg = calculate_damage(atkteam, defteam);
+            defteam.mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Secret_Power:
-            dmg = calculate_damage(teamindex);
-            DEFMON->reduce_hp(dmg);
+            dmg = calculate_damage(atkteam, defteam);
+            defteam.mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Self_Destruct:
-            dmg = calculate_damage(teamindex);
-            DEFMON->reduce_hp(dmg);
+            dmg = calculate_damage(atkteam, defteam);
+            defteam.mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Shadow_Ball:
-            dmg = calculate_damage(teamindex);
-            DEFMON->reduce_hp(dmg);
+            dmg = calculate_damage(atkteam, defteam);
+            defteam.mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Shadow_Punch:
-            dmg = calculate_damage(teamindex);
-            DEFMON->reduce_hp(dmg);
+            dmg = calculate_damage(atkteam, defteam);
+            defteam.mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Signal_Beam:
-            dmg = calculate_damage(teamindex);
-            DEFMON->reduce_hp(dmg);
+            dmg = calculate_damage(atkteam, defteam);
+            defteam.mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Silver_Wind:
-            dmg = calculate_damage(teamindex);
-            DEFMON->reduce_hp(dmg);
+            dmg = calculate_damage(atkteam, defteam);
+            defteam.mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Sludge:
-            dmg = calculate_damage(teamindex);
-            DEFMON->reduce_hp(dmg);
+            dmg = calculate_damage(atkteam, defteam);
+            defteam.mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Sludge_Bomb:
-            dmg = calculate_damage(teamindex);
-            DEFMON->reduce_hp(dmg);
+            dmg = calculate_damage(atkteam, defteam);
+            defteam.mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Smog:
-            dmg = calculate_damage(teamindex);
-            DEFMON->reduce_hp(dmg);
+            dmg = calculate_damage(atkteam, defteam);
+            defteam.mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Spark:
-            dmg = calculate_damage(teamindex);
-            DEFMON->reduce_hp(dmg);
+            dmg = calculate_damage(atkteam, defteam);
+            defteam.mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Steel_Wing:
-            dmg = calculate_damage(teamindex);
-            DEFMON->reduce_hp(dmg);
+            dmg = calculate_damage(atkteam, defteam);
+            defteam.mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Struggle:
-            dmg = calculate_damage(teamindex);
-            DEFMON->reduce_hp(dmg);
+            dmg = calculate_damage(atkteam, defteam);
+            defteam.mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Submission:
-            dmg = calculate_damage(teamindex);
-            DEFMON->reduce_hp(dmg);
+            dmg = calculate_damage(atkteam, defteam);
+            defteam.mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Superpower:
-            dmg = calculate_damage(teamindex);
-            DEFMON->reduce_hp(dmg);
+            dmg = calculate_damage(atkteam, defteam);
+            defteam.mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Take_Down:
-            dmg = calculate_damage(teamindex);
-            DEFMON->reduce_hp(dmg);
+            dmg = calculate_damage(atkteam, defteam);
+            defteam.mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Thief:
-            dmg = calculate_damage(teamindex);
-            DEFMON->reduce_hp(dmg);
+            dmg = calculate_damage(atkteam, defteam);
+            defteam.mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Thunder_Punch:
         case Move::Thunder_Shock:
         case Move::Thunderbolt:
-            dmg = calculate_damage(teamindex);
-            DEFMON->reduce_hp(dmg);
+            dmg = calculate_damage(atkteam, defteam);
+            defteam.mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Tri_Attack:
-            dmg = calculate_damage(teamindex);
-            DEFMON->reduce_hp(dmg);
+            dmg = calculate_damage(atkteam, defteam);
+            defteam.mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Twister:
-            dmg = calculate_damage(teamindex);
-            DEFMON->reduce_hp(dmg);
+            dmg = calculate_damage(atkteam, defteam);
+            defteam.mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Volt_Tackle:
-            dmg = calculate_damage(teamindex);
-            DEFMON->reduce_hp(dmg);
+            dmg = calculate_damage(atkteam, defteam);
+            defteam.mon_in_battle->reduce_hp(dmg);
             return;
         case Move::Water_Pulse:
-            dmg = calculate_damage(teamindex);
-            DEFMON->reduce_hp(dmg);
+            dmg = calculate_damage(atkteam, defteam);
+            defteam.mon_in_battle->reduce_hp(dmg);
             return;
         ////////////////// 
         case Move::Zap_Cannon:
-            dmg = calculate_damage(teamindex);
-            DEFMON->reduce_hp(dmg);
-            if(DEFMON->get_status() == Status::Healthy){
-                DEFMON->set_status(Status::Paralysis, DEFTEAM->safeguard);
+            dmg = calculate_damage(atkteam, defteam);
+            defteam.mon_in_battle->reduce_hp(dmg);
+            if(defteam.mon_in_battle->get_status() == Status::Healthy){
+                defteam.mon_in_battle->set_status(Status::Paralysis, defteam.safeguard);
             }
             return;	
         case Move::Luster_Purge:
@@ -532,19 +527,19 @@ void Battle::use_move(const bool teamindex){
 	    case Move::Psybeam:	// 10% confusion
 	    case Move::Psycho_Boost:
         case Move::Overheat:
-            dmg = calculate_damage(teamindex);
-            DEFMON->reduce_hp(dmg);
+            dmg = calculate_damage(atkteam, defteam);
+            defteam.mon_in_battle->reduce_hp(dmg);
             return;	
 	    case Move::Psywave:
             dmg = 10 * get_random(0, 10);
             dmg *= 50;
-            dmg *= ATKMON->get_level();
+            dmg *= atkteam.mon_in_battle->get_level();
             dmg = static_cast<int>(dmg / 100.0);
             
             if(dmg < 1){
                 dmg = 1;
             }
-            DEFMON->reduce_hp(dmg);
+            defteam.mon_in_battle->reduce_hp(dmg);
             return;	
 	    case Move::Rage:
 	    case Move::Revenge:
@@ -569,8 +564,8 @@ void Battle::use_move(const bool teamindex){
         case Move::Rock_Blast:
         case Move::Spike_Cannon:
             for(int i = 0; i < get_random(2,5); ++i){
-                dmg = calculate_damage(teamindex);
-                DEFMON->reduce_hp(dmg);
+                dmg = calculate_damage(atkteam, defteam);
+                defteam.mon_in_battle->reduce_hp(dmg);
             }
             return;
         case Move::Bonemerang:
@@ -578,14 +573,14 @@ void Battle::use_move(const bool teamindex){
         case Move::Double_Slap:
         case Move::Twineedle:
             for(int i = 0; i < 2; ++i){
-                dmg = calculate_damage(teamindex);
-                DEFMON->reduce_hp(dmg);
+                dmg = calculate_damage(atkteam, defteam);
+                defteam.mon_in_battle->reduce_hp(dmg);
             }
             return;
         case Move::Triple_Kick:
             for(int i = 0; i < 3; ++i){
-                dmg = calculate_damage(teamindex);
-                DEFMON->reduce_hp(dmg);
+                dmg = calculate_damage(atkteam, defteam);
+                defteam.mon_in_battle->reduce_hp(dmg);
             }
             return;
 
@@ -610,12 +605,12 @@ void Battle::use_move(const bool teamindex){
         case Move::Skull_Bash:
         case Move::Sky_Attack:
         case Move::Solar_Beam:
-            if(ATKTEAM->charged == 0){
-                ATKTEAM->charged = 1;
+            if(atkteam.charged == 0){
+                atkteam.charged = 1;
             }
             else{
-                dmg = calculate_damage(teamindex);
-                DEFMON->reduce_hp(dmg);
+                dmg = calculate_damage(atkteam, defteam);
+                defteam.mon_in_battle->reduce_hp(dmg);
             }
             return;
         ///
@@ -642,169 +637,169 @@ void Battle::use_move(const bool teamindex){
         case Move::Wrap:
 
         case Move::Belly_Drum:
-            ATKTEAM->set_boost(Statname::Atk, 12);
+            atkteam.set_boost(Statname::Atk, 12);
             return;
         case Move::Bulk_Up:
-            ATKTEAM->set_boost(Statname::Atk, 1);
-            ATKTEAM->set_boost(Statname::Def, 1);
+            atkteam.set_boost(Statname::Atk, 1);
+            atkteam.set_boost(Statname::Def, 1);
             return;
         case Move::Curse:
-            ATKTEAM->set_boost(Statname::Atk, 1);
-            ATKTEAM->set_boost(Statname::Def, 1);
-            ATKTEAM->set_boost(Statname::Spe, -1);
+            atkteam.set_boost(Statname::Atk, 1);
+            atkteam.set_boost(Statname::Def, 1);
+            atkteam.set_boost(Statname::Spe, -1);
             return;
         case Move::Dragon_Dance:
-            ATKTEAM->set_boost(Statname::Atk, 1);
-            ATKTEAM->set_boost(Statname::Spe, 1);
+            atkteam.set_boost(Statname::Atk, 1);
+            atkteam.set_boost(Statname::Spe, 1);
             return;
         case Move::Howl:
-            ATKTEAM->set_boost(Statname::Atk, 1);
+            atkteam.set_boost(Statname::Atk, 1);
             return;
         case Move::Meditate:
-            ATKTEAM->set_boost(Statname::Atk, 1);
+            atkteam.set_boost(Statname::Atk, 1);
             return;
         case Move::Sharpen:
-            ATKTEAM->set_boost(Statname::Atk, 1);
+            atkteam.set_boost(Statname::Atk, 1);
             return;
         case Move::Swagger:
-            DEFTEAM->set_boost(Statname::Atk, 1);
-            ATKTEAM->set_confusion();
+            defteam.set_boost(Statname::Atk, 1);
+            atkteam.set_confusion();
             return;
         case Move::Swords_Dance:
-            ATKTEAM->set_boost(Statname::Atk, 2);
+            atkteam.set_boost(Statname::Atk, 2);
             return;
 
         case Move::Acid_Armor:
-            ATKTEAM->set_boost(Statname::Def, 2);
+            atkteam.set_boost(Statname::Def, 2);
             return;
         case Move::Barrier:
-            ATKTEAM->set_boost(Statname::Def, 2);
+            atkteam.set_boost(Statname::Def, 2);
             return;
         case Move::Cosmic_Power:
-            ATKTEAM->set_boost(Statname::Def, 1);
-            ATKTEAM->set_boost(Statname::Sdef, 1);
+            atkteam.set_boost(Statname::Def, 1);
+            atkteam.set_boost(Statname::Sdef, 1);
             return;
         case Move::Defense_Curl:
-            ATKTEAM->set_boost(Statname::Def, 1);
+            atkteam.set_boost(Statname::Def, 1);
             return;
         case Move::Harden:
-            ATKTEAM->set_boost(Statname::Def, 1);
+            atkteam.set_boost(Statname::Def, 1);
             return;
         case Move::Iron_Defense:
-            ATKTEAM->set_boost(Statname::Def, 2);
+            atkteam.set_boost(Statname::Def, 2);
             return;
         case Move::Withdraw:
-            ATKTEAM->set_boost(Statname::Def, 1);
+            atkteam.set_boost(Statname::Def, 1);
             return;
 
         case Move::Calm_Mind:
-            ATKTEAM->set_boost(Statname::Satk, 1);
-            ATKTEAM->set_boost(Statname::Sdef, 1);
+            atkteam.set_boost(Statname::Satk, 1);
+            atkteam.set_boost(Statname::Sdef, 1);
             return;
         case Move::Growth:
-            ATKTEAM->set_boost(Statname::Satk, 1);
+            atkteam.set_boost(Statname::Satk, 1);
             return;
         case Move::Tail_Glow:
-            ATKTEAM->set_boost(Statname::Satk, 2);
+            atkteam.set_boost(Statname::Satk, 2);
             return;
         
         case Move::Amnesia:
-            ATKTEAM->set_boost(Statname::Sdef, 2);
+            atkteam.set_boost(Statname::Sdef, 2);
             return;
 
         case Move::Agility:
-            ATKTEAM->set_boost(Statname::Spe, 2);
+            atkteam.set_boost(Statname::Spe, 2);
             return;
 
         case Move::Double_Team:
-            ATKTEAM->set_boost(Statname::Eva, 1);
+            atkteam.set_boost(Statname::Eva, 1);
             return;
         case Move::Minimize:
-            ATKTEAM->set_boost(Statname::Eva, 1);
+            atkteam.set_boost(Statname::Eva, 1);
             return;
 ////////////////////////////////////////////////////
         case Move::Focus_Energy:
 ////////////////////////////////////////////////////
         case Move::Charm:
-            DEFTEAM->set_boost(Statname::Atk, -2);
+            defteam.set_boost(Statname::Atk, -2);
             return;
         case Move::Feather_Dance:
-            DEFTEAM->set_boost(Statname::Atk, -2);
+            defteam.set_boost(Statname::Atk, -2);
             return;
         case Move::Growl:
-            DEFTEAM->set_boost(Statname::Atk, -1);
+            defteam.set_boost(Statname::Atk, -1);
             return;
         case Move::Tickle:
-            DEFTEAM->set_boost(Statname::Atk, -1);
-            DEFTEAM->set_boost(Statname::Satk, -1);
+            defteam.set_boost(Statname::Atk, -1);
+            defteam.set_boost(Statname::Satk, -1);
             return;
 
         case Move::Leer:
-            DEFTEAM->set_boost(Statname::Def, -1);
+            defteam.set_boost(Statname::Def, -1);
             return;
         case Move::Screech:
-            DEFTEAM->set_boost(Statname::Def, -2);
+            defteam.set_boost(Statname::Def, -2);
             return;
         case Move::Tail_Whip:
-            DEFTEAM->set_boost(Statname::Def, -1);
+            defteam.set_boost(Statname::Def, -1);
             return;
 
         case Move::Fake_Tears:
         case Move::Metal_Sound:
-            DEFTEAM->set_boost(Statname::Sdef, -2);
+            defteam.set_boost(Statname::Sdef, -2);
             return;
 
         case Move::Cotton_Spore:
         case Move::Scary_Face:
-            DEFTEAM->set_boost(Statname::Spe, -2);
+            defteam.set_boost(Statname::Spe, -2);
             return;
         case Move::String_Shot:
-            DEFTEAM->set_boost(Statname::Spe, -1);
+            defteam.set_boost(Statname::Spe, -1);
             return;
 
         case Move::Flash:
         case Move::Kinesis:
         case Move::Sand_Attack:
         case Move::Smokescreen:
-            DEFTEAM->set_boost(Statname::Acc, -1);
+            defteam.set_boost(Statname::Acc, -1);
             return;
         case Move::Sweet_Scent:
-            DEFTEAM->set_boost(Statname::Eva, -1);
+            defteam.set_boost(Statname::Eva, -1);
             return;
 
         case Move::Psych_Up:
-            if(DEFTEAM->atkboost > ATKTEAM->atkboost){
-                ATKTEAM->atkboost = DEFTEAM->atkboost;
+            if(defteam.atkboost > atkteam.atkboost){
+                atkteam.atkboost = defteam.atkboost;
             }
-            if(DEFTEAM->defboost > ATKTEAM->defboost){
-                ATKTEAM->defboost = DEFTEAM->defboost;
+            if(defteam.defboost > atkteam.defboost){
+                atkteam.defboost = defteam.defboost;
             }
-            if(DEFTEAM->satkboost > ATKTEAM->satkboost){
-                ATKTEAM->satkboost = DEFTEAM->satkboost;
+            if(defteam.satkboost > atkteam.satkboost){
+                atkteam.satkboost = defteam.satkboost;
             }
-            if(DEFTEAM->sdefboost > ATKTEAM->sdefboost){
-                ATKTEAM->sdefboost = DEFTEAM->sdefboost;
+            if(defteam.sdefboost > atkteam.sdefboost){
+                atkteam.sdefboost = defteam.sdefboost;
             }
-            if(DEFTEAM->speboost > ATKTEAM->speboost){
-                ATKTEAM->speboost = DEFTEAM->speboost;
+            if(defteam.speboost > atkteam.speboost){
+                atkteam.speboost = defteam.speboost;
             }
             return;
         case Move::Haze:
-            ATKTEAM->atkboost = 0;
-            ATKTEAM->defboost = 0;
-            ATKTEAM->satkboost = 0;
-            ATKTEAM->sdefboost = 0;
-            ATKTEAM->speboost = 0;
-            ATKTEAM->accboost = 0;
-            ATKTEAM->evaboost = 0;
+            atkteam.atkboost = 0;
+            atkteam.defboost = 0;
+            atkteam.satkboost = 0;
+            atkteam.sdefboost = 0;
+            atkteam.speboost = 0;
+            atkteam.accboost = 0;
+            atkteam.evaboost = 0;
 
-            DEFTEAM->atkboost = 0;
-            DEFTEAM->defboost = 0;
-            DEFTEAM->satkboost = 0;
-            DEFTEAM->sdefboost = 0;
-            DEFTEAM->speboost = 0;
-            DEFTEAM->accboost = 0;
-            DEFTEAM->evaboost = 0;
+            defteam.atkboost = 0;
+            defteam.defboost = 0;
+            defteam.satkboost = 0;
+            defteam.sdefboost = 0;
+            defteam.speboost = 0;
+            defteam.accboost = 0;
+            defteam.evaboost = 0;
             return;
         ///
         /// status moves
@@ -812,21 +807,21 @@ void Battle::use_move(const bool teamindex){
 
         // paralysis
         case Move::Glare:
-            if(DEFMON->get_status() != Status::Healthy){
-                if(*DEFMON != Type::Ghost){
-                    DEFMON->set_status(Status::Paralysis, DEFTEAM->safeguard);
+            if(defteam.mon_in_battle->get_status() != Status::Healthy){
+                if(*defteam.mon_in_battle != Type::Ghost){
+                    defteam.mon_in_battle->set_status(Status::Paralysis, defteam.safeguard);
                 }
             }
             return;
         case Move::Stun_Spore:
-            if(DEFMON->get_status() != Status::Healthy){
-                DEFMON->set_status(Status::Paralysis, DEFTEAM->safeguard);
+            if(defteam.mon_in_battle->get_status() != Status::Healthy){
+                defteam.mon_in_battle->set_status(Status::Paralysis, defteam.safeguard);
             }
             return;
         case Move::Thunder_Wave:
-            if(DEFMON->get_status() != Status::Healthy){
-                if(*DEFMON != Type::Ground){
-                    DEFMON->set_status(Status::Paralysis, DEFTEAM->safeguard);
+            if(defteam.mon_in_battle->get_status() != Status::Healthy){
+                if(*defteam.mon_in_battle != Type::Ground){
+                    defteam.mon_in_battle->set_status(Status::Paralysis, defteam.safeguard);
                 }
             }
             return;
@@ -837,49 +832,49 @@ void Battle::use_move(const bool teamindex){
         case Move::Sing:
         case Move::Sleep_Powder:
         case Move::Spore:
-            if(DEFMON->get_status() != Status::Healthy){
-                DEFMON->set_status(Status::Sleep_inflicted, DEFTEAM->safeguard);
+            if(defteam.mon_in_battle->get_status() != Status::Healthy){
+                defteam.mon_in_battle->set_status(Status::Sleep_inflicted, defteam.safeguard);
             }
             return;
         case Move::Yawn:
-            DEFTEAM->yawn = 2;
+            defteam.yawn = 2;
             return;
         case Move::Snore:
-            if(ATKMON->get_status() == Status::Sleep_inflicted ||
-               ATKMON->get_status() == Status::Sleep_self){
-                dmg = calculate_damage(teamindex);
-                DEFMON->reduce_hp(dmg);
+            if(atkteam.mon_in_battle->get_status() == Status::Sleep_inflicted ||
+               atkteam.mon_in_battle->get_status() == Status::Sleep_self){
+                dmg = calculate_damage(atkteam, defteam);
+                defteam.mon_in_battle->reduce_hp(dmg);
                }
                return;
         case Move::Sleep_Talk:
         // poison
         case Move::Poison_Powder:
-            if(DEFMON->get_status() != Status::Healthy){
-                if(*DEFMON != Type::Steel && *DEFMON != Type::Poison){
-                    DEFMON->set_status(Status::Poison, DEFTEAM->safeguard);
+            if(defteam.mon_in_battle->get_status() != Status::Healthy){
+                if(*defteam.mon_in_battle != Type::Steel && *defteam.mon_in_battle != Type::Poison){
+                    defteam.mon_in_battle->set_status(Status::Poison, defteam.safeguard);
                 }
             }
             return;
         case Move::Toxic:
-            if(DEFMON->get_status() != Status::Healthy){
-                if(*DEFMON != Type::Steel && *DEFMON != Type::Poison){
-                    DEFMON->set_status(Status::Toxic_poison, DEFTEAM->safeguard);
+            if(defteam.mon_in_battle->get_status() != Status::Healthy){
+                if(*defteam.mon_in_battle != Type::Steel && *defteam.mon_in_battle != Type::Poison){
+                    defteam.mon_in_battle->set_status(Status::Toxic_poison, defteam.safeguard);
                 }
             }
             return;
         // burn
         case Move::Will_O_Wisp:
-            if(DEFMON->get_status() != Status::Healthy){
-                if(*DEFMON != Type::Fire){
-                    DEFMON->set_status(Status::Burn, DEFTEAM->safeguard);
+            if(defteam.mon_in_battle->get_status() != Status::Healthy){
+                if(*defteam.mon_in_battle != Type::Fire){
+                    defteam.mon_in_battle->set_status(Status::Burn, defteam.safeguard);
                 }
             }
             return;
         case Move::Refresh:
-            if(ATKMON->get_status() != Status::Freeze){
-                if(ATKMON->get_status() != Status::Sleep_inflicted){
-                    if(ATKMON->get_status() != Status::Sleep_self){
-                        ATKMON->set_status(Status::Healthy, false);
+            if(atkteam.mon_in_battle->get_status() != Status::Freeze){
+                if(atkteam.mon_in_battle->get_status() != Status::Sleep_inflicted){
+                    if(atkteam.mon_in_battle->get_status() != Status::Sleep_self){
+                        atkteam.mon_in_battle->set_status(Status::Healthy, false);
                     }
                 }
             }
@@ -889,20 +884,20 @@ void Battle::use_move(const bool teamindex){
         case Move::Supersonic:
         case Move::Sweet_Kiss:
         case Move::Teeter_Dance:
-            DEFTEAM->set_confusion();
+            defteam.set_confusion();
             return;
         //related
         case Move::Aromatherapy:
         case Move::Heal_Bell:
             for(int i = 0; i < 6; ++i){
-                if(ATKTEAM->member[i].get_status() != Status::Fainted){
-                    ATKTEAM->member[i].set_status(Status::Healthy, false);
+                if(atkteam.member[i].get_status() != Status::Fainted){
+                    atkteam.member[i].set_status(Status::Healthy, false);
                 }
             }
-            ATKTEAM->sleep_inflict = false;
+            atkteam.sleep_inflict = false;
             return;    
         case Move::Safeguard:     
-            ATKTEAM->safeguard = true;   
+            atkteam.safeguard = true;   
         ///
         /// healing moves
         ///
@@ -910,37 +905,37 @@ void Battle::use_move(const bool teamindex){
         case Move::Recover:
         case Move::Slack_Off:
         case Move::Soft_Boiled:
-            ATKMON->increase_hp(
-                static_cast<int>(ATKMON->get_stats().hp / 2.0));
+            atkteam.mon_in_battle->increase_hp(
+                static_cast<int>(atkteam.mon_in_battle->get_stats().hp / 2.0));
             return;
         case Move::Moonlight:
         case Move::Morning_Sun:
         case Move::Synthesis:
             switch(this->weather){
                 case Weather::Sun:
-                    ATKMON->increase_hp(
-                        static_cast<int>(ATKMON->get_stats().hp * (2.0 / 3.0)));
+                    atkteam.mon_in_battle->increase_hp(
+                        static_cast<int>(atkteam.mon_in_battle->get_stats().hp * (2.0 / 3.0)));
                 case Weather::Clear:
-                    ATKMON->increase_hp(
-                        static_cast<int>(ATKMON->get_stats().hp / 2.0));
+                    atkteam.mon_in_battle->increase_hp(
+                        static_cast<int>(atkteam.mon_in_battle->get_stats().hp / 2.0));
                 default:
-                    ATKMON->increase_hp(
-                        static_cast<int>(ATKMON->get_stats().hp / 4.0));
+                    atkteam.mon_in_battle->increase_hp(
+                        static_cast<int>(atkteam.mon_in_battle->get_stats().hp / 4.0));
             }
             return;
         case Move::Rest:
-            if(ATKMON->get_status() != Status::Sleep_inflicted &&
-                ATKMON->get_status() != Status::Sleep_self){
-                    ATKMON->set_status(Status::Sleep_self, false);
-                    ATKMON->increase_hp(999);
+            if(atkteam.mon_in_battle->get_status() != Status::Sleep_inflicted &&
+                atkteam.mon_in_battle->get_status() != Status::Sleep_self){
+                    atkteam.mon_in_battle->set_status(Status::Sleep_self, false);
+                    atkteam.mon_in_battle->increase_hp(999);
                 }
             return;
         case Move::Wish:
-            ATKTEAM->wish = true;
-            ATKTEAM->wish_recovery = static_cast<int>(ATKMON->get_stats().hp / 2.0);
+            atkteam.wish = true;
+            atkteam.wish_recovery = static_cast<int>(atkteam.mon_in_battle->get_stats().hp / 2.0);
             return;
         case Move::Ingrain:
-            ATKTEAM->ingrain = true;
+            atkteam.ingrain = true;
             return;
         ///
         /// weather
@@ -968,13 +963,13 @@ void Battle::use_move(const bool teamindex){
         case Move::Attract:
         case Move::Baton_Pass:
             // input to switch pokemon
-            if(ATKMON->substitute){
-                ATKMON->substitute = false;
-                ATKTEAM->member[switch_target].substitute = true;
-                ATKTEAM->member[switch_target].substitute_hp = ATKMON->substitute_hp;
-                ATKMON->substitute_hp = 0;
+            if(atkteam.mon_in_battle->substitute){
+                atkteam.mon_in_battle->substitute = false;
+                atkteam.member[switch_target].substitute = true;
+                atkteam.member[switch_target].substitute_hp = atkteam.mon_in_battle->substitute_hp;
+                atkteam.mon_in_battle->substitute_hp = 0;
             }
-            ATKTEAM->active_pokemon = switch_target;
+            atkteam.active_pokemon = switch_target;
 
         case Move::Beat_Up:
         case Move::Bide:
@@ -998,18 +993,18 @@ void Battle::use_move(const bool teamindex){
         case Move::Helping_Hand:
         case Move::Imprison:
         case Move::Leech_Seed:
-            DEFTEAM->leechseed = true;
+            defteam.leechseed = true;
             return;
         case Move::Light_Screen:
-            ATKTEAM->lightscreen = true;
+            atkteam.lightscreen = true;
             return;
         case Move::Lock_On:
         case Move::Low_Kick:
         case Move::Magic_Coat:
         case Move::Memento:
-            ATKMON->reduce_hp(999);
-            DEFTEAM->set_boost(Statname::Atk, 2);
-            DEFTEAM->set_boost(Statname::Satk, 2);
+            atkteam.mon_in_battle->reduce_hp(999);
+            defteam.set_boost(Statname::Atk, 2);
+            defteam.set_boost(Statname::Satk, 2);
             return;
         case Move::Mimic:
         case Move::Mind_Reader:
@@ -1046,7 +1041,3 @@ void Battle::use_move(const bool teamindex){
             return;
     }
 }
-#undef ATKTEAM
-#undef DEFTEAM
-#undef ATKMON
-#undef DEFMON

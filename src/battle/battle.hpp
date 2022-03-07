@@ -11,7 +11,7 @@
 class Battle{
 public:
     Battle(Team &team1, Team &team2);
-    
+    Battle();
     ~Battle();
     std::string_view p1 = "p1";
     std::string_view p2 = "p2";
@@ -28,10 +28,12 @@ public:
     void calc_first_attacker();
 
     // damage_calc.cpp
-    int calculate_damage(const int atkteam);
     int calculate_damage(const Team &atkteam, const Team &defteam);
-    float crit_multiplier(const Team &atkteam, const Team &defteam);
+    bool is_crit(const Team &atkteam, const Team &defteam);
     float ability_multiplier(const Team &atkteam, const Team &defteam);
+    float boost_multiplier(const Team &atkteam, const Statname _stat);
+    int crit_multiplier(const Team &atkteam, const Team &defteam);
+    float effectiveness_multiplier(const Team &atkteam, const Team &defteam);
     float item_multiplier(const Team &atkteam);
     float weather_multiplier(const Team &atkteam);
 
@@ -45,5 +47,5 @@ public:
     void end_of_turn();
 
     // use_move.cpp
-    void use_move(const bool teamindex);
+    void use_move(Team &atkteam, Team &defteam);
 };

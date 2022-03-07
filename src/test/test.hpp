@@ -7,6 +7,7 @@
 
 #include "tools/benchmark.hpp"
 #include "tools/import.hpp"
+#include "battle.hpp"
 
 #include "data/base_stats.hpp"
 #include "../string_conversions/ability.hpp"
@@ -29,6 +30,7 @@ public:
     bool test_move_options();
 private:
     std::vector<Team> teams;
+    Battle battle;
     bool import_test;
     bool team_init_test;
     bool init_test_species();
@@ -38,4 +40,9 @@ private:
     bool test_switch();
     bool test_substitute();
     bool test_calc();
+    bool test_crit();
+    bool test_ability();
+    bool test_item();
+    bool test_weather();
+    bool weather_compare(const Team &_team, const float &value);
 };

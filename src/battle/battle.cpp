@@ -10,6 +10,10 @@ Battle::Battle(Team &team1, Team &team2){
     this->weather_turns = 0;
 }
 
+Battle::Battle(){
+
+}
+
 Battle::~Battle(){
 
 }

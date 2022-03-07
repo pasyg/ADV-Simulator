@@ -16,14 +16,17 @@ void Test::test_all(){
 
 void Test::check(std::string funcname, std::function<bool()> func){
     if(func()){
-        std::cout << funcname << " test successful" << "\n";
+        std::cout << funcname << " test successful\n\n";
     }
     else{
-        std::cout << funcname << " test NOT successful" << "\n";
+        std::cout << funcname << " test NOT successful\n\n";
     }
 }
 
 bool Test::test_import(){
+
+    std::cout << "== Import test ==\n";
+
     this->import_test = false;
 
     this->teams = import_team("sample");
@@ -247,19 +250,18 @@ bool Test::init_test_hidden_power(){
 }
 
 bool Test::test_team_init(){
+
+    std::cout << "== team initilization test ==\n";
+
     if(this->import_test == true){
         for(auto&& team : this->teams){
             team.team_init();
         }
-        if(this->init_test_species() &&
-           this->init_test_stats() &&
-           this->init_test_moves() &&
-           this->init_test_hidden_power()){ 
-               return true; 
-            }
-        else{
-            return false;
-        }
+        if(!this->init_test_species()) return false;
+        if(!this->init_test_stats()) return false;
+        if(!this->init_test_moves()) return false;
+        if(!this->init_test_hidden_power()) return false;
+        return true;
     }
     else{
         std::cout << "(ERROR import)" << "\n";
@@ -268,6 +270,9 @@ bool Test::test_team_init(){
 }
 
 bool Test::test_move_options(){
+
+    std::cout << "== move options test ==\n";
+
     this->teams[0].member[0].moveset[0].reduce_pp(999);
     this->teams[0].member[0].moveset[1].reduce_pp(999);
     this->teams[0].get_move_options();
@@ -281,12 +286,18 @@ bool Test::test_move_options(){
     this->teams[1].member[4].reduce_hp(999);
     this->teams[1].get_move_options();
     for(auto&& option : this->teams[1].move_options){
-        std::cout << to_string(option.get_move()) << "\n";
+        if(option.get_move() == Move::Switch2 ||
+           option.get_move() == Move::Switch4){
+               return false;
     }
     return true;
+  }
 }
 
 bool Test::test_switch(){
+
+    std::cout << "== switch test ==\n";
+
     if(this->team_init_test){
         if(this->teams[0].member[this->teams[0].active_pokemon].get_species() != Species::Swampert){
             return false;
@@ -336,21 +347,105 @@ bool Test::test_substitute(){
 }
 
 bool Test::test_calc(){
+    std::cout << "== Damage Calculator Test ==\n";
+    std::cout << "test crits...\n";
+    if(!this->test_crit()){
+        return false;
+    }
+    std::cout << "test ability...\n";
+    if(!this->test_ability()){
+        return false;
+    }
+    std::cout << "test item...\n";
+    if(!this->test_item()){
+        return false;
+    }
+    std::cout << "test weather...\n";
+    if(!this->test_weather()){
+        return false;
+    }
     Battle battle1(this->teams[0], this->teams[1]);
 
     this->teams[0].movechoice = &this->teams[0].member[0].moveset[0];
-    int damage = battle1.calculate_damage(0);
-    std::cout << damage << std::endl;
+    int damage = battle1.calculate_damage(this->teams[0], this->teams[1]);
+    std::cout << "critical hits not considered damage calculation test\n";
     if(damage < 112 || damage > 132){
-        //return false;
+        return false;
     }
 
     this->teams[0].movechoice = &this->teams[0].member[0].moveset[1];
-    damage = battle1.calculate_damage(0);
-    std::cout << damage << std::endl;
+    damage = battle1.calculate_damage(this->teams[0], this->teams[1]);
     if(damage < 238 || damage > 280){
         return false;
     }
 
+    return true;
+}
+
+bool Test::test_crit(){
+    Battle battle(this->teams[21], this->teams[26]);
+    this->battle = battle;
+    return true;
+}
+
+bool Test::test_ability(){
+    Battle battle(this->teams[26], this->teams[21]);
+    this->battle = battle;
+    this->battle.team[0]->active_pokemon = 4;
+    this->battle.team[1]->active_pokemon = 3;
+    
+    this->battle.team[0]->movechoice = &this->battle.team[0]->member[4].moveset[1];
+    if(this->battle.ability_multiplier(*this->battle.team[0], *this->battle.team[1]) != 0.0f){
+        std::cout << "ability multiplier error \n";
+        return false;
+    }
+    return true;
+}
+
+bool Test::test_item(){
+    Battle battle(this->teams[0], this->teams[21]);
+    this->battle = battle;
+    this->battle.team[0]->active_pokemon = 4;
+    this->battle.team[0]->movechoice = &this->battle.team[0]->member[4].moveset[1];
+
+    if(this->battle.item_multiplier(*this->battle.team[0]) != 1.5f){
+        std::cout << "item multiplier error \n";
+        return false;
+    }
+    return true;
+}
+
+bool Test::test_weather(){
+    Battle battle(this->teams[1], this->teams[4]);
+    this->battle = battle;
+    this->battle.team[0]->active_pokemon = 2;
+    this->battle.team[1]->active_pokemon = 1;
+
+    this->battle.team[0]->movechoice = &this->battle.team[0]->member[2].moveset[0];
+    this->battle.team[1]->movechoice = &this->battle.team[1]->member[1].moveset[0];
+
+    this->battle.weather = Weather::Sun;
+
+    if(!(this-weather_compare(*this->battle.team[1], 0.5f)) ||
+       !(this->weather_compare(*this->battle.team[0], 2.0f))){
+           return false;
+       }
+
+    this->battle.weather = Weather::Rain;
+
+    if(!(this-weather_compare(*this->battle.team[0], 0.5f)) ||
+       !(this->weather_compare(*this->battle.team[1], 2.0f))){
+           return false;
+       }
+
+    return true;
+}
+
+bool Test::weather_compare(const Team &_team, const float &value){
+    const float result = this->battle.weather_multiplier(_team);
+    if(result != value){
+        std::cout << "weather multiplier error \n";
+        return false;
+    }
     return true;
 }

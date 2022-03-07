@@ -4,31 +4,335 @@
 
 
 int Battle::calculate_damage(const Team &atkteam, const Team &defteam){
-    return 1;
+    
+    int damage = 0;
+    int atk_stat = 0;
+    int def_stat = 0;
+    bool critical_hit = is_crit(atkteam, defteam);
+
+    switch(atkteam.movechoice->category){
+        case MoveCategory::Physical:
+            atk_stat = atkteam.member[atkteam.active_pokemon].get_stats().atk;
+            if(critical_hit && atkteam.atkboost < 0){
+                atk_stat = static_cast<int>(atk_stat * boost_multiplier(atkteam, Statname::Atk));
+            }
+            def_stat = defteam.member[defteam.active_pokemon].get_stats().def;
+            if(critical_hit && defteam.defboost > 0){
+                def_stat = static_cast<int>(def_stat * boost_multiplier(defteam, Statname::Def));
+            }
+            break;
+        case MoveCategory::Special:
+            atk_stat = atkteam.member[atkteam.active_pokemon].get_stats().satk;
+            if(critical_hit && atkteam.satkboost < 0){
+                atk_stat = static_cast<int>(atk_stat * boost_multiplier(atkteam, Statname::Satk));
+            }
+            def_stat = defteam.member[defteam.active_pokemon].get_stats().sdef;
+            if(critical_hit && defteam.sdefboost > 0){
+                def_stat = static_cast<int>(def_stat * boost_multiplier(defteam, Statname::Sdef));
+            }
+            break;
+    }
+
+    damage = 2 * (atkteam.member[atkteam.active_pokemon].get_level());
+    damage /= 5;
+    damage += 2;
+    damage *= atkteam.movechoice->get_power();
+    damage = static_cast<int>(static_cast<float>(damage) * static_cast<float>(atk_stat) / static_cast<float>(def_stat));
+    damage = static_cast<int>(static_cast<float>(damage) / 50.0f);
+    damage += 2;
+    damage = static_cast<int>(static_cast<float>(damage) * this->ability_multiplier(atkteam, defteam));
+    damage = static_cast<int>(static_cast<float>(damage) * this->item_multiplier(atkteam));
+    damage = static_cast<int>(static_cast<float>(damage) * this->weather_multiplier(atkteam));
+    if(atkteam.movechoice->get_stab()){
+        damage = static_cast<int>(static_cast<float>(damage) * 1.5f);
+    }
+    damage = static_cast<int>(static_cast<float>(damage) * effectiveness_multiplier(atkteam, defteam));
+    damage = static_cast<int>(static_cast<float>(damage) * static_cast<float>(get_random(85, 100)) / 100.0f);
+
+    if(critical_hit){
+        return damage *= 2;
+    }
+    else{
+        return damage;
+    }
 }
 
-float Battle::crit_multiplier(const Team &atkteam, const Team &defteam){
-    return 1;
+bool Battle::is_crit(const Team &atkteam, const Team &defteam){
+
+    switch(crit_multiplier(atkteam, defteam)){
+        case 0:
+            if(get_random(0, 15) == 0){
+                return true;
+            }
+            break;
+        case 1:
+            if(get_random(0, 7) == 0){
+                return true;
+            }
+            break;
+        case 2:
+            if(get_random(0, 3) == 0){
+                return true;
+            }
+            break;
+        case 3:
+            if(get_random(0, 2) == 0){
+                return true;
+            }
+            break;
+        case 4:
+            if(get_random(0, 1) == 0){
+                return true;
+            }
+            break;
+        default:
+            return false;
+    }
+    return false;
 }
 
 float Battle::ability_multiplier(const Team &atkteam, const Team &defteam){
-    return 1;
+    float atk_multiplier = 1;
+    float def_multiplier = 1;
+
+    switch(atkteam.member[atkteam.active_pokemon].get_ability()){
+        case Ability::Blaze:
+            if(atkteam.movechoice->get_type() == Type::Fire &&
+               (atkteam.member[atkteam.active_pokemon].current_hp <
+               static_cast<int>(atkteam.member[atkteam.active_pokemon].get_stats().hp / 3.0))){
+                   atk_multiplier = 1.5;
+               }
+               break;
+        case Ability::Overgrow:
+            if(atkteam.movechoice->get_type() == Type::Grass &&
+               (atkteam.member[atkteam.active_pokemon].current_hp <
+               static_cast<int>(atkteam.member[atkteam.active_pokemon].get_stats().hp / 3.0))){
+                   atk_multiplier = 1.5;
+               }
+            break;
+        case Ability::Torrent:
+            if(atkteam.movechoice->get_type() == Type::Water &&
+               (atkteam.member[atkteam.active_pokemon].current_hp <
+               static_cast<int>(atkteam.member[atkteam.active_pokemon].get_stats().hp / 3.0))){
+                   atk_multiplier = 1.5;
+               }
+            break;
+        case Ability::Swarm:
+            if(atkteam.movechoice->get_type() == Type::Bug &&
+               (atkteam.member[atkteam.active_pokemon].current_hp <
+               static_cast<int>(atkteam.member[atkteam.active_pokemon].get_stats().hp / 3.0))){
+                   atk_multiplier = 1.5;
+               }
+            break;
+        case Ability::Pure_Power:
+        case Ability::Huge_Power:
+            if(atkteam.movechoice->category == MoveCategory::Physical){
+                atk_multiplier = 2.0;
+            }
+            break;
+        case Ability::Guts:
+            if(atkteam.movechoice->category == MoveCategory::Physical &&
+                atkteam.member[atkteam.active_pokemon].get_status() != Status::Healthy){
+                    atk_multiplier = 1.5;
+                }
+            break;
+        case Ability::Hustle:
+            if(atkteam.movechoice->category == MoveCategory::Physical){
+                atk_multiplier = 1.5;
+            }
+            break;
+    }
+    switch(defteam.member[defteam.active_pokemon].get_ability()){
+        case Ability::Flash_Fire:
+            if(atkteam.movechoice->get_type() == Type::Fire){
+                def_multiplier = 0;
+            }
+            break;
+        case Ability::Levitate:
+            if(atkteam.movechoice->get_type() == Type::Ground){
+                def_multiplier = 0;
+            }
+            break;
+        case Ability::Marvel_Scale:
+            if(defteam.member[defteam.active_pokemon].get_status() != Status::Healthy){
+                if(atkteam.movechoice->category == MoveCategory::Physical){
+                    def_multiplier = 1.5;
+                }
+            }
+            break;
+        case Ability::Thick_Fat:
+            if(atkteam.movechoice->get_type() == Type::Fire ||
+               atkteam.movechoice->get_type() == Type::Ice){
+                   def_multiplier = 2;
+               }
+            break;
+        case Ability::Volt_Absorb:
+            if(atkteam.movechoice->get_type() == Type::Electric){
+                def_multiplier = 0;
+            }
+            break;
+        case Ability::Water_Absorb:
+            if(atkteam.movechoice->get_type() == Type::Water){
+                def_multiplier = 0;
+            }
+            break;
+        case Ability::Wonder_Guard:
+            switch(atkteam.movechoice->get_type()){
+                case Type::Dark:
+                case Type::Fire:
+                case Type::Flying:
+                case Type::Ghost:
+                case Type::Rock:
+                    return 1.0f;
+                default:
+                    def_multiplier = 0;
+            }
+            break;
+    }
+    if(def_multiplier == 0){
+        return 0;
+    }
+    else{
+        return atk_multiplier / def_multiplier;
+    }
+}
+
+float Battle::boost_multiplier(const Team &_team, const Statname _stat){
+    int boost = 0;
+
+    switch(_stat){
+        case Statname::Atk:
+            boost = _team.atkboost;
+            break;
+        case Statname::Def:
+            boost = _team.defboost;
+            break;
+        case Statname::Satk:
+            boost = _team.satkboost;
+            break;
+        case Statname::Sdef:
+            boost = _team.sdefboost;
+            break;
+        case Statname::Spe:
+            boost = _team.speboost;
+            break;
+    }
+
+    if(boost == 0){
+        return 1;
+    }
+    else if(boost > 0){
+        return static_cast<float>((2.0 + boost) / 2.0);
+    }
+    else{
+        return static_cast<float>(2.0 / (2.0 + boost));
+    }
+}
+
+int Battle::crit_multiplier(const Team &atkteam, const Team &defteam){
+    
+    int crit_multiplier = 0;
+
+    switch (defteam.member[defteam.active_pokemon].get_ability()){
+        case Ability::Battle_Armor:
+        case Ability::Shell_Armor:
+            return 0;
+        default:
+            break;
+    }
+
+    switch(atkteam.movechoice->get_move()){
+        case Move::Future_Sight:
+        case Move::Doom_Desire:
+            return 0;
+        case Move::Aeroblast:
+        case Move::Air_Cutter:
+        case Move::Attack_Order:
+        case Move::Blaze_Kick:
+        case Move::Crabhammer:
+        case Move::Cross_Chop:
+        case Move::Cross_Poison:
+        case Move::Drill_Run:
+        case Move::Karate_Chop:
+        case Move::Leaf_Blade:
+        case Move::Night_Slash:
+        case Move::Poison_Tail:
+        case Move::Psycho_Cut:
+        case Move::Razor_Leaf:
+        case Move::Razor_Wind:
+        case Move::Shadow_Claw:
+        case Move::Sky_Attack:
+        case Move::Slash:
+        case Move::Spacial_Rend:
+        case Move::Stone_Edge:
+            crit_multiplier += 1;
+            break;
+        default:
+            break;
+    }
+
+    switch(atkteam.member[atkteam.active_pokemon].get_item()){
+        case Item::Luckypunch:
+            if(atkteam.member[atkteam.active_pokemon].get_species() == Species::Chansey){
+                crit_multiplier += 1;
+            }
+            break;
+        case Item::Stick:
+            if(atkteam.member[atkteam.active_pokemon].get_species() == Species::Farfetchd){
+                crit_multiplier += 1;
+            }
+            break;
+        case Item::Scopelens:
+            crit_multiplier += 1;
+            break;
+        default:
+            break;
+    }
+
+    return crit_multiplier;
+}
+
+float Battle::effectiveness_multiplier(const Team &atkteam, const Team &defteam){
+
+    return effectiveness(atkteam.movechoice->get_type(), defteam.member[defteam.active_pokemon].get_type()[0]) *
+           effectiveness(atkteam.movechoice->get_type(), defteam.member[defteam.active_pokemon].get_type()[1]);
 }
 
 float Battle::item_multiplier(const Team &atkteam){
     switch(atkteam.member[atkteam.active_pokemon].get_item()){
         case Item::Blackbelt:
+            if(atkteam.movechoice->get_type() == Type::Fighting){
+                return 1.1f;
+            }
         case Item::Blackglasses:
+            if(atkteam.movechoice->get_type() == Type::Dark){
+                return 1.1f;
+            }
         case Item::Charcoal:
+            if(atkteam.movechoice->get_type() == Type::Fire){
+                return 1.1f;
+            }
         case Item::Choiceband:
-        case Item::Deepseascale:
+            if(atkteam.movechoice->category == MoveCategory::Physical){
+                return 1.5f;
+            }
         case Item::Deepseatooth:
+            if(atkteam.member[atkteam.active_pokemon].get_species() == Species::Clamperl &&
+               atkteam.movechoice->category == MoveCategory::Special){
+                   return 2.0f;
+               }
         case Item::Dragonfang:
+            if(atkteam.movechoice->get_type() == Type::Dragon){
+                return 1.1f;
+            }
         case Item::Hardstone:
+            if(atkteam.movechoice->get_type() == Type::Rock){
+                return 1.1f;
+            }
         case Item::Lightball:
             if(atkteam.movechoice->category == MoveCategory::Special &&
                atkteam.member[atkteam.active_pokemon].get_species() == Species::Pikachu){
-                   return 2;
+                   return 2.0f;
                }
         case Item::Magnet:
             if(atkteam.movechoice->get_type() == Type::Electric){
@@ -70,16 +374,16 @@ float Battle::item_multiplier(const Team &atkteam){
             if(atkteam.movechoice->category == MoveCategory::Physical &&
               (atkteam.member[atkteam.active_pokemon].get_species() == Species::Cubone ||
                atkteam.member[atkteam.active_pokemon].get_species() == Species::Marowak)){
-                   return 2;
+                   return 2.0f;
                }
         case Item::Twistedspoon:
             if(atkteam.movechoice->get_type() == Type::Psychic){
                 return 1.1f;
             }
             else{
-                return 1;
+                return 1.0f;
             }
-        default: return 1;
+        default: return 1.0f;
     }
 }
 
@@ -101,320 +405,4 @@ float Battle::weather_multiplier(const Team &atkteam){
             }
         default: return 1;
     }
-}
-
-int Battle::calculate_damage(const int patkteam){
-    // Air Lock not implemented
-    // Crits (shellarmor, scopelens, etc.)
-    Team* atkteam;
-    Team* defteam;
-
-    Pokemon* atkmon;
-    Pokemon* defmon;
-
-    Statname attack;
-    Statname defense;
-
-    int atk_stat = 0;
-    int def_stat = 0;
-
-    int crit_chance = 0;
-    int damage = 0;
-    int burn = 1;
-    double other = 1;
-
-    // choose correct attacking and defending side
-    if(this->team[patkteam]->movechoice->get_move() != Move::Hit_Self){
-        if(patkteam == 0){
-            atkteam = this->team[0];
-            defteam = this->team[1];
-        }
-        else{
-            atkteam = this->team[1];
-            defteam = this->team[0];
-        }
-    }
-    else{
-        atkteam = this->team[0];
-        defteam = this->team[0];
-    }
-
-    atkmon = &atkteam->member[atkteam->active_pokemon];
-    defmon = &defteam->member[defteam->active_pokemon];
-    
-    // just for shedinja
-    if(defmon->get_ability() == Ability::Wonder_Guard){
-        switch(ATKTYPE){
-        case Type::Dark:
-        case Type::Fire:
-        case Type::Flying:
-        case Type::Ghost:
-        case Type::Rock:
-            return 1;
-        default:
-            return 0;
-        }
-    }
-
-    // type immunity, item type boost, weather boost
-    switch(ATKTYPE){
-        case Type::Bug:
-            if(atkmon->get_item() == Item::Silverpowder){
-                other *= 1.1;
-            }
-            break;
-        case Type::Dark:
-            if(atkmon->get_item() == Item::Blackglasses){
-                other *= 1.1;
-            }
-            break;
-        case Type::Dragon:
-            if(atkmon->get_item() == Item::Dragonfang){
-                other *= 1.1;
-            }
-            break;
-        case Type::Electric:
-            if(defmon->get_ability() == Ability::Volt_Absorb){
-                return 0;
-            }
-            if(atkmon->get_item() == Item::Magnet){
-                other *= 1.1;
-            }
-            break;
-        case Type::Fighting:
-            if(atkmon->get_item() == Item::Blackbelt){
-                other *= 1.1;
-            }
-            break;
-        case Type::Fire:
-            if(defmon->get_ability() == Ability::Flash_Fire){
-                return 0;
-            }
-            if(defmon->get_ability() == Ability::Thick_Fat){
-                other /= 2.0;
-            }
-            if(atkmon->get_item() == Item::Charcoal){
-                other *= 1.1;
-            }
-            if(this->weather == Weather::Sun){
-                other *= 1.5;
-            }
-            if(this->weather == Weather::Rain){
-                other /= 2.0;
-            }
-            break;
-        case Type::Flying:
-            if(atkmon->get_item() == Item::Sharpbeak){
-                other *= 1.1;
-            }
-            break;
-        case Type::Ghost:
-            if(atkmon->get_item() == Item::Spelltag){
-                other *= 1.1;
-            }
-            break;
-        case Type::Grass:
-            if(atkmon->get_item() == Item::Miracleseed){
-                other *= 1.1;
-            }
-            break;
-        case Type::Ground:
-            if(defmon->get_ability() == Ability::Levitate){
-                return 0;
-            }
-            if(atkmon->get_item() == Item::Softsand){
-                other *= 1.1;
-            }
-            break;
-        case Type::Ice:
-            if(defmon->get_ability() == Ability::Thick_Fat){
-                other /= 2.0;
-            }
-            if(atkmon->get_item() == Item::Nevermeltice){
-                other *= 1.1;
-            }
-            break;
-        case Type::Normal:
-            if(atkmon->get_item() == Item::Silkscarf){
-                other *= 1.1;
-            }
-            break;
-        case Type::Poison:
-            if(atkmon->get_item() == Item::Poisonbarb){
-                other *= 1.1;
-            }
-            break;
-        case Type::Psychic:
-            if(atkmon->get_item() == Item::Twistedspoon){
-                other *= 1.1;
-            }
-            break;
-        case Type::Rock:
-            if(atkmon->get_item() == Item::Hardstone){
-                other *= 1.1;
-            }
-            break;
-        case Type::Steel:
-            if(atkmon->get_item() == Item::Metalcoat){
-                other *= 1.1;
-            }
-            break;
-        case Type::Water:
-            if(defmon->get_ability() == Ability::Water_Absorb){
-                return 0;
-            }
-            if(atkmon->get_item() == Item::Mysticwater){
-                other *= 1.1;
-            }
-            else if(atkmon->get_item() == Item::Seaincense){
-                other *= 1.05;
-            }
-            if(this->weather == Weather::Rain){
-                other *= 1.5;
-            }
-            if(this->weather == Weather::Sun){
-                other /= 2.0;
-            }
-            break;
-    }
-    
-    other *= effectiveness(ATKTYPE, defmon->get_type()[0]);
-    other *= effectiveness(ATKTYPE, defmon->get_type()[1]);
-
-    switch(ATKTYPE){
-        case Type::Bug:
-        case Type::Fighting:
-        case Type::Flying:
-        case Type::Ghost:
-        case Type::Ground:
-        case Type::Normal:
-        case Type::Poison:
-        case Type::Rock:
-        case Type::Steel:
-            attack = Statname::Atk;
-            defense = Statname::Def;
-
-            // Initialize attack value with boost
-            atk_stat = get_stat_boosted(attack, *atkmon, atkteam->get_boost(attack));
-            def_stat = get_stat_boosted(defense, *defmon, defteam->get_boost(defense));
-            // attack boost abilities / items
-            switch (atkmon->get_item()){
-                case Item::Choiceband:
-                    atk_stat = static_cast<int>(atk_stat * 1.5);
-                    break;
-                //case Item::Deepseascale:
-                //case Item::Deepseatooth:
-                //case Item::Lightball:
-                //case Item::Luckypunch:
-                //case Item::Metalpowder:
-                //case Item::Souldew:
-                //case Item::Stick:
-                case Item::Thickclub:
-                    if(atkmon->get_species() == Species::Marowak){
-                        atk_stat *= 2;
-                    }
-                    break;
-                    if(atkmon->get_species() == Species::Cubone){
-                        atk_stat *= 2;
-                    }
-                default: break;
-                }
-            switch(atkmon->get_ability()){
-                case Ability::Pure_Power:
-                case Ability::Huge_Power:
-                    atk_stat *= 2;
-                    break;
-                case Ability::Hustle:
-                    atk_stat = static_cast<int>(atk_stat * 1.5);
-                    break;
-                case Ability::Guts:
-                    if(atkmon->get_status() != Status::Healthy){
-                        burn = 1;
-                        atk_stat = static_cast<int>(atk_stat * 1.5);
-                        break;
-                    }
-                case Ability::Swarm:
-                    if(ATKTYPE == Type::Bug){
-                        if(atkmon->get_current_hp() < (atkmon->get_stats().hp / 3)){
-                            other *= 1.5;
-                        }
-                    }
-                }
-            if(defmon->get_ability() == Ability::Marvel_Scale){
-                if(defmon->get_status() != Status::Healthy){
-                    def_stat = static_cast<int>(def_stat * 1.5);
-                }
-            }
-            break;
-        case Type::Fire:
-            if(atkmon->get_ability() == Ability::Blaze){
-                if(atkmon->get_current_hp() < (atkmon->get_stats().hp / 3)){
-                    other *= 1.5;
-                }
-            }
-        case Type::Water:
-            if(atkmon->get_ability() == Ability::Torrent){
-                if(atkmon->get_current_hp() < (atkmon->get_stats().hp / 3)){
-                    other *= 1.5;
-                }
-            }
-        case Type::Grass:
-            if(atkmon->get_ability() == Ability::Overgrow){
-                if(atkmon->get_current_hp() < (atkmon->get_stats().hp / 3)){
-                    other *= 1.5;
-                }
-            }
-        default:
-            attack = Statname::Satk;
-            defense = Statname::Sdef;
-            // Initialize attack value with boost
-            atk_stat = get_stat_boosted(attack, *atkmon, atkteam->get_boost(attack));
-            def_stat = get_stat_boosted(defense, *defmon, defteam->get_boost(defense));
-    }
-
-    // basic damage formula from: https://bulbapedia.bulbagarden.net/wiki/Damage
-    damage = 2 * atkmon->get_level();
-    damage = static_cast<int>(damage / 5.0);
-    damage += 2;
-    damage *= atkteam->movechoice->get_power();
-
-    // Critical Hit / Ignore positive defensive boost
-    if(get_random(0,15) == 0){
-        if(defteam->defboost >= 0){
-            damage = static_cast<int>(static_cast<int>(damage * get_stat_boosted(attack, *atkmon, atkteam->get_boost(attack))
-                                       / static_cast<float>(def_stat * 50.0)));
-            damage *= 2;
-        }
-        else{
-            damage = static_cast<int>(static_cast<int>(damage * get_stat_boosted(attack, *atkmon, atkteam->get_boost(attack)) 
-                                      / static_cast<float>(get_stat_boosted(defense, *defmon, defteam->get_boost(defense)) * 50.0)));
-            damage *= 2;
-        }
-    }
-    // No Critical Hit
-    else{
-    damage = static_cast<int>(damage * get_stat_boosted(attack, *atkmon, atkteam->get_boost(attack)) 
-                              / static_cast<float>((get_stat_boosted(defense, *defmon, defteam->get_boost(defense)) * 50.0)));
-    }
-
-    damage += 2;
-
-    // same type attack bonus
-    if(atkteam->movechoice->get_stab()){
-        damage = static_cast<int>(damage * 1.5);
-    }
-
-    // Damage Roll
-    damage = static_cast<int>((get_random(85,100) * damage) / 100.0);
-    if(damage < 1){
-        damage = 1;
-    }
-    if(damage > 0){
-        if(atkmon->get_item() == Item::Kingsrock){
-            if(get_random(0,9) == 0){
-                defteam->flinch = true;
-            }
-        }
-    }
-    return damage;
 }
