@@ -12,6 +12,7 @@ void Test::test_all(){
     check("switch", std::bind(&Test::test_switch, this));
     check("substitute", std::bind(&Test::test_substitute, this));
     check("damage calculation", std::bind(&Test::test_calc, this));
+    check("use move", std::bind(&Test::test_use_move, this));
 }
 
 void Test::check(std::string funcname, std::function<bool()> func){
@@ -20,6 +21,13 @@ void Test::check(std::string funcname, std::function<bool()> func){
     }
     else{
         std::cout << funcname << " test NOT successful\n\n";
+    }
+}
+
+void Test::reset(){
+
+    for(auto&& team : this->teams){
+        team.team_init();
     }
 }
 
@@ -290,8 +298,20 @@ bool Test::test_move_options(){
            option.get_move() == Move::Switch4){
                return false;
     }
-    return true;
   }
+    for(auto&& pokemon : this->teams[1].member){
+        if(pokemon.get_species() != Species::Breloom){
+            pokemon.reduce_hp(9999);
+        }
+    }
+    for(auto&& move : this->teams[1].member[0].moveset){
+        move.reduce_pp(999);
+    }
+    this->teams[1].get_move_options();
+    if(this->teams[1].move_options[0] != Move::Struggle){
+        return false;
+    }
+  return true;
 }
 
 bool Test::test_switch(){
@@ -447,5 +467,87 @@ bool Test::weather_compare(const Team &_team, const float &value){
         std::cout << "weather multiplier error \n";
         return false;
     }
+    return true;
+}
+
+bool Test::test_use_move(){
+    std::cout << "== use move test ==\n";
+    // attacking moves, no side effect   
+    std::cout << "damage moves check...\n";
+    reset();
+    if(!test_attacking_moves()){
+        return false;
+    }
+    // attacking moves, side effect
+    std::cout << "side effects check...\n";
+    reset();
+    if(!test_sideeffects_moves()){
+        return false;
+    }
+    // accuracy check
+    std::cout << "accuracy check...\n";
+    reset();
+    if(!test_accuracy_moves()){
+        return false;
+    }
+    // healing moves
+    std::cout << "healing check...\n";
+    reset();
+    if(!test_healing_moves()){
+        return false;
+    }
+    // status moves
+    std::cout << "status check...\n";
+    reset();
+    if(!test_status_moves()){
+        return false;
+    }
+    // random
+    std::cout << "misc. check...\n";
+    reset();
+    if(!test_misc_moves()){
+        return false;
+    }
+    return true;
+}
+
+bool Test::test_attacking_moves(){
+
+    return true;
+}
+
+bool Test::test_sideeffects_moves(){
+
+    return true;
+}
+
+bool Test::test_accuracy_moves(){
+    auto is_miss = [&](Team t1, Team t2){
+        for(int i = 0; i < 300; ++i){
+            this->battle.use_move(t1, t2);
+            if(t2.member[t2.active_pokemon].current_hp == t2.member[t2.active_pokemon].stats.hp){
+                return true;
+            }
+            t2.member[t2.active_pokemon].current_hp = t2.member[t2.active_pokemon].stats.hp;
+        }
+        return false;
+    };
+
+    this->teams[0].movechoice = &this->teams[0].member[0].moveset[0];
+    if(!is_miss(teams[0], teams[1])){
+        return false;
+    }
+    return true;
+}
+
+bool Test::test_healing_moves(){
+    return true;
+}
+
+bool Test::test_status_moves(){
+    return true;
+}
+
+bool Test::test_misc_moves(){
     return true;
 }

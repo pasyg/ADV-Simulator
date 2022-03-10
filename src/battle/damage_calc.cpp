@@ -1,7 +1,5 @@
 #include "battle.hpp"
 
-#define ATKTYPE atkteam->movechoice->get_type()
-
 
 int Battle::calculate_damage(const Team &atkteam, const Team &defteam){
     
@@ -13,22 +11,22 @@ int Battle::calculate_damage(const Team &atkteam, const Team &defteam){
     switch(atkteam.movechoice->category){
         case MoveCategory::Physical:
             atk_stat = atkteam.member[atkteam.active_pokemon].get_stats().atk;
-            if(critical_hit && atkteam.atkboost < 0){
-                atk_stat = static_cast<int>(atk_stat * boost_multiplier(atkteam, Statname::Atk));
+            if(!(critical_hit && atkteam.atkboost < 0)){
+                atk_stat = get_stat_boosted(atkteam.member[atkteam.active_pokemon].get_stats().atk, Statname::Atk, atkteam.atkboost);
             }
             def_stat = defteam.member[defteam.active_pokemon].get_stats().def;
-            if(critical_hit && defteam.defboost > 0){
-                def_stat = static_cast<int>(def_stat * boost_multiplier(defteam, Statname::Def));
+            if(!(critical_hit && defteam.defboost > 0)){
+                def_stat = get_stat_boosted(defteam.member[defteam.active_pokemon].get_stats().def, Statname::Def, defteam.defboost);
             }
             break;
         case MoveCategory::Special:
             atk_stat = atkteam.member[atkteam.active_pokemon].get_stats().satk;
-            if(critical_hit && atkteam.satkboost < 0){
-                atk_stat = static_cast<int>(atk_stat * boost_multiplier(atkteam, Statname::Satk));
+            if(!(critical_hit && atkteam.satkboost < 0)){
+                atk_stat = get_stat_boosted(atkteam.member[atkteam.active_pokemon].get_stats().satk, Statname::Satk, atkteam.satkboost);
             }
             def_stat = defteam.member[defteam.active_pokemon].get_stats().sdef;
-            if(critical_hit && defteam.sdefboost > 0){
-                def_stat = static_cast<int>(def_stat * boost_multiplier(defteam, Statname::Sdef));
+            if(!(critical_hit && defteam.sdefboost > 0)){
+                def_stat = get_stat_boosted(defteam.member[defteam.active_pokemon].get_stats().sdef, Statname::Sdef, defteam.sdefboost);
             }
             break;
     }
@@ -97,28 +95,28 @@ float Battle::ability_multiplier(const Team &atkteam, const Team &defteam){
 
     switch(atkteam.member[atkteam.active_pokemon].get_ability()){
         case Ability::Blaze:
-            if(atkteam.movechoice->get_type() == Type::Fire &&
+            if(*atkteam.movechoice == Type::Fire &&
                (atkteam.member[atkteam.active_pokemon].current_hp <
                static_cast<int>(atkteam.member[atkteam.active_pokemon].get_stats().hp / 3.0))){
                    atk_multiplier = 1.5;
                }
                break;
         case Ability::Overgrow:
-            if(atkteam.movechoice->get_type() == Type::Grass &&
+            if(*atkteam.movechoice == Type::Grass &&
                (atkteam.member[atkteam.active_pokemon].current_hp <
                static_cast<int>(atkteam.member[atkteam.active_pokemon].get_stats().hp / 3.0))){
                    atk_multiplier = 1.5;
                }
             break;
         case Ability::Torrent:
-            if(atkteam.movechoice->get_type() == Type::Water &&
+            if(*atkteam.movechoice == Type::Water &&
                (atkteam.member[atkteam.active_pokemon].current_hp <
                static_cast<int>(atkteam.member[atkteam.active_pokemon].get_stats().hp / 3.0))){
                    atk_multiplier = 1.5;
                }
             break;
         case Ability::Swarm:
-            if(atkteam.movechoice->get_type() == Type::Bug &&
+            if(*atkteam.movechoice == Type::Bug &&
                (atkteam.member[atkteam.active_pokemon].current_hp <
                static_cast<int>(atkteam.member[atkteam.active_pokemon].get_stats().hp / 3.0))){
                    atk_multiplier = 1.5;
@@ -144,12 +142,12 @@ float Battle::ability_multiplier(const Team &atkteam, const Team &defteam){
     }
     switch(defteam.member[defteam.active_pokemon].get_ability()){
         case Ability::Flash_Fire:
-            if(atkteam.movechoice->get_type() == Type::Fire){
+            if(*atkteam.movechoice == Type::Fire){
                 def_multiplier = 0;
             }
             break;
         case Ability::Levitate:
-            if(atkteam.movechoice->get_type() == Type::Ground){
+            if(*atkteam.movechoice == Type::Ground){
                 def_multiplier = 0;
             }
             break;
@@ -161,18 +159,18 @@ float Battle::ability_multiplier(const Team &atkteam, const Team &defteam){
             }
             break;
         case Ability::Thick_Fat:
-            if(atkteam.movechoice->get_type() == Type::Fire ||
-               atkteam.movechoice->get_type() == Type::Ice){
+            if(*atkteam.movechoice == Type::Fire ||
+               *atkteam.movechoice == Type::Ice){
                    def_multiplier = 2;
                }
             break;
         case Ability::Volt_Absorb:
-            if(atkteam.movechoice->get_type() == Type::Electric){
+            if(*atkteam.movechoice == Type::Electric){
                 def_multiplier = 0;
             }
             break;
         case Ability::Water_Absorb:
-            if(atkteam.movechoice->get_type() == Type::Water){
+            if(*atkteam.movechoice == Type::Water){
                 def_multiplier = 0;
             }
             break;
@@ -194,38 +192,6 @@ float Battle::ability_multiplier(const Team &atkteam, const Team &defteam){
     }
     else{
         return atk_multiplier / def_multiplier;
-    }
-}
-
-float Battle::boost_multiplier(const Team &_team, const Statname _stat){
-    int boost = 0;
-
-    switch(_stat){
-        case Statname::Atk:
-            boost = _team.atkboost;
-            break;
-        case Statname::Def:
-            boost = _team.defboost;
-            break;
-        case Statname::Satk:
-            boost = _team.satkboost;
-            break;
-        case Statname::Sdef:
-            boost = _team.sdefboost;
-            break;
-        case Statname::Spe:
-            boost = _team.speboost;
-            break;
-    }
-
-    if(boost == 0){
-        return 1;
-    }
-    else if(boost > 0){
-        return static_cast<float>((2.0 + boost) / 2.0);
-    }
-    else{
-        return static_cast<float>(2.0 / (2.0 + boost));
     }
 }
 
@@ -301,15 +267,15 @@ float Battle::effectiveness_multiplier(const Team &atkteam, const Team &defteam)
 float Battle::item_multiplier(const Team &atkteam){
     switch(atkteam.member[atkteam.active_pokemon].get_item()){
         case Item::Blackbelt:
-            if(atkteam.movechoice->get_type() == Type::Fighting){
+            if(*atkteam.movechoice == Type::Fighting){
                 return 1.1f;
             }
         case Item::Blackglasses:
-            if(atkteam.movechoice->get_type() == Type::Dark){
+            if(*atkteam.movechoice == Type::Dark){
                 return 1.1f;
             }
         case Item::Charcoal:
-            if(atkteam.movechoice->get_type() == Type::Fire){
+            if(*atkteam.movechoice == Type::Fire){
                 return 1.1f;
             }
         case Item::Choiceband:
@@ -322,11 +288,11 @@ float Battle::item_multiplier(const Team &atkteam){
                    return 2.0f;
                }
         case Item::Dragonfang:
-            if(atkteam.movechoice->get_type() == Type::Dragon){
+            if(*atkteam.movechoice == Type::Dragon){
                 return 1.1f;
             }
         case Item::Hardstone:
-            if(atkteam.movechoice->get_type() == Type::Rock){
+            if(*atkteam.movechoice == Type::Rock){
                 return 1.1f;
             }
         case Item::Lightball:
@@ -335,39 +301,39 @@ float Battle::item_multiplier(const Team &atkteam){
                    return 2.0f;
                }
         case Item::Magnet:
-            if(atkteam.movechoice->get_type() == Type::Electric){
+            if(*atkteam.movechoice == Type::Electric){
                 return 1.1f;
             }
         case Item::Metalcoat:
-            if(atkteam.movechoice->get_type() == Type::Steel){
+            if(*atkteam.movechoice == Type::Steel){
                 return 1.1f;
             }
         case Item::Miracleseed:
-            if(atkteam.movechoice->get_type() == Type::Grass){
+            if(*atkteam.movechoice == Type::Grass){
                 return 1.1f;
             }
         case Item::Mysticwater:
-            if(atkteam.movechoice->get_type() == Type::Water){
+            if(*atkteam.movechoice == Type::Water){
                 return 1.1f;
             }
         case Item::Nevermeltice:
-            if(atkteam.movechoice->get_type() == Type::Ice){
+            if(*atkteam.movechoice == Type::Ice){
                 return 1.1f;
             }
         case Item::Poisonbarb:
-            if(atkteam.movechoice->get_type() == Type::Poison){
+            if(*atkteam.movechoice == Type::Poison){
                 return 1.1f;
             }
         case Item::Silkscarf:
-            if(atkteam.movechoice->get_type() == Type::Normal){
+            if(*atkteam.movechoice == Type::Normal){
                 return 1.1f;
             }
         case Item::Softsand:
-            if(atkteam.movechoice->get_type() == Type::Ground){
+            if(*atkteam.movechoice == Type::Ground){
                 return 1.1f;
             }
         case Item::Spelltag:
-            if(atkteam.movechoice->get_type() == Type::Ghost){
+            if(*atkteam.movechoice == Type::Ghost){
                 return 1.1f;
             }
         case Item::Thickclub:
@@ -377,7 +343,7 @@ float Battle::item_multiplier(const Team &atkteam){
                    return 2.0f;
                }
         case Item::Twistedspoon:
-            if(atkteam.movechoice->get_type() == Type::Psychic){
+            if(*atkteam.movechoice == Type::Psychic){
                 return 1.1f;
             }
             else{
@@ -388,21 +354,14 @@ float Battle::item_multiplier(const Team &atkteam){
 }
 
 float Battle::weather_multiplier(const Team &atkteam){
+    
     switch(this->weather){
         case Weather::Sun:
-            if(atkteam.movechoice->type == Type::Fire){
-                return 2.0;
-            }
-            if(atkteam.movechoice->type == Type::Water){
-                return 0.5;
-            }
-        case Weather::Rain:
-            if(atkteam.movechoice->type == Type::Fire){
-                return 0.5;
-            }
-            if(atkteam.movechoice->type == Type::Water){
-                return 2;
-            }
+            if(*atkteam.movechoice == Type::Fire){ return 2.0; }
+            if(*atkteam.movechoice == Type::Water){ return 0.5; }
+        case Weather::Rain:        
+            if(*atkteam.movechoice == Type::Fire){ return 0.5; }
+            if(*atkteam.movechoice == Type::Water){ return 2; }
         default: return 1;
     }
 }

@@ -22,7 +22,7 @@ int Battle::play_battle(){
     return 0;
 }
 
-int Battle::get_stat_boosted(const Statname &stat, const Pokemon &pokemon, const int &boost){
+int Battle::get_stat_boosted(int statvalue, const Statname &stat,  const int &boost){
     switch(stat){
         case Statname::Atk:
         case Statname::Def:
@@ -30,13 +30,13 @@ int Battle::get_stat_boosted(const Statname &stat, const Pokemon &pokemon, const
         case Statname::Sdef:
         case Statname::Spe:
             if(boost > 0){
-                return static_cast<int>(pokemon.get_stat(stat) * (2 + boost) / 2.0);
+                return static_cast<int>(statvalue * (2 + boost) / 2.0);
             }
             else if(boost < 0){
-                return static_cast<int>(pokemon.get_stat(stat) * 2 / static_cast<float>(2 + boost));
+                return static_cast<int>(statvalue * 2 / static_cast<float>(2 + boost));
             }
             else{
-                return pokemon.get_stat(stat);
+                return statvalue;
             }
         case Statname::Acc:
         case Statname::Eva:
@@ -59,9 +59,10 @@ int Battle::get_stat_boosted(const Statname &stat, const Pokemon &pokemon, const
 ///
 bool Battle::compare_speed(){
 
-    int speed1 = get_stat_boosted(Statname::Spe, this->team[0]->member[this->team[0]->active_pokemon], this->team[0]->speboost);
-    int speed2 = get_stat_boosted(Statname::Spe, this->team[1]->member[this->team[1]->active_pokemon], this->team[1]->speboost);
-
+    int speed1 = get_stat_boosted(this->team[0]->member[this->team[0]->active_pokemon].get_stats().spe, 
+                                  Statname::Spe, this->team[0]->speboost);
+    int speed2 = get_stat_boosted(this->team[1]->member[this->team[1]->active_pokemon].get_stats().spe, 
+                                  Statname::Spe, this->team[1]->speboost);
 
     if(this->team[0]->member[this->team[0]->active_pokemon].get_status() == Status::Paralysis){
         speed1 = static_cast<int>(speed1 / 4.0);

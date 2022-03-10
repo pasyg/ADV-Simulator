@@ -3,7 +3,54 @@
 void Battle::use_move(Team &atkteam, Team &defteam){
     int dmg = 0;
     int switch_target = 0;
-
+    int accuracy = move_accuracy(atkteam.movechoice->get_move(), this->weather);
+    // ADD ITEMS etc.
+    if(accuracy > 0){
+        int stages = atkteam.get_boost(Statname::Acc) - defteam.get_boost(Statname::Eva);
+        if(stages > 6){ stages = 6; };
+        if(stages < -6){ stages = -6; };
+        switch(stages){
+            case 6:
+                accuracy *= 3;
+                break;
+            case 5:
+                accuracy = static_cast<int>(accuracy * 266 / 100);
+                break;
+            case 4:
+                accuracy = static_cast<int>(accuracy * 250 / 100);
+                break;
+            case 3:
+                accuracy = static_cast<int>(accuracy * 200 / 100);
+                break;
+            case 2:
+                accuracy = static_cast<int>(accuracy * 166 / 100);
+                break;
+            case 1:
+                accuracy = static_cast<int>(accuracy * 133 / 100);
+                break;
+            case 0:
+                break;
+            case -1:
+                accuracy = static_cast<int>(accuracy * 75 / 100);
+                break;
+            case -2:
+                accuracy = static_cast<int>(accuracy * 60 / 100);
+                break;
+            case -3:
+                accuracy = static_cast<int>(accuracy * 50 / 100);
+                break;
+            case -4:
+                accuracy = static_cast<int>(accuracy * 43 / 100);
+                break;
+            case -5:
+                accuracy = static_cast<int>(accuracy * 36 / 100);
+                break;
+            case -6:
+                accuracy = static_cast<int>(accuracy * 33 / 100);
+                break;
+        }
+        if(get_random(1,100) > accuracy){ return; };
+    }
     switch(atkteam.movechoice->get_move()){
         ///
         /// switches
@@ -144,7 +191,8 @@ void Battle::use_move(Team &atkteam, Team &defteam){
         case Move::Waterfall:
         case Move::Wing_Attack:
             dmg = calculate_damage(atkteam, defteam);
-            defteam.mon_in_battle->reduce_hp(dmg);
+            defteam.member[defteam.active_pokemon].reduce_hp(dmg);
+            //defteam.mon_in_battle->reduce_hp(dmg);
             return;
         ///
         /// secondary effect damage moves

@@ -23,7 +23,7 @@ public:
 
     // battle.cpp
     int play_battle();
-    int get_stat_boosted(const Statname &stat, const Pokemon &pokemon, const int &boost);
+    int get_stat_boosted(int statvalue, const Statname &stat,  const int &boost);
     bool compare_speed();
     void calc_first_attacker();
 
@@ -31,7 +31,6 @@ public:
     int calculate_damage(const Team &atkteam, const Team &defteam);
     bool is_crit(const Team &atkteam, const Team &defteam);
     float ability_multiplier(const Team &atkteam, const Team &defteam);
-    float boost_multiplier(const Team &atkteam, const Statname _stat);
     int crit_multiplier(const Team &atkteam, const Team &defteam);
     float effectiveness_multiplier(const Team &atkteam, const Team &defteam);
     float item_multiplier(const Team &atkteam);

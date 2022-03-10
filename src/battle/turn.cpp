@@ -38,6 +38,7 @@ bool Battle::play_turn(){
         }
         return true;
     }
+    return true;
 }
 
 bool Battle::game_end(int teamindex){

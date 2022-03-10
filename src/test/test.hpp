@@ -33,6 +33,7 @@ private:
     Battle battle;
     bool import_test;
     bool team_init_test;
+    void reset();
     bool init_test_species();
     bool init_test_stats();
     bool init_test_moves();
@@ -44,5 +45,13 @@ private:
     bool test_ability();
     bool test_item();
     bool test_weather();
+    bool test_moves();
+    bool test_use_move();
+    bool test_accuracy_moves();
+    bool test_attacking_moves();
+    bool test_sideeffects_moves();
+    bool test_healing_moves();
+    bool test_status_moves();
+    bool test_misc_moves();
     bool weather_compare(const Team &_team, const float &value);
 };
