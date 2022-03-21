@@ -1,4 +1,4 @@
-#include "Moves.hpp"
+#include "moves.hpp"
 
 std::string_view to_string(Move const move){
     switch (move) {
