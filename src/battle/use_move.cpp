@@ -1,6 +1,13 @@
 #include "battle.hpp"
 
-void Battle::use_move(Team &atkteam, Team &defteam){
+
+void Battle::use_move(Team &atkteam, Team &defteam){ 
+    if(defteam.member[defteam.active_pokemon].get_ability() == Ability::Pressure){
+        atkteam.movechoice->reduce_pp(2);
+    }
+    else{
+        atkteam.movechoice->reduce_pp(1);
+    }
     int dmg = 0;
     int switch_target = 0;
     int accuracy = move_accuracy(atkteam.movechoice->get_move(), this->weather);
@@ -56,30 +63,30 @@ void Battle::use_move(Team &atkteam, Team &defteam){
         /// switches
         ///
         case Move::Switch0:
-            atkteam.mon_in_battle->set_ability(atkteam.mon_in_battle->former_ability);
+            atkteam.member[atkteam.active_pokemon].set_ability(atkteam.member[atkteam.active_pokemon].former_ability);
             atkteam.active_pokemon = 0;
             goto SWITCHIN;
         case Move::Switch1:
-            atkteam.mon_in_battle->set_ability(atkteam.mon_in_battle->former_ability);
+            atkteam.member[atkteam.active_pokemon].set_ability(atkteam.member[atkteam.active_pokemon].former_ability);
             atkteam.active_pokemon = 1;
             goto SWITCHIN;
         case Move::Switch2:
-            atkteam.mon_in_battle->set_ability(atkteam.mon_in_battle->former_ability);
+            atkteam.member[atkteam.active_pokemon].set_ability(atkteam.member[atkteam.active_pokemon].former_ability);
             atkteam.active_pokemon = 2;
             goto SWITCHIN;
         case Move::Switch3:
-            atkteam.mon_in_battle->set_ability(atkteam.mon_in_battle->former_ability);
+            atkteam.member[atkteam.active_pokemon].set_ability(atkteam.member[atkteam.active_pokemon].former_ability);
             atkteam.active_pokemon = 3;
             goto SWITCHIN;
         case Move::Switch4:
-            atkteam.mon_in_battle->set_ability(atkteam.mon_in_battle->former_ability);
+            atkteam.member[atkteam.active_pokemon].set_ability(atkteam.member[atkteam.active_pokemon].former_ability);
             atkteam.active_pokemon = 4;
             goto SWITCHIN;
         case Move::Switch5:
-            atkteam.mon_in_battle->set_ability(atkteam.mon_in_battle->former_ability);
+            atkteam.member[atkteam.active_pokemon].set_ability(atkteam.member[atkteam.active_pokemon].former_ability);
             atkteam.active_pokemon = 5;
         SWITCHIN:
-            switch (atkteam.mon_in_battle->get_ability())
+            switch (atkteam.member[atkteam.active_pokemon].get_ability())
             {
             case Ability::Drizzle:
                 this->weather = Weather::Rain;
@@ -96,8 +103,8 @@ void Battle::use_move(Team &atkteam, Team &defteam){
                 this->weather = Weather::Sand;
                 break;
             case Ability::Trace:
-                atkteam.mon_in_battle->former_ability = Ability::Trace;
-                atkteam.mon_in_battle->set_ability(defteam.mon_in_battle->get_ability());
+                atkteam.member[atkteam.active_pokemon].former_ability = Ability::Trace;
+                atkteam.member[atkteam.active_pokemon].set_ability(defteam.member[defteam.active_pokemon].get_ability());
                 break;
             default:
                 break;
@@ -109,37 +116,37 @@ void Battle::use_move(Team &atkteam, Team &defteam){
         /// basic damage moves without further effects
         ///
         case Move::Super_Fang:
-            dmg = static_cast<int>(defteam.mon_in_battle->get_current_hp() / 2.0);
+            dmg = static_cast<int>(defteam.member[defteam.active_pokemon].get_current_hp() / 2.0);
             if(*defteam.mon_in_battle != Type::Ghost){
-                defteam.mon_in_battle->reduce_hp(dmg);
+                defteam.member[defteam.active_pokemon].reduce_hp(dmg);
             }
             return;
         case Move::Dragon_Rage:
             dmg = 40;
-            defteam.mon_in_battle->reduce_hp(dmg);
+            defteam.member[defteam.active_pokemon].reduce_hp(dmg);
             return;
         case Move::Seismic_Toss:
             dmg = 100;
             if(*defteam.mon_in_battle != Type::Ghost){
-                defteam.mon_in_battle->reduce_hp(dmg);
+                defteam.member[defteam.active_pokemon].reduce_hp(dmg);
             }
             return;
         case Move::Night_Shade:
             dmg = 100;
             if(*defteam.mon_in_battle != Type::Normal){
-                defteam.mon_in_battle->reduce_hp(dmg);
+                defteam.member[defteam.active_pokemon].reduce_hp(dmg);
             }	
             return;
         case Move::Sonic_Boom:
             dmg = 20;
             if(*defteam.mon_in_battle != Type::Ghost){
-                defteam.mon_in_battle->reduce_hp(dmg);
+                defteam.member[defteam.active_pokemon].reduce_hp(dmg);
             }
             return;
         case Move::Endeavor:
-            if(atkteam.mon_in_battle->get_current_hp() < defteam.mon_in_battle->get_current_hp()){
-                defteam.mon_in_battle->reduce_hp(
-                    defteam.mon_in_battle->get_current_hp() - atkteam.mon_in_battle->get_current_hp()
+            if(atkteam.member[atkteam.active_pokemon].get_current_hp() < defteam.member[defteam.active_pokemon].get_current_hp()){
+                defteam.member[defteam.active_pokemon].reduce_hp(
+                    defteam.member[defteam.active_pokemon].get_current_hp() - atkteam.member[atkteam.active_pokemon].get_current_hp()
                 );
             }
         return;
@@ -192,7 +199,7 @@ void Battle::use_move(Team &atkteam, Team &defteam){
         case Move::Wing_Attack:
             dmg = calculate_damage(atkteam, defteam);
             defteam.member[defteam.active_pokemon].reduce_hp(dmg);
-            //defteam.mon_in_battle->reduce_hp(dmg);
+            //defteam.member[defteam.active_pokemon].reduce_hp(dmg);
             return;
         ///
         /// secondary effect damage moves
@@ -203,17 +210,17 @@ void Battle::use_move(Team &atkteam, Team &defteam){
         case Move::Leech_Life:
         case Move::Mega_Drain:
             dmg = calculate_damage(atkteam, defteam);
-            defteam.mon_in_battle->reduce_hp(dmg);
+            defteam.member[defteam.active_pokemon].reduce_hp(dmg);
             if(dmg > 1){
-                atkteam.mon_in_battle->increase_hp(static_cast<int>(dmg / 2.0));
+                atkteam.member[atkteam.active_pokemon].increase_hp(static_cast<int>(dmg / 2.0));
             }
             else{
-                atkteam.mon_in_battle->increase_hp(static_cast<int>(1));
+                atkteam.member[atkteam.active_pokemon].increase_hp(static_cast<int>(1));
             }
                 return;
         case Move::Acid:
             dmg = calculate_damage(atkteam, defteam);
-            defteam.mon_in_battle->reduce_hp(dmg);
+            defteam.member[defteam.active_pokemon].reduce_hp(dmg);
             if(dmg > 0){
                 if(get_random(1,10) == 1){
                     defteam.set_boost(Statname::Def, -1);
@@ -222,7 +229,7 @@ void Battle::use_move(Team &atkteam, Team &defteam){
             return;
         case Move::Ancient_Power:
             dmg = calculate_damage(atkteam, defteam);
-            defteam.mon_in_battle->reduce_hp(dmg);
+            defteam.member[defteam.active_pokemon].reduce_hp(dmg);
             if(dmg > 0){
                 if(get_random(1,10) == 1){
                     defteam.set_boost(Statname::Atk, 1);
@@ -235,7 +242,7 @@ void Battle::use_move(Team &atkteam, Team &defteam){
             return;
         case Move::Aurora_Beam:
             dmg = calculate_damage(atkteam, defteam);
-            defteam.mon_in_battle->reduce_hp(dmg);
+            defteam.member[defteam.active_pokemon].reduce_hp(dmg);
             if(get_random(1,10) == 1){
                 defteam.set_boost(Statname::Atk, 1);
             }
@@ -245,7 +252,7 @@ void Battle::use_move(Team &atkteam, Team &defteam){
         case Move::Rock_Slide:
             dmg = calculate_damage(atkteam, defteam);
             if(dmg > 0){
-                defteam.mon_in_battle->reduce_hp(dmg);
+                defteam.member[defteam.active_pokemon].reduce_hp(dmg);
                 if(get_random(1,10) < 4){
                     defteam.flinch = true;
                 }
@@ -257,7 +264,7 @@ void Battle::use_move(Team &atkteam, Team &defteam){
         case Move::Hyper_Beam:
             dmg = calculate_damage(atkteam, defteam);
             if(dmg > 0){
-                defteam.mon_in_battle->reduce_hp(dmg);
+                defteam.member[defteam.active_pokemon].reduce_hp(dmg);
                 atkteam.recharge = 2;
             }
             return;
@@ -268,11 +275,11 @@ void Battle::use_move(Team &atkteam, Team &defteam){
         case Move::Flamethrower:
         case Move::Heat_Wave:
             dmg = calculate_damage(atkteam, defteam);
-            defteam.mon_in_battle->reduce_hp(dmg);
+            defteam.member[defteam.active_pokemon].reduce_hp(dmg);
             if(dmg > 0){
                 if(get_random(1,10)){
-                    if(defteam.mon_in_battle->get_status() == Status::Healthy){
-                        defteam.mon_in_battle->set_status(Status::Burn, defteam.safeguard);
+                    if(defteam.member[defteam.active_pokemon].get_status() == Status::Healthy){
+                        defteam.member[defteam.active_pokemon].set_status(Status::Burn, defteam.safeguard);
                     }
                 }
             }
@@ -281,16 +288,23 @@ void Battle::use_move(Team &atkteam, Team &defteam){
         case Move::Ice_Beam:
         case Move::Ice_Punch:
             dmg = calculate_damage(atkteam, defteam);
-            defteam.mon_in_battle->reduce_hp(dmg);
+            if(dmg > 0){
+                defteam.member[defteam.active_pokemon].reduce_hp(dmg);
+                if(defteam.member[defteam.active_pokemon].get_status() == Status::Healthy){
+                    if(get_random(1,10) < 2){
+                        defteam.member[defteam.active_pokemon].set_status(Status::Freeze, defteam.safeguard);
+                    }
+                }
+            }
             return;
         case Move::Body_Slam:
         case Move::Thunder:
             dmg = calculate_damage(atkteam, defteam);
             if(dmg > 0){
-                defteam.mon_in_battle->reduce_hp(dmg);
-                if(defteam.mon_in_battle->get_status() == Status::Healthy){
+                defteam.member[defteam.active_pokemon].reduce_hp(dmg);
+                if(defteam.member[defteam.active_pokemon].get_status() == Status::Healthy){
                     if(get_random(1,10) < 4){
-                        defteam.mon_in_battle->set_status(Status::Paralysis, defteam.safeguard);
+                        defteam.member[defteam.active_pokemon].set_status(Status::Paralysis, defteam.safeguard);
                     }
                 }
             }
@@ -298,55 +312,55 @@ void Battle::use_move(Team &atkteam, Team &defteam){
         ////////////////// done until here
         case Move::Bone_Club:
             dmg = calculate_damage(atkteam, defteam);
-            defteam.mon_in_battle->reduce_hp(dmg);
+            defteam.member[defteam.active_pokemon].reduce_hp(dmg);
             return;
         case Move::Bubble:
             dmg = calculate_damage(atkteam, defteam);
-            defteam.mon_in_battle->reduce_hp(dmg);
+            defteam.member[defteam.active_pokemon].reduce_hp(dmg);
             return;
         case Move::Bubble_Beam:
             dmg = calculate_damage(atkteam, defteam);
-            defteam.mon_in_battle->reduce_hp(dmg);
+            defteam.member[defteam.active_pokemon].reduce_hp(dmg);
             return;
         case Move::Confusion:
             dmg = calculate_damage(atkteam, defteam);
-            defteam.mon_in_battle->reduce_hp(dmg);
+            defteam.member[defteam.active_pokemon].reduce_hp(dmg);
             return;
         case Move::Constrict:
             dmg = calculate_damage(atkteam, defteam);
-            defteam.mon_in_battle->reduce_hp(dmg);
+            defteam.member[defteam.active_pokemon].reduce_hp(dmg);
             return;
         case Move::Crunch:
             dmg = calculate_damage(atkteam, defteam);
-            defteam.mon_in_battle->reduce_hp(dmg);
+            defteam.member[defteam.active_pokemon].reduce_hp(dmg);
             return;
         case Move::Crush_Claw:
             dmg = calculate_damage(atkteam, defteam);
-            defteam.mon_in_battle->reduce_hp(dmg);
+            defteam.member[defteam.active_pokemon].reduce_hp(dmg);
             return;
         case Move::Dizzy_Punch:
             dmg = calculate_damage(atkteam, defteam);
-            defteam.mon_in_battle->reduce_hp(dmg);
+            defteam.member[defteam.active_pokemon].reduce_hp(dmg);
             return;
         case Move::Doom_Desire:
         case Move::Future_Sight:
             return;
         case Move::Double_Edge:
             dmg = calculate_damage(atkteam, defteam);
-            defteam.mon_in_battle->reduce_hp(dmg);
-            atkteam.mon_in_battle->reduce_hp(static_cast<int>(dmg/3.0));
+            defteam.member[defteam.active_pokemon].reduce_hp(dmg);
+            atkteam.member[atkteam.active_pokemon].reduce_hp(static_cast<int>(dmg/3.0));
             return;
         case Move::Dragon_Breath:
             dmg = calculate_damage(atkteam, defteam);
-            defteam.mon_in_battle->reduce_hp(dmg);
+            defteam.member[defteam.active_pokemon].reduce_hp(dmg);
             return;
         case Move::Dream_Eater:
             dmg = calculate_damage(atkteam, defteam);
-            defteam.mon_in_battle->reduce_hp(dmg);
+            defteam.member[defteam.active_pokemon].reduce_hp(dmg);
             return;
         case Move::Dynamic_Punch:
             dmg = calculate_damage(atkteam, defteam);
-            defteam.mon_in_battle->reduce_hp(dmg);
+            defteam.member[defteam.active_pokemon].reduce_hp(dmg);
             return;
         case Move::Eruption:
         case Move::Flail:
@@ -355,215 +369,215 @@ void Battle::use_move(Team &atkteam, Team &defteam){
             return;
         case Move::Explosion:
             dmg = calculate_damage(atkteam, defteam);
-            defteam.mon_in_battle->reduce_hp(dmg);
+            defteam.member[defteam.active_pokemon].reduce_hp(dmg);
             return;
         case Move::Extrasensory:
             dmg = calculate_damage(atkteam, defteam);
-            defteam.mon_in_battle->reduce_hp(dmg);
+            defteam.member[defteam.active_pokemon].reduce_hp(dmg);
             return;
         case Move::Facade:
             dmg = calculate_damage(atkteam, defteam);
-            defteam.mon_in_battle->reduce_hp(dmg);
+            defteam.member[defteam.active_pokemon].reduce_hp(dmg);
             return;
         case Move::False_Swipe:
             dmg = calculate_damage(atkteam, defteam);
-            defteam.mon_in_battle->reduce_hp(dmg);
+            defteam.member[defteam.active_pokemon].reduce_hp(dmg);
             return;
         case Move::Feint_Attack:
             dmg = calculate_damage(atkteam, defteam);
-            defteam.mon_in_battle->reduce_hp(dmg);
+            defteam.member[defteam.active_pokemon].reduce_hp(dmg);
             return;
         case Move::Headbutt:
             dmg = calculate_damage(atkteam, defteam);
-            defteam.mon_in_battle->reduce_hp(dmg);
+            defteam.member[defteam.active_pokemon].reduce_hp(dmg);
             return;
         case Move::High_Jump_Kick:
             dmg = calculate_damage(atkteam, defteam);
-            defteam.mon_in_battle->reduce_hp(dmg);
+            defteam.member[defteam.active_pokemon].reduce_hp(dmg);
             return;
         case Move::Icy_Wind:
             dmg = calculate_damage(atkteam, defteam);
-            defteam.mon_in_battle->reduce_hp(dmg);
+            defteam.member[defteam.active_pokemon].reduce_hp(dmg);
             return;
         case Move::Iron_Tail:
             dmg = calculate_damage(atkteam, defteam);
-            defteam.mon_in_battle->reduce_hp(dmg);
+            defteam.member[defteam.active_pokemon].reduce_hp(dmg);
             return;
         case Move::Knock_Off:
             dmg = calculate_damage(atkteam, defteam);
-            defteam.mon_in_battle->reduce_hp(dmg);
+            defteam.member[defteam.active_pokemon].reduce_hp(dmg);
             return;
         case Move::Leaf_Blade:
             dmg = calculate_damage(atkteam, defteam);
-            defteam.mon_in_battle->reduce_hp(dmg);
+            defteam.member[defteam.active_pokemon].reduce_hp(dmg);
             return;
         case Move::Lick:
             dmg = calculate_damage(atkteam, defteam);
-            defteam.mon_in_battle->reduce_hp(dmg);
+            defteam.member[defteam.active_pokemon].reduce_hp(dmg);
             return;
         case Move::Magical_Leaf:
             dmg = calculate_damage(atkteam, defteam);
-            defteam.mon_in_battle->reduce_hp(dmg);
+            defteam.member[defteam.active_pokemon].reduce_hp(dmg);
             return;
         case Move::Magnitude:
             dmg = calculate_damage(atkteam, defteam);
-            defteam.mon_in_battle->reduce_hp(dmg);
+            defteam.member[defteam.active_pokemon].reduce_hp(dmg);
             return;
         case Move::Metal_Claw:
             dmg = calculate_damage(atkteam, defteam);
-            defteam.mon_in_battle->reduce_hp(dmg);
+            defteam.member[defteam.active_pokemon].reduce_hp(dmg);
             return;
         case Move::Meteor_Mash:
             dmg = calculate_damage(atkteam, defteam);
-            defteam.mon_in_battle->reduce_hp(dmg);
+            defteam.member[defteam.active_pokemon].reduce_hp(dmg);
             return;
         case Move::Nature_Power:
             dmg = calculate_damage(atkteam, defteam);
-            defteam.mon_in_battle->reduce_hp(dmg);
+            defteam.member[defteam.active_pokemon].reduce_hp(dmg);
             return;
         case Move::Needle_Arm:
             dmg = calculate_damage(atkteam, defteam);
-            defteam.mon_in_battle->reduce_hp(dmg);
+            defteam.member[defteam.active_pokemon].reduce_hp(dmg);
             return;
         case Move::Octazooka:
             dmg = calculate_damage(atkteam, defteam);
-            defteam.mon_in_battle->reduce_hp(dmg);
+            defteam.member[defteam.active_pokemon].reduce_hp(dmg);
             return;
         case Move::Poison_Fang:
             dmg = calculate_damage(atkteam, defteam);
-            defteam.mon_in_battle->reduce_hp(dmg);
+            defteam.member[defteam.active_pokemon].reduce_hp(dmg);
             return;
         case Move::Poison_Tail:
             dmg = calculate_damage(atkteam, defteam);
-            defteam.mon_in_battle->reduce_hp(dmg);
+            defteam.member[defteam.active_pokemon].reduce_hp(dmg);
             return;
         case Move::Powder_Snow:
             dmg = calculate_damage(atkteam, defteam);
-            defteam.mon_in_battle->reduce_hp(dmg);
+            defteam.member[defteam.active_pokemon].reduce_hp(dmg);
             return;
         case Move::Psychic:
             dmg = calculate_damage(atkteam, defteam);
-            defteam.mon_in_battle->reduce_hp(dmg);
+            defteam.member[defteam.active_pokemon].reduce_hp(dmg);
             return;
         case Move::Pursuit:
             dmg = calculate_damage(atkteam, defteam);
-            defteam.mon_in_battle->reduce_hp(dmg);
+            defteam.member[defteam.active_pokemon].reduce_hp(dmg);
             return;
         case Move::Rapid_Spin:
             dmg = calculate_damage(atkteam, defteam);
-            defteam.mon_in_battle->reduce_hp(dmg);
+            defteam.member[defteam.active_pokemon].reduce_hp(dmg);
             if(dmg > 0){
                 
             }
             return;
         case Move::Razor_Leaf:
             dmg = calculate_damage(atkteam, defteam);
-            defteam.mon_in_battle->reduce_hp(dmg);
+            defteam.member[defteam.active_pokemon].reduce_hp(dmg);
             return;
         case Move::Rock_Smash:
             dmg = calculate_damage(atkteam, defteam);
-            defteam.mon_in_battle->reduce_hp(dmg);
+            defteam.member[defteam.active_pokemon].reduce_hp(dmg);
             return;
         case Move::Rock_Tomb:
             dmg = calculate_damage(atkteam, defteam);
-            defteam.mon_in_battle->reduce_hp(dmg);
+            defteam.member[defteam.active_pokemon].reduce_hp(dmg);
             return;
         case Move::Sacred_Fire:
             dmg = calculate_damage(atkteam, defteam);
-            defteam.mon_in_battle->reduce_hp(dmg);
+            defteam.member[defteam.active_pokemon].reduce_hp(dmg);
             return;
         case Move::Secret_Power:
             dmg = calculate_damage(atkteam, defteam);
-            defteam.mon_in_battle->reduce_hp(dmg);
+            defteam.member[defteam.active_pokemon].reduce_hp(dmg);
             return;
         case Move::Self_Destruct:
             dmg = calculate_damage(atkteam, defteam);
-            defteam.mon_in_battle->reduce_hp(dmg);
+            defteam.member[defteam.active_pokemon].reduce_hp(dmg);
             return;
         case Move::Shadow_Ball:
             dmg = calculate_damage(atkteam, defteam);
-            defteam.mon_in_battle->reduce_hp(dmg);
+            defteam.member[defteam.active_pokemon].reduce_hp(dmg);
             return;
         case Move::Shadow_Punch:
             dmg = calculate_damage(atkteam, defteam);
-            defteam.mon_in_battle->reduce_hp(dmg);
+            defteam.member[defteam.active_pokemon].reduce_hp(dmg);
             return;
         case Move::Signal_Beam:
             dmg = calculate_damage(atkteam, defteam);
-            defteam.mon_in_battle->reduce_hp(dmg);
+            defteam.member[defteam.active_pokemon].reduce_hp(dmg);
             return;
         case Move::Silver_Wind:
             dmg = calculate_damage(atkteam, defteam);
-            defteam.mon_in_battle->reduce_hp(dmg);
+            defteam.member[defteam.active_pokemon].reduce_hp(dmg);
             return;
         case Move::Sludge:
             dmg = calculate_damage(atkteam, defteam);
-            defteam.mon_in_battle->reduce_hp(dmg);
+            defteam.member[defteam.active_pokemon].reduce_hp(dmg);
             return;
         case Move::Sludge_Bomb:
             dmg = calculate_damage(atkteam, defteam);
-            defteam.mon_in_battle->reduce_hp(dmg);
+            defteam.member[defteam.active_pokemon].reduce_hp(dmg);
             return;
         case Move::Smog:
             dmg = calculate_damage(atkteam, defteam);
-            defteam.mon_in_battle->reduce_hp(dmg);
+            defteam.member[defteam.active_pokemon].reduce_hp(dmg);
             return;
         case Move::Spark:
             dmg = calculate_damage(atkteam, defteam);
-            defteam.mon_in_battle->reduce_hp(dmg);
+            defteam.member[defteam.active_pokemon].reduce_hp(dmg);
             return;
         case Move::Steel_Wing:
             dmg = calculate_damage(atkteam, defteam);
-            defteam.mon_in_battle->reduce_hp(dmg);
+            defteam.member[defteam.active_pokemon].reduce_hp(dmg);
             return;
         case Move::Struggle:
             dmg = calculate_damage(atkteam, defteam);
-            defteam.mon_in_battle->reduce_hp(dmg);
+            defteam.member[defteam.active_pokemon].reduce_hp(dmg);
             return;
         case Move::Submission:
             dmg = calculate_damage(atkteam, defteam);
-            defteam.mon_in_battle->reduce_hp(dmg);
+            defteam.member[defteam.active_pokemon].reduce_hp(dmg);
             return;
         case Move::Superpower:
             dmg = calculate_damage(atkteam, defteam);
-            defteam.mon_in_battle->reduce_hp(dmg);
+            defteam.member[defteam.active_pokemon].reduce_hp(dmg);
             return;
         case Move::Take_Down:
             dmg = calculate_damage(atkteam, defteam);
-            defteam.mon_in_battle->reduce_hp(dmg);
+            defteam.member[defteam.active_pokemon].reduce_hp(dmg);
             return;
         case Move::Thief:
             dmg = calculate_damage(atkteam, defteam);
-            defteam.mon_in_battle->reduce_hp(dmg);
+            defteam.member[defteam.active_pokemon].reduce_hp(dmg);
             return;
         case Move::Thunder_Punch:
         case Move::Thunder_Shock:
         case Move::Thunderbolt:
             dmg = calculate_damage(atkteam, defteam);
-            defteam.mon_in_battle->reduce_hp(dmg);
+            defteam.member[defteam.active_pokemon].reduce_hp(dmg);
             return;
         case Move::Tri_Attack:
             dmg = calculate_damage(atkteam, defteam);
-            defteam.mon_in_battle->reduce_hp(dmg);
+            defteam.member[defteam.active_pokemon].reduce_hp(dmg);
             return;
         case Move::Twister:
             dmg = calculate_damage(atkteam, defteam);
-            defteam.mon_in_battle->reduce_hp(dmg);
+            defteam.member[defteam.active_pokemon].reduce_hp(dmg);
             return;
         case Move::Volt_Tackle:
             dmg = calculate_damage(atkteam, defteam);
-            defteam.mon_in_battle->reduce_hp(dmg);
+            defteam.member[defteam.active_pokemon].reduce_hp(dmg);
             return;
         case Move::Water_Pulse:
             dmg = calculate_damage(atkteam, defteam);
-            defteam.mon_in_battle->reduce_hp(dmg);
+            defteam.member[defteam.active_pokemon].reduce_hp(dmg);
             return;
         ////////////////// 
         case Move::Zap_Cannon:
             dmg = calculate_damage(atkteam, defteam);
-            defteam.mon_in_battle->reduce_hp(dmg);
-            if(defteam.mon_in_battle->get_status() == Status::Healthy){
-                defteam.mon_in_battle->set_status(Status::Paralysis, defteam.safeguard);
+            defteam.member[defteam.active_pokemon].reduce_hp(dmg);
+            if(defteam.member[defteam.active_pokemon].get_status() == Status::Healthy){
+                defteam.member[defteam.active_pokemon].set_status(Status::Paralysis, defteam.safeguard);
             }
             return;	
         case Move::Luster_Purge:
@@ -576,18 +590,18 @@ void Battle::use_move(Team &atkteam, Team &defteam){
 	    case Move::Psycho_Boost:
         case Move::Overheat:
             dmg = calculate_damage(atkteam, defteam);
-            defteam.mon_in_battle->reduce_hp(dmg);
+            defteam.member[defteam.active_pokemon].reduce_hp(dmg);
             return;	
 	    case Move::Psywave:
             dmg = 10 * get_random(0, 10);
             dmg *= 50;
-            dmg *= atkteam.mon_in_battle->get_level();
+            dmg *= atkteam.member[atkteam.active_pokemon].get_level();
             dmg = static_cast<int>(dmg / 100.0);
             
             if(dmg < 1){
                 dmg = 1;
             }
-            defteam.mon_in_battle->reduce_hp(dmg);
+            defteam.member[defteam.active_pokemon].reduce_hp(dmg);
             return;	
 	    case Move::Rage:
 	    case Move::Revenge:
@@ -613,7 +627,7 @@ void Battle::use_move(Team &atkteam, Team &defteam){
         case Move::Spike_Cannon:
             for(int i = 0; i < get_random(2,5); ++i){
                 dmg = calculate_damage(atkteam, defteam);
-                defteam.mon_in_battle->reduce_hp(dmg);
+                defteam.member[defteam.active_pokemon].reduce_hp(dmg);
             }
             return;
         case Move::Bonemerang:
@@ -622,13 +636,13 @@ void Battle::use_move(Team &atkteam, Team &defteam){
         case Move::Twineedle:
             for(int i = 0; i < 2; ++i){
                 dmg = calculate_damage(atkteam, defteam);
-                defteam.mon_in_battle->reduce_hp(dmg);
+                defteam.member[defteam.active_pokemon].reduce_hp(dmg);
             }
             return;
         case Move::Triple_Kick:
             for(int i = 0; i < 3; ++i){
                 dmg = calculate_damage(atkteam, defteam);
-                defteam.mon_in_battle->reduce_hp(dmg);
+                defteam.member[defteam.active_pokemon].reduce_hp(dmg);
             }
             return;
 
@@ -658,7 +672,7 @@ void Battle::use_move(Team &atkteam, Team &defteam){
             }
             else{
                 dmg = calculate_damage(atkteam, defteam);
-                defteam.mon_in_battle->reduce_hp(dmg);
+                defteam.member[defteam.active_pokemon].reduce_hp(dmg);
             }
             return;
         ///
@@ -855,21 +869,21 @@ void Battle::use_move(Team &atkteam, Team &defteam){
 
         // paralysis
         case Move::Glare:
-            if(defteam.mon_in_battle->get_status() != Status::Healthy){
+            if(defteam.member[defteam.active_pokemon].get_status() == Status::Healthy){
                 if(*defteam.mon_in_battle != Type::Ghost){
-                    defteam.mon_in_battle->set_status(Status::Paralysis, defteam.safeguard);
+                    defteam.member[defteam.active_pokemon].set_status(Status::Paralysis, defteam.safeguard);
                 }
             }
             return;
         case Move::Stun_Spore:
-            if(defteam.mon_in_battle->get_status() != Status::Healthy){
-                defteam.mon_in_battle->set_status(Status::Paralysis, defteam.safeguard);
+            if(defteam.member[defteam.active_pokemon].get_status() == Status::Healthy){
+                defteam.member[defteam.active_pokemon].set_status(Status::Paralysis, defteam.safeguard);
             }
             return;
         case Move::Thunder_Wave:
-            if(defteam.mon_in_battle->get_status() != Status::Healthy){
+            if(defteam.member[defteam.active_pokemon].get_status() == Status::Healthy){
                 if(*defteam.mon_in_battle != Type::Ground){
-                    defteam.mon_in_battle->set_status(Status::Paralysis, defteam.safeguard);
+                    defteam.member[defteam.active_pokemon].set_status(Status::Paralysis, defteam.safeguard);
                 }
             }
             return;
@@ -880,49 +894,49 @@ void Battle::use_move(Team &atkteam, Team &defteam){
         case Move::Sing:
         case Move::Sleep_Powder:
         case Move::Spore:
-            if(defteam.mon_in_battle->get_status() != Status::Healthy){
-                defteam.mon_in_battle->set_status(Status::Sleep_inflicted, defteam.safeguard);
+            if(defteam.member[defteam.active_pokemon].get_status() == Status::Healthy){
+                defteam.member[defteam.active_pokemon].set_status(Status::Sleep_inflicted, defteam.safeguard);
             }
             return;
         case Move::Yawn:
             defteam.yawn = 2;
             return;
         case Move::Snore:
-            if(atkteam.mon_in_battle->get_status() == Status::Sleep_inflicted ||
-               atkteam.mon_in_battle->get_status() == Status::Sleep_self){
+            if(atkteam.member[atkteam.active_pokemon].get_status() == Status::Sleep_inflicted ||
+               atkteam.member[atkteam.active_pokemon].get_status() == Status::Sleep_self){
                 dmg = calculate_damage(atkteam, defteam);
-                defteam.mon_in_battle->reduce_hp(dmg);
+                defteam.member[defteam.active_pokemon].reduce_hp(dmg);
                }
                return;
         case Move::Sleep_Talk:
         // poison
         case Move::Poison_Powder:
-            if(defteam.mon_in_battle->get_status() != Status::Healthy){
+            if(defteam.member[defteam.active_pokemon].get_status() == Status::Healthy){
                 if(*defteam.mon_in_battle != Type::Steel && *defteam.mon_in_battle != Type::Poison){
-                    defteam.mon_in_battle->set_status(Status::Poison, defteam.safeguard);
+                    defteam.member[defteam.active_pokemon].set_status(Status::Poison, defteam.safeguard);
                 }
             }
             return;
         case Move::Toxic:
-            if(defteam.mon_in_battle->get_status() != Status::Healthy){
+            if(defteam.member[defteam.active_pokemon].get_status() == Status::Healthy){
                 if(*defteam.mon_in_battle != Type::Steel && *defteam.mon_in_battle != Type::Poison){
-                    defteam.mon_in_battle->set_status(Status::Toxic_poison, defteam.safeguard);
+                    defteam.member[defteam.active_pokemon].set_status(Status::Toxic_poison, defteam.safeguard);
                 }
             }
             return;
         // burn
         case Move::Will_O_Wisp:
-            if(defteam.mon_in_battle->get_status() != Status::Healthy){
+            if(defteam.member[defteam.active_pokemon].get_status() == Status::Healthy){
                 if(*defteam.mon_in_battle != Type::Fire){
-                    defteam.mon_in_battle->set_status(Status::Burn, defteam.safeguard);
+                    defteam.member[defteam.active_pokemon].set_status(Status::Burn, defteam.safeguard);
                 }
             }
             return;
         case Move::Refresh:
-            if(atkteam.mon_in_battle->get_status() != Status::Freeze){
-                if(atkteam.mon_in_battle->get_status() != Status::Sleep_inflicted){
-                    if(atkteam.mon_in_battle->get_status() != Status::Sleep_self){
-                        atkteam.mon_in_battle->set_status(Status::Healthy, false);
+            if(atkteam.member[atkteam.active_pokemon].get_status() != Status::Freeze){
+                if(atkteam.member[atkteam.active_pokemon].get_status() != Status::Sleep_inflicted){
+                    if(atkteam.member[atkteam.active_pokemon].get_status() != Status::Sleep_self){
+                        atkteam.member[atkteam.active_pokemon].set_status(Status::Healthy, false);
                     }
                 }
             }
@@ -953,34 +967,34 @@ void Battle::use_move(Team &atkteam, Team &defteam){
         case Move::Recover:
         case Move::Slack_Off:
         case Move::Soft_Boiled:
-            atkteam.mon_in_battle->increase_hp(
-                static_cast<int>(atkteam.mon_in_battle->get_stats().hp / 2.0));
+            atkteam.member[atkteam.active_pokemon].increase_hp(
+                static_cast<int>(atkteam.member[atkteam.active_pokemon].get_stats().hp / 2.0));
             return;
         case Move::Moonlight:
         case Move::Morning_Sun:
         case Move::Synthesis:
             switch(this->weather){
                 case Weather::Sun:
-                    atkteam.mon_in_battle->increase_hp(
-                        static_cast<int>(atkteam.mon_in_battle->get_stats().hp * (2.0 / 3.0)));
+                    atkteam.member[atkteam.active_pokemon].increase_hp(
+                        static_cast<int>(atkteam.member[atkteam.active_pokemon].get_stats().hp * (2.0 / 3.0)));
                 case Weather::Clear:
-                    atkteam.mon_in_battle->increase_hp(
-                        static_cast<int>(atkteam.mon_in_battle->get_stats().hp / 2.0));
+                    atkteam.member[atkteam.active_pokemon].increase_hp(
+                        static_cast<int>(atkteam.member[atkteam.active_pokemon].get_stats().hp / 2.0));
                 default:
-                    atkteam.mon_in_battle->increase_hp(
-                        static_cast<int>(atkteam.mon_in_battle->get_stats().hp / 4.0));
+                    atkteam.member[atkteam.active_pokemon].increase_hp(
+                        static_cast<int>(atkteam.member[atkteam.active_pokemon].get_stats().hp / 4.0));
             }
             return;
         case Move::Rest:
-            if(atkteam.mon_in_battle->get_status() != Status::Sleep_inflicted &&
-                atkteam.mon_in_battle->get_status() != Status::Sleep_self){
-                    atkteam.mon_in_battle->set_status(Status::Sleep_self, false);
-                    atkteam.mon_in_battle->increase_hp(999);
+            if(atkteam.member[atkteam.active_pokemon].get_status() != Status::Sleep_inflicted &&
+                atkteam.member[atkteam.active_pokemon].get_status() != Status::Sleep_self){
+                    atkteam.member[atkteam.active_pokemon].set_status(Status::Sleep_self, false);
+                    atkteam.member[atkteam.active_pokemon].increase_hp(999);
                 }
             return;
         case Move::Wish:
             atkteam.wish = true;
-            atkteam.wish_recovery = static_cast<int>(atkteam.mon_in_battle->get_stats().hp / 2.0);
+            atkteam.wish_recovery = static_cast<int>(atkteam.member[atkteam.active_pokemon].get_stats().hp / 2.0);
             return;
         case Move::Ingrain:
             atkteam.ingrain = true;
@@ -1011,11 +1025,11 @@ void Battle::use_move(Team &atkteam, Team &defteam){
         case Move::Attract:
         case Move::Baton_Pass:
             // input to switch pokemon
-            if(atkteam.mon_in_battle->substitute){
-                atkteam.mon_in_battle->substitute = false;
+            if(atkteam.member[atkteam.active_pokemon].substitute){
+                atkteam.member[atkteam.active_pokemon].substitute = false;
                 atkteam.member[switch_target].substitute = true;
-                atkteam.member[switch_target].substitute_hp = atkteam.mon_in_battle->substitute_hp;
-                atkteam.mon_in_battle->substitute_hp = 0;
+                atkteam.member[switch_target].substitute_hp = atkteam.member[atkteam.active_pokemon].substitute_hp;
+                atkteam.member[atkteam.active_pokemon].substitute_hp = 0;
             }
             atkteam.active_pokemon = switch_target;
 
@@ -1050,7 +1064,7 @@ void Battle::use_move(Team &atkteam, Team &defteam){
         case Move::Low_Kick:
         case Move::Magic_Coat:
         case Move::Memento:
-            atkteam.mon_in_battle->reduce_hp(999);
+            atkteam.member[atkteam.active_pokemon].reduce_hp(999);
             defteam.set_boost(Statname::Atk, 2);
             defteam.set_boost(Statname::Satk, 2);
             return;

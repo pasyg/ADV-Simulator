@@ -91,6 +91,7 @@ void set_ivs(std::string &ivs, Pokemon &pokemon){
 
 std::vector<Team> import_team(std::string_view path){
     std::ifstream file("teams/packed/sample.txt");
+        std::vector<Team> teams;
 
     if(file.is_open()){
         std::string line = "";
@@ -103,7 +104,6 @@ std::vector<Team> import_team(std::string_view path){
         std::array<std::array<std::string, 12>, 6> data;
 
         Team importteam;
-        std::vector<Team> teams;
 
         size_t j = 0;
         while(getline(file, line)){
@@ -156,5 +156,6 @@ std::vector<Team> import_team(std::string_view path){
     }
     else{
         std::cout << "ERROR import team" << std::endl;
+        return teams;
     }
 }

@@ -1,6 +1,7 @@
 #include "battle.hpp"
 
-Battle::Battle(Team &team1, Team &team2){
+Battle::Battle(Team &team1, Team &team2)
+{
     this->team[0] = &team1;
     this->team[1] = &team2;
     this->team[0]->team_init();
@@ -10,7 +11,7 @@ Battle::Battle(Team &team1, Team &team2){
     this->weather_turns = 0;
 }
 
-Battle::Battle(){
+Battle::Battle() {
 
 }
 

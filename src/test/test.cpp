@@ -385,17 +385,25 @@ bool Test::test_calc(){
         return false;
     }
     Battle battle1(this->teams[0], this->teams[1]);
-
+    // swampert hydro pump vs breloom
     this->teams[0].movechoice = &this->teams[0].member[0].moveset[0];
     int damage = battle1.calculate_damage(this->teams[0], this->teams[1]);
-    std::cout << "critical hits not considered damage calculation test\n";
-    if(damage < 112 || damage > 132){
+
+    auto func = [&](int roll) -> bool{ return roll == damage; };
+    
+    std::vector<int> rolls = { 112, 113, 114, 116, 117, 118, 120, 121, 122, 124, 125, 126, 128, 129, 130, 132,
+                               224, 227, 229, 232, 234, 237, 240, 242, 245, 248, 250, 253, 256, 258, 261, 264 };
+    if(!multi_or(rolls, func)){
         return false;
     }
 
+    // swampert ice beam vs breloom
     this->teams[0].movechoice = &this->teams[0].member[0].moveset[1];
     damage = battle1.calculate_damage(this->teams[0], this->teams[1]);
-    if(damage < 238 || damage > 280){
+    rolls = { 238, 240, 243, 246, 249, 252 ,254, 257, 260, 263, 266, 268, 271, 274, 277, 280,
+              476, 481, 487, 492, 498, 504, 509, 515, 520, 526, 532, 537, 543, 548, 554, 560 };
+
+    if(!multi_or(rolls, func)){
         return false;
     }
 
@@ -404,7 +412,7 @@ bool Test::test_calc(){
 
 bool Test::test_crit(){
     Battle battle(this->teams[21], this->teams[26]);
-    this->battle = battle;
+    this->battle = std::move(battle);
     return true;
 }
 
@@ -512,11 +520,43 @@ bool Test::test_use_move(){
 }
 
 bool Test::test_attacking_moves(){
+    Battle battle(this->teams[0], this->teams[1]);
+    this->battle = std::move(battle);
 
+    // skarmory attacks breloom with drill peck
+    this->battle.team[0]->movechoice = &this->battle.team[0]->member[1].moveset[1];
+    this->battle.use_move(*this->battle.team[0], *this->battle.team[1]);
+    if(this->battle.team[0]->member[1].moveset[1].get_pp() >= this->battle.team[0]->member[1].moveset[1].base_pp){
+        return false;
+    }
+    if(this->battle.team[1]->member[0].current_hp >= this->battle.team[1]->member[0].get_stats().hp){
+        return false;
+    }
     return true;
 }
 
 bool Test::test_sideeffects_moves(){
+    Battle battle(this->teams[0], this->teams[1]);
+    this->battle = std::move(battle);
+
+    // swampert attacks tyranitar with ice beam
+    this->battle.team[0]->movechoice = &this->battle.team[0]->member[0].moveset[1];
+    this->battle.team[1]->active_pokemon = 1;
+    this->battle.use_move(*this->battle.team[0], *this->battle.team[1]);
+
+    auto is_status = [&](Team t1, Team t2, Status status){
+        for(int i = 0; i < 300; ++i){
+            this->battle.use_move(t1, t2);
+            if(t2.member[t2.active_pokemon].get_status() == status){  return true; };
+            t2.movechoice->set_pp(10);
+            t2.member[t2.active_pokemon].increase_hp(999);
+        }
+        return false;
+    };
+
+    if(!is_status(*this->battle.team[0], *this->battle.team[1], Status::Freeze)){
+        return false;
+    }
 
     return true;
 }
@@ -545,6 +585,21 @@ bool Test::test_healing_moves(){
 }
 
 bool Test::test_status_moves(){
+    Battle battle(this->teams[1], this->teams[2]);
+    this->battle = std::move(battle);
+
+    this->battle.team[0]->active_pokemon = 0;
+    this->battle.team[1]->active_pokemon = 0;
+
+    this->battle.team[0]->movechoice = &this->battle.team[0]->member[0].moveset[0];
+    this->battle.team[1]->movechoice = &this->battle.team[1]->member[0].moveset[3];
+
+    this->battle.use_move(*this->battle.team[1], *this->battle.team[0]);
+    this->battle.use_move(*this->battle.team[0], *this->battle.team[1]);
+
+    if(this->battle.team[0]->member[0].get_status() != Status::Paralysis)       { return false; }
+    if(this->battle.team[1]->member[0].get_status() != Status::Sleep_inflicted) { return false; }
+
     return true;
 }
 
