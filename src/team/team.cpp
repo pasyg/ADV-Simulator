@@ -18,7 +18,7 @@ void Team::print_team(){
                   << "SAtk: " << pokemon.get_stat(Statname::Satk) << "\t"
                   << "SDef: " << pokemon.get_stat(Statname::Sdef) << "\t"
                   << "Spe: " << pokemon.get_stat(Statname::Spe) << "\n";
-        for(auto move : pokemon.get_moveset()){
+        for(auto move : *(pokemon.get_moveset())){
             std::cout << "Move: " << to_string(move.get_move());
             std::cout << " " << move.get_pp() 
                       << "/" << move.base_pp << "\n";
@@ -298,10 +298,13 @@ void Team::use_hp_berry(){
     }
 }
 
+Pokemon* Team::active(){
+    return &this->member[this->active_pokemon];
+}
+
 void Team::get_move_options(){
 
-    const Pokemon activemon = this->member[this->active_pokemon];
-    const std::array<AttackMove, 4> moves = activemon.get_moveset();
+    const std::array<AttackMove, 4> *moves = this->active()->get_moveset();
     bool has_to_struggle = false;
     static AttackMove struggle;
     struggle.set_move(Move::Struggle);
@@ -311,12 +314,12 @@ void Team::get_move_options(){
     this->move_options.clear();
     
     if(this->move_locked){
-        this->move_options.push_back(this->locked_move);
+        this->move_options.push_back(&this->locked_move);
     }
     else{
-        for(auto&& move : this->member[this->active_pokemon].get_moveset()){
+        for(auto&& move : *this->active()->get_moveset()){
             if(move.get_pp() > 0 && !move.get_disabled()){
-                this->move_options.push_back(move);
+                this->move_options.push_back(&move);
                 has_to_struggle = false;
             }
             else{
@@ -325,7 +328,7 @@ void Team::get_move_options(){
         }
     }
     if(has_to_struggle){
-        this->move_options.push_back(struggle);
+        this->move_options.push_back(&struggle);
     }
     if(this->trapped){
         return;
@@ -336,7 +339,7 @@ void Team::get_move_options(){
         }
         else{
             if(this->member[i].get_status() != Status::Fainted){
-                this->move_options.push_back(this->switches[i]);
+                this->move_options.push_back(&this->switches[i]);
             }
         }
     }
@@ -345,5 +348,5 @@ void Team::get_move_options(){
 // can be rewritten for however one wants to make move decisions
 void Team::decide_move(){
     this->prev_movechoice = this->movechoice;
-    this->movechoice = &this->move_options[get_random(0, static_cast<int>(move_options.size()) - 1)];
+    this->movechoice = this->move_options[get_random(0, static_cast<int>(move_options.size()) - 1)];
 }

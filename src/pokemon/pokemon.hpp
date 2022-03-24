@@ -20,10 +20,13 @@ public:
     Pokemon();
     ~Pokemon();
     Ability former_ability;
+    void set_former_ability(Ability fability);
     // in this class, because of reduce_hp(), reset on switch
     // pass over to incoming on baton pass
     bool substitute = false;
     int substitute_hp = 0;
+    void set_sub(bool sub);
+    void set_sub_hp(int subhp);
     void create_substitute();
 
     void init();
@@ -34,6 +37,7 @@ public:
     /// relevant in battles
     ///
     int get_current_hp();
+    void set_current_hp(int hp);
     void remove_item();
     void reduce_hp(const int damage);
     void increase_hp(const int heal);
@@ -52,7 +56,7 @@ public:
     Ability get_ability() const;
     Nature get_nature() const;
     Species get_species() const;
-    std::array<AttackMove, 4> get_moveset() const;
+    std::array<AttackMove, 4>* get_moveset();
     std::array<Type, 2> get_type() const;
     int get_level() const;
     Gender get_gender() const;

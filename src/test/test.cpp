@@ -15,13 +15,9 @@ void Test::test_all(){
     check("use move", std::bind(&Test::test_use_move, this));
 }
 
-void Test::check(std::string funcname, std::function<bool()> func){
-    if(func()){
-        std::cout << funcname << " test successful\n\n";
-    }
-    else{
-        std::cout << funcname << " test NOT successful\n\n";
-    }
+
+Pokemon* Test::member(int team, int slot){
+    return &this->teams[team].member[slot];
 }
 
 void Test::reset(){
@@ -39,40 +35,40 @@ bool Test::test_import(){
 
     this->teams = import_team("sample");
 
-    if(this->teams[0].member[0].get_species() != Species::Swampert){
+    if(member(0, 0)->get_species() != Species::Swampert){
         return false;
     }
-    if(this->teams[12].member[0].get_species() != Species::Salamence){
+    if(member(12, 0)->get_species() != Species::Salamence){
         return false;
     }
-    if(this->teams[27].member[0].get_species() != Species::Celebi){
+    if(member(27, 0)->get_species() != Species::Celebi){
         return false;
     }
-    if(this->teams[0].member[0].get_item() != Item::Salacberry){
+    if(member(0, 0)->get_item() != Item::Salacberry){
         return false;
     }
-    if(this->teams[12].member[0].get_item() != Item::Leftovers){
+    if(member(12, 0)->get_item() != Item::Leftovers){
         return false;
     }
-    if(this->teams[27].member[0].get_item() != Item::Leftovers){
+    if(member(27, 0)->get_item() != Item::Leftovers){
         return false;
     }
-    if(this->teams[0].member[0].get_ability() != Ability::Torrent){
+    if(member(0, 0)->get_ability() != Ability::Torrent){
         return false;
     }
-    if(this->teams[12].member[0].get_ability() != Ability::Intimidate){
+    if(member(12, 0)->get_ability() != Ability::Intimidate){
         return false;
     }
-    if(this->teams[27].member[0].get_ability() != Ability::Natural_Cure){
+    if(member(27, 0)->get_ability() != Ability::Natural_Cure){
         return false;
     }
-    if(this->teams[0].member[0].get_moveset()[0] != Move::Hydro_Pump){
+    if(member(0, 0)->get_moveset()->at(0).get_move() != Move::Hydro_Pump){
         return false;
     }
-    if(this->teams[12].member[0].get_moveset()[3] != Move::Brick_Break){
+    if(member(12, 0)->get_moveset()->at(3).get_move() != Move::Brick_Break){
         return false;
     }
-    if(this->teams[27].member[0].get_moveset()[2] != Move::Recover){
+    if(member(27, 0)->get_moveset()->at(2).get_move() != Move::Recover){
         return false;
     }
     this->import_test = true;
@@ -82,31 +78,31 @@ bool Test::test_import(){
 bool Test::init_test_species(){
 
     std::cout << "species test ..." << "\n";
-    if(this->teams[0].member[0].get_species() != Species::Swampert){
+    if(member(0, 0)->get_species() != Species::Swampert){
         return false;
     }
-    if(this->teams[0].member[4].get_species() != Species::Aerodactyl){
+    if(member(0, 4)->get_species() != Species::Aerodactyl){
         return false;
     }
-    if(this->teams[0].member[5].get_species() != Species::no_pokemon){
+    if(member(0, 5)->get_species() != Species::no_pokemon){
         return false;
     }
-    if(this->teams[5].member[0].get_species() != Species::Salamence){
+    if(member(5, 0)->get_species() != Species::Salamence){
         return false;
     }
-    if(this->teams[5].member[2].get_species() != Species::Claydol){
+    if(member(5, 2)->get_species() != Species::Claydol){
         return false;
     }
-    if(this->teams[5].member[5].get_species() != Species::Blissey){
+    if(member(5, 5)->get_species() != Species::Blissey){
         return false;
     }
-    if(this->teams[27].member[0].get_species() != Species::Celebi){
+    if(member(27, 0)->get_species() != Species::Celebi){
         return false;
     }
-    if(this->teams[27].member[3].get_species() != Species::Claydol){
+    if(member(27, 3)->get_species() != Species::Claydol){
         return false;
     }
-    if(this->teams[27].member[5].get_species() != Species::Milotic){
+    if(member(27, 5)->get_species() != Species::Milotic){
         return false;
     }
     return true;
@@ -115,52 +111,52 @@ bool Test::init_test_species(){
 bool Test::init_test_stats(){
 
     std::cout << "stat test ..." << "\n";
-    if( this->teams[0].member[0].get_stats().hp   != 341 ||
-        this->teams[0].member[0].get_stats().atk  != 202 ||
-        this->teams[0].member[0].get_stats().def  != 217 ||
-        this->teams[0].member[0].get_stats().satk != 269 ||
-        this->teams[0].member[0].get_stats().sdef != 216 ||
-        this->teams[0].member[0].get_stats().spe  != 240 ){
+    if( member(0, 0)->get_stats().hp   != 341 ||
+        member(0, 0)->get_stats().atk  != 202 ||
+        member(0, 0)->get_stats().def  != 217 ||
+        member(0, 0)->get_stats().satk != 269 ||
+        member(0, 0)->get_stats().sdef != 216 ||
+        member(0, 0)->get_stats().spe  != 240 ){
             return false;
     }
-    if( this->teams[0].member[4].get_stats().hp   != 301 ||
-        this->teams[0].member[4].get_stats().atk  != 308 ||
-        this->teams[0].member[4].get_stats().def  != 165 ||
-        this->teams[0].member[4].get_stats().satk != 140 ||
-        this->teams[0].member[4].get_stats().sdef != 186 ||
-        this->teams[0].member[4].get_stats().spe  != 394 ){
+    if( member(0, 4)->get_stats().hp   != 301 ||
+        member(0, 4)->get_stats().atk  != 308 ||
+        member(0, 4)->get_stats().def  != 165 ||
+        member(0, 4)->get_stats().satk != 140 ||
+        member(0, 4)->get_stats().sdef != 186 ||
+        member(0, 4)->get_stats().spe  != 394 ){
             return false;
         }
-    if( this->teams[16].member[0].get_stats().hp   != 301 ||
-        this->teams[16].member[0].get_stats().atk  != 153 ||
-        this->teams[16].member[0].get_stats().def  != 219 ||
-        this->teams[16].member[0].get_stats().satk != 298 ||
-        this->teams[16].member[0].get_stats().sdef != 250 ||
-        this->teams[16].member[0].get_stats().spe  != 250 ){
+    if( member(16, 0)->get_stats().hp   != 301 ||
+        member(16, 0)->get_stats().atk  != 153 ||
+        member(16, 0)->get_stats().def  != 219 ||
+        member(16, 0)->get_stats().satk != 298 ||
+        member(16, 0)->get_stats().sdef != 250 ||
+        member(16, 0)->get_stats().spe  != 250 ){
             return false;
         }
-    if( this->teams[16].member[4].get_stats().hp   != 356 ||
-        this->teams[16].member[4].get_stats().atk  != 405 ||
-        this->teams[16].member[4].get_stats().def  != 296 ||
-        this->teams[16].member[4].get_stats().satk != 203 ||
-        this->teams[16].member[4].get_stats().sdef != 216 ||
-        this->teams[16].member[4].get_stats().spe  != 185 ){
+    if( member(16, 4)->get_stats().hp   != 356 ||
+        member(16, 4)->get_stats().atk  != 405 ||
+        member(16, 4)->get_stats().def  != 296 ||
+        member(16, 4)->get_stats().satk != 203 ||
+        member(16, 4)->get_stats().sdef != 216 ||
+        member(16, 4)->get_stats().spe  != 185 ){
             return false;
         }
-    if( this->teams[27].member[0].get_stats().hp   != 404 ||
-        this->teams[27].member[0].get_stats().atk  != 184 ||
-        this->teams[27].member[0].get_stats().def  != 262 ||
-        this->teams[27].member[0].get_stats().satk != 236 ||
-        this->teams[27].member[0].get_stats().sdef != 236 ||
-        this->teams[27].member[0].get_stats().spe  != 301 ){
+    if( member(27, 4)->get_stats().hp   != 404 ||
+        member(27, 4)->get_stats().atk  != 184 ||
+        member(27, 4)->get_stats().def  != 312 ||
+        member(27, 4)->get_stats().satk != 236 ||
+        member(27, 4)->get_stats().sdef != 236 ||
+        member(27, 4)->get_stats().spe  != 252 ){
             return false;
         }
-    if( this->teams[27].member[5].get_stats().hp   != 391 ||
-        this->teams[27].member[5].get_stats().atk  != 112 ||
-        this->teams[27].member[5].get_stats().def  != 276 ||
-        this->teams[27].member[5].get_stats().satk != 236 ||
-        this->teams[27].member[5].get_stats().sdef != 286 ||
-        this->teams[27].member[5].get_stats().spe  != 208 ){
+    if( member(27, 5)->get_stats().hp   != 391 ||
+        member(27, 5)->get_stats().atk  != 112 ||
+        member(27, 5)->get_stats().def  != 276 ||
+        member(27, 5)->get_stats().satk != 236 ||
+        member(27, 5)->get_stats().sdef != 286 ||
+        member(27, 5)->get_stats().spe  != 208 ){
             return false;
         }
     return true;
@@ -169,45 +165,45 @@ bool Test::init_test_stats(){
 bool Test::init_test_moves(){
 
     std::cout << "move test ..." << "\n";
-    if(this->teams[0].member[0].get_moveset()[0].base_pp != 8  ||
-       this->teams[0].member[0].get_moveset()[0].get_pp() != 8 ||
-       this->teams[0].member[0].get_moveset()[0].get_move() != Move::Hydro_Pump){
+    if(member(0, 0)->get_moveset()->at(0).base_pp != 8  ||
+       member(0, 0)->get_moveset()->at(0).get_pp() != 8 ||
+       member(0, 0)->get_moveset()->at(0).get_move() != Move::Hydro_Pump){
            return false;
        }
-    if(this->teams[0].member[2].get_moveset()[3].base_pp != 8  ||
-       this->teams[0].member[2].get_moveset()[3].get_pp() != 8 ||
-       this->teams[0].member[2].get_moveset()[3].get_move() != Move::Explosion){
+    if(member(0, 2)->get_moveset()->at(3).base_pp != 8  ||
+       member(0, 2)->get_moveset()->at(3).get_pp() != 8 ||
+       member(0, 2)->get_moveset()->at(3).get_move() != Move::Explosion){
 
            return false;
        }
-    if(this->teams[12].member[2].get_moveset()[1].base_pp != 32  ||
-       this->teams[12].member[2].get_moveset()[1].get_pp() != 32 ||
-       this->teams[12].member[2].get_moveset()[1].get_move() != Move::Dragon_Dance){
+    if(member(12, 2)->get_moveset()->at(1).base_pp != 32  ||
+       member(12, 2)->get_moveset()->at(1).get_pp() != 32 ||
+       member(12, 2)->get_moveset()->at(1).get_move() != Move::Dragon_Dance){
            return false;
        }
-    if(this->teams[12].member[4].get_moveset()[2].base_pp != 24  ||
-       this->teams[12].member[4].get_moveset()[2].get_pp() != 24 ||
-       this->teams[12].member[4].get_moveset()[2].get_move() != Move::Crunch){
+    if(member(12, 4)->get_moveset()->at(2).base_pp != 24  ||
+       member(12, 4)->get_moveset()->at(2).get_pp() != 24 ||
+       member(12, 4)->get_moveset()->at(2).get_move() != Move::Crunch){
            return false;
        }
-    if(this->teams[27].member[0].get_moveset()[0].base_pp != 16  ||
-       this->teams[27].member[0].get_moveset()[0].get_pp() != 16 ||
-       this->teams[27].member[0].get_moveset()[0].get_move() != Move::Substitute){
+    if(member(27, 0)->get_moveset()->at(0).base_pp != 16  ||
+       member(27, 0)->get_moveset()->at(0).get_pp() != 16 ||
+       member(27, 0)->get_moveset()->at(0).get_move() != Move::Substitute){
            return false;
        }
-    if(this->teams[27].member[5].get_moveset()[0].base_pp != 16  ||
-       this->teams[27].member[5].get_moveset()[0].get_pp() != 16 ||
-       this->teams[27].member[5].get_moveset()[0].get_move() != Move::Ice_Beam){
+    if(member(27, 5)->get_moveset()->at(0).base_pp != 16  ||
+       member(27, 5)->get_moveset()->at(0).get_pp() != 16 ||
+       member(27, 5)->get_moveset()->at(0).get_move() != Move::Ice_Beam){
            return false;
        }
-    if(this->teams[27].member[0].get_moveset()[3].base_pp != 64  ||
-       this->teams[27].member[0].get_moveset()[3].get_pp() != 64 ||
-       this->teams[27].member[0].get_moveset()[3].get_move() != Move::Baton_Pass){
+    if(member(27, 0)->get_moveset()->at(3).base_pp != 64  ||
+       member(27, 0)->get_moveset()->at(3).get_pp() != 64 ||
+       member(27, 0)->get_moveset()->at(3).get_move() != Move::Baton_Pass){
            return false;
        }
-    if(this->teams[27].member[5].get_moveset()[3].base_pp != 32  ||
-       this->teams[27].member[5].get_moveset()[3].get_pp() != 32 ||
-       this->teams[27].member[5].get_moveset()[3].get_move() != Move::Recover){
+    if(member(27, 5)->get_moveset()->at(3).base_pp != 32  ||
+       member(27, 5)->get_moveset()->at(3).get_pp() != 32 ||
+       member(27, 5)->get_moveset()->at(3).get_move() != Move::Recover){
            return false;
        }
     return true;
@@ -216,42 +212,42 @@ bool Test::init_test_moves(){
 bool Test::init_test_hidden_power(){
 
     std::cout << "hidden power test ..." << "\n";
-    if(this->teams[1].member[0].hiddenpower != Type::Bug ||
-       this->teams[1].member[0].hiddenpower_power != 70){
-           std::cout << to_string(this->teams[1].member[0].hiddenpower) << "\n";
-           std::cout << this->teams[1].member[0].hiddenpower_power << "\n";
+    if(member(1, 0)->hiddenpower != Type::Bug ||
+       member(1, 0)->hiddenpower_power != 70){
+           std::cout << to_string(member(1, 0)->hiddenpower) << "\n";
+           std::cout << member(1, 0)->hiddenpower_power << "\n";
            return false;
        }
-    if(this->teams[1].member[2].hiddenpower != Type::Grass ||
-       this->teams[1].member[2].hiddenpower_power != 70){
+    if(member(1, 2)->hiddenpower != Type::Grass ||
+       member(1, 2)->hiddenpower_power != 70){
            return false;
        }
-    if(this->teams[2].member[1].hiddenpower != Type::Fighting ||
-       this->teams[2].member[1].hiddenpower_power != 70){
+    if(member(2, 1)->hiddenpower != Type::Fighting ||
+       member(2, 1)->hiddenpower_power != 70){
            return false;
        }
-    if(this->teams[3].member[1].hiddenpower != Type::Grass ||
-       this->teams[3].member[1].hiddenpower_power != 70){
+    if(member(3, 1)->hiddenpower != Type::Grass ||
+       member(3, 1)->hiddenpower_power != 70){
            return false;
        }
-    if(this->teams[3].member[5].hiddenpower != Type::Bug ||
-       this->teams[3].member[5].hiddenpower_power != 70){
+    if(member(3, 5)->hiddenpower != Type::Bug ||
+       member(3, 5)->hiddenpower_power != 70){
            return false;
        }
-    if(this->teams[20].member[3].hiddenpower != Type::Fire ||
-       this->teams[20].member[3].hiddenpower_power != 70){
+    if(member(20, 3)->hiddenpower != Type::Fire ||
+       member(20, 3)->hiddenpower_power != 70){
            return false;
        }
-    if(this->teams[24].member[0].hiddenpower != Type::Grass ||
-       this->teams[24].member[0].hiddenpower_power != 70){
+    if(member(24, 0)->hiddenpower != Type::Grass ||
+       member(24, 0)->hiddenpower_power != 70){
            return false;
        }
-    if(this->teams[24].member[1].hiddenpower != Type::Grass ||
-       this->teams[24].member[1].hiddenpower_power != 70){
+    if(member(24, 1)->hiddenpower != Type::Grass ||
+       member(24, 1)->hiddenpower_power != 70){
            return false;
        }
-    if(this->teams[24].member[2].hiddenpower != Type::Bug ||
-       this->teams[24].member[2].hiddenpower_power != 70){
+    if(member(24, 2)->hiddenpower != Type::Bug ||
+       member(24, 2)->hiddenpower_power != 70){
            return false;
        }
     return true;
@@ -281,21 +277,21 @@ bool Test::test_move_options(){
 
     std::cout << "== move options test ==\n";
 
-    this->teams[0].member[0].moveset[0].reduce_pp(999);
-    this->teams[0].member[0].moveset[1].reduce_pp(999);
+    member(0, 0)->moveset[0].reduce_pp(999);
+    member(0, 0)->moveset[1].reduce_pp(999);
     this->teams[0].get_move_options();
     for(auto&& option : this->teams[0].move_options){
-        if(option.get_move() == Move::Hydro_Pump || option.get_move() == Move::Ice_Beam){
+        if(option->get_move() == Move::Hydro_Pump || option->get_move() == Move::Ice_Beam){
             return false;
         }
     }
 
-    this->teams[1].member[2].reduce_hp(999);
-    this->teams[1].member[4].reduce_hp(999);
+    member(1, 2)->reduce_hp(999);
+    member(1, 4)->reduce_hp(999);
     this->teams[1].get_move_options();
     for(auto&& option : this->teams[1].move_options){
-        if(option.get_move() == Move::Switch2 ||
-           option.get_move() == Move::Switch4){
+        if(option->get_move() == Move::Switch2 ||
+           option->get_move() == Move::Switch4){
                return false;
     }
   }
@@ -304,11 +300,11 @@ bool Test::test_move_options(){
             pokemon.reduce_hp(9999);
         }
     }
-    for(auto&& move : this->teams[1].member[0].moveset){
+    for(auto&& move : member(1, 0)->moveset){
         move.reduce_pp(999);
     }
     this->teams[1].get_move_options();
-    if(this->teams[1].move_options[0] != Move::Struggle){
+    if(this->teams[1].move_options[0]->get_move() != Move::Struggle){
         return false;
     }
   return true;
@@ -319,16 +315,16 @@ bool Test::test_switch(){
     std::cout << "== switch test ==\n";
 
     if(this->team_init_test){
-        if(this->teams[0].member[this->teams[0].active_pokemon].get_species() != Species::Swampert){
+        if(this->teams[0].active()->get_species() != Species::Swampert){
             return false;
         }
-        if(this->teams[5].member[this->teams[5].active_pokemon].get_species() != Species::Salamence){
+        if(this->teams[5].active()->get_species() != Species::Salamence){
             return false;
         }
-        if(this->teams[18].member[this->teams[18].active_pokemon].get_species() != Species::Tyranitar){
+        if(this->teams[18].active()->get_species() != Species::Tyranitar){
             return false;
         }
-        if(this->teams[27].member[this->teams[27].active_pokemon].get_species() != Species::Celebi){
+        if(this->teams[27].active()->get_species() != Species::Celebi){
             return false;
         }
 
@@ -337,16 +333,16 @@ bool Test::test_switch(){
         this->teams[18].active_pokemon = 5;
         this->teams[27].active_pokemon = 0;
 
-        if(this->teams[0].member[this->teams[0].active_pokemon].get_species() != Species::Metagross){
+        if(this->teams[0].active()->get_species() != Species::Metagross){
             return false;
         }
-        if(this->teams[5].member[this->teams[5].active_pokemon].get_species() != Species::Jirachi){
+        if(this->teams[5].active()->get_species() != Species::Jirachi){
             return false;
         }
-        if(this->teams[18].member[this->teams[18].active_pokemon].get_species() != Species::Skarmory){
+        if(this->teams[18].active()->get_species() != Species::Skarmory){
             return false;
         }
-        if(this->teams[27].member[this->teams[27].active_pokemon].get_species() != Species::Celebi){
+        if(this->teams[27].active()->get_species() != Species::Celebi){
             return false;
         }
     }
@@ -354,13 +350,13 @@ bool Test::test_switch(){
 }
 
 bool Test::test_substitute(){
-    this->teams[0].member[0].create_substitute();
-    if(this->teams[0].member[0].substitute_hp != 85){
+    member(0, 0)->create_substitute();
+    if(member(0, 0)->substitute_hp != 85){
         return false;
     }
-    this->teams[0].member[0].reduce_hp(999);
-    if(this->teams[0].member[0].get_status() == Status::Fainted ||
-       this->teams[0].member[0].current_hp != 341){
+    member(0, 0)->reduce_hp(999);
+    if(member(0, 0)->get_status() == Status::Fainted ||
+       member(0, 0)->current_hp != 341){
            return false;
        }
        return true;
@@ -386,7 +382,9 @@ bool Test::test_calc(){
     }
     Battle battle1(this->teams[0], this->teams[1]);
     // swampert hydro pump vs breloom
-    this->teams[0].movechoice = &this->teams[0].member[0].moveset[0];
+    this->teams[0].movechoice = &member(0, 0)->moveset[0];
+    this->teams[0].active_pokemon = 0;
+    this->teams[1].active_pokemon = 0;
     int damage = battle1.calculate_damage(this->teams[0], this->teams[1]);
 
     auto func = [&](int roll) -> bool{ return roll == damage; };
@@ -398,7 +396,7 @@ bool Test::test_calc(){
     }
 
     // swampert ice beam vs breloom
-    this->teams[0].movechoice = &this->teams[0].member[0].moveset[1];
+    this->teams[0].movechoice = &member(0, 0)->moveset[1];
     damage = battle1.calculate_damage(this->teams[0], this->teams[1]);
     rolls = { 238, 240, 243, 246, 249, 252 ,254, 257, 260, 263, 266, 268, 271, 274, 277, 280,
               476, 481, 487, 492, 498, 504, 509, 515, 520, 526, 532, 537, 543, 548, 554, 560 };
@@ -411,19 +409,19 @@ bool Test::test_calc(){
 }
 
 bool Test::test_crit(){
-    Battle battle(this->teams[21], this->teams[26]);
-    this->battle = std::move(battle);
+    this->battle = Battle(this->teams[21], this->teams[26]); 
+    
     return true;
 }
 
 bool Test::test_ability(){
-    Battle battle(this->teams[26], this->teams[21]);
-    this->battle = battle;
-    this->battle.team[0]->active_pokemon = 4;
-    this->battle.team[1]->active_pokemon = 3;
+    this->battle = Battle(this->teams[26], this->teams[21]);
     
-    this->battle.team[0]->movechoice = &this->battle.team[0]->member[4].moveset[1];
-    if(this->battle.ability_multiplier(*this->battle.team[0], *this->battle.team[1]) != 0.0f){
+    this->battle.team[0].active_pokemon = 4;
+    this->battle.team[1].active_pokemon = 3;
+    
+    this->battle.team[0].movechoice = &this->battle.team[0].member[4].moveset[1];
+    if(this->battle.ability_multiplier(this->battle.team[0], this->battle.team[1]) != 0.0f){
         std::cout << "ability multiplier error \n";
         return false;
     }
@@ -431,12 +429,12 @@ bool Test::test_ability(){
 }
 
 bool Test::test_item(){
-    Battle battle(this->teams[0], this->teams[21]);
-    this->battle = battle;
-    this->battle.team[0]->active_pokemon = 4;
-    this->battle.team[0]->movechoice = &this->battle.team[0]->member[4].moveset[1];
+    this->battle = Battle(this->teams[0], this->teams[21]);
 
-    if(this->battle.item_multiplier(*this->battle.team[0]) != 1.5f){
+    this->battle.team[0].active_pokemon = 4;
+    this->battle.team[0].movechoice = &this->battle.team[0].member[4].moveset[1];
+
+    if(this->battle.item_multiplier(this->battle.team[0]) != 1.5f){
         std::cout << "item multiplier error \n";
         return false;
     }
@@ -444,25 +442,25 @@ bool Test::test_item(){
 }
 
 bool Test::test_weather(){
-    Battle battle(this->teams[1], this->teams[4]);
-    this->battle = battle;
-    this->battle.team[0]->active_pokemon = 2;
-    this->battle.team[1]->active_pokemon = 1;
+    this->battle = Battle(this->teams[1], this->teams[4]);
 
-    this->battle.team[0]->movechoice = &this->battle.team[0]->member[2].moveset[0];
-    this->battle.team[1]->movechoice = &this->battle.team[1]->member[1].moveset[0];
+    this->battle.team[0].active_pokemon = 2;
+    this->battle.team[1].active_pokemon = 1;
+
+    this->battle.team[0].movechoice = &this->battle.team[0].member[2].moveset[0];
+    this->battle.team[1].movechoice = &this->battle.team[1].member[1].moveset[0];
 
     this->battle.weather = Weather::Sun;
 
-    if(!(this-weather_compare(*this->battle.team[1], 0.5f)) ||
-       !(this->weather_compare(*this->battle.team[0], 2.0f))){
+    if(!(this-weather_compare(this->battle.team[1], 0.5f)) ||
+       !(this->weather_compare(this->battle.team[0], 2.0f))){
            return false;
        }
 
     this->battle.weather = Weather::Rain;
 
-    if(!(this-weather_compare(*this->battle.team[0], 0.5f)) ||
-       !(this->weather_compare(*this->battle.team[1], 2.0f))){
+    if(!(this-weather_compare(this->battle.team[0], 0.5f)) ||
+       !(this->weather_compare(this->battle.team[1], 2.0f))){
            return false;
        }
 
@@ -520,41 +518,40 @@ bool Test::test_use_move(){
 }
 
 bool Test::test_attacking_moves(){
-    Battle battle(this->teams[0], this->teams[1]);
-    this->battle = std::move(battle);
+    this->battle = Battle(this->teams[0], this->teams[1]);
 
     // skarmory attacks breloom with drill peck
-    this->battle.team[0]->movechoice = &this->battle.team[0]->member[1].moveset[1];
-    this->battle.use_move(*this->battle.team[0], *this->battle.team[1]);
-    if(this->battle.team[0]->member[1].moveset[1].get_pp() >= this->battle.team[0]->member[1].moveset[1].base_pp){
+    this->battle.team[0].movechoice = &this->battle.team[0].member[1].moveset[1];
+    this->battle.use_move(this->battle.team[0], this->battle.team[1]);
+    if(this->battle.team[0].member[1].moveset[1].get_pp() >= this->battle.team[0].member[1].moveset[1].base_pp){
         return false;
     }
-    if(this->battle.team[1]->member[0].current_hp >= this->battle.team[1]->member[0].get_stats().hp){
+    if(this->battle.team[1].member[0].current_hp >= this->battle.team[1].member[0].get_stats().hp){
         return false;
     }
     return true;
 }
 
 bool Test::test_sideeffects_moves(){
-    Battle battle(this->teams[0], this->teams[1]);
-    this->battle = std::move(battle);
+    this->battle = Battle(this->teams[0], this->teams[1]);
 
     // swampert attacks tyranitar with ice beam
-    this->battle.team[0]->movechoice = &this->battle.team[0]->member[0].moveset[1];
-    this->battle.team[1]->active_pokemon = 1;
-    this->battle.use_move(*this->battle.team[0], *this->battle.team[1]);
+    this->battle.team[0].movechoice = &this->battle.team[0].member[0].moveset[1];
+    this->battle.team[0].active_pokemon = 0;
+    this->battle.team[1].active_pokemon = 1;
+    this->battle.use_move(this->battle.team[0], this->battle.team[1]);
 
     auto is_status = [&](Team t1, Team t2, Status status){
         for(int i = 0; i < 300; ++i){
             this->battle.use_move(t1, t2);
-            if(t2.member[t2.active_pokemon].get_status() == status){  return true; };
-            t2.movechoice->set_pp(10);
-            t2.member[t2.active_pokemon].increase_hp(999);
+            if(t2.active()->get_status() == status){  return true; };
+            t1.movechoice->set_pp(10);
+            t2.active()->increase_hp(999);
         }
         return false;
     };
 
-    if(!is_status(*this->battle.team[0], *this->battle.team[1], Status::Freeze)){
+    if(!is_status(this->battle.team[0], this->battle.team[1], Status::Freeze)){
         return false;
     }
 
@@ -565,15 +562,15 @@ bool Test::test_accuracy_moves(){
     auto is_miss = [&](Team t1, Team t2){
         for(int i = 0; i < 300; ++i){
             this->battle.use_move(t1, t2);
-            if(t2.member[t2.active_pokemon].current_hp == t2.member[t2.active_pokemon].stats.hp){
+            if(t2.active()->current_hp == t2.active()->stats.hp){
                 return true;
             }
-            t2.member[t2.active_pokemon].current_hp = t2.member[t2.active_pokemon].stats.hp;
+            t2.active()->set_current_hp(t2.active()->stats.hp);
         }
         return false;
     };
 
-    this->teams[0].movechoice = &this->teams[0].member[0].moveset[0];
+    this->teams[0].movechoice = &member(0, 0)->moveset[0];
     if(!is_miss(teams[0], teams[1])){
         return false;
     }
@@ -585,20 +582,19 @@ bool Test::test_healing_moves(){
 }
 
 bool Test::test_status_moves(){
-    Battle battle(this->teams[1], this->teams[2]);
-    this->battle = std::move(battle);
+    this->battle = Battle(this->teams[1], this->teams[2]); 
 
-    this->battle.team[0]->active_pokemon = 0;
-    this->battle.team[1]->active_pokemon = 0;
+    this->battle.team[0].active_pokemon = 0;
+    this->battle.team[1].active_pokemon = 0;
 
-    this->battle.team[0]->movechoice = &this->battle.team[0]->member[0].moveset[0];
-    this->battle.team[1]->movechoice = &this->battle.team[1]->member[0].moveset[3];
+    this->battle.team[0].movechoice = &this->battle.team[0].member[0].moveset[0];
+    this->battle.team[1].movechoice = &this->battle.team[1].member[0].moveset[3];
 
-    this->battle.use_move(*this->battle.team[1], *this->battle.team[0]);
-    this->battle.use_move(*this->battle.team[0], *this->battle.team[1]);
+    this->battle.use_move(this->battle.team[1], this->battle.team[0]);
+    this->battle.use_move(this->battle.team[0], this->battle.team[1]);
 
-    if(this->battle.team[0]->member[0].get_status() != Status::Paralysis)       { return false; }
-    if(this->battle.team[1]->member[0].get_status() != Status::Sleep_inflicted) { return false; }
+    if(this->battle.team[0].member[0].get_status() != Status::Paralysis)       { return false; }
+    if(this->battle.team[1].member[0].get_status() != Status::Sleep_inflicted) { return false; }
 
     return true;
 }

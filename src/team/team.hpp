@@ -28,11 +28,11 @@ public:
     AttackMove* prev_movechoice;
     AttackMove* disabled_move;
     std::array<AttackMove, 6> switches;
-    std::vector<AttackMove> move_options;
+    std::vector<AttackMove*> move_options;
 /// TRANSFORM / BIDE / DOOMDESIRE / FUTURE SIGHT / IMPRISON / METRONOME / MIRRORMOVE
     std::array<Pokemon, 6> member;
     int active_pokemon = 0;     // index of currently active pokemon
-    Pokemon* mon_in_battle = &this->member[this->active_pokemon]; // lets see???
+    Pokemon* active();
 
     ///
     /// one turn

@@ -67,6 +67,10 @@ int Pokemon::get_current_hp(){
     return this->current_hp;    
 }
 
+void Pokemon::set_current_hp(int hp){
+    this->current_hp = hp;
+}
+
 void Pokemon::set_status(const Status p_status, const bool safeguard){
     if(safeguard){
         return;
@@ -118,6 +122,10 @@ int Pokemon::get_stat(const Statname stat) const{
             std::cout << "ERROR GET_STAT pokemon.cpp" << std::endl;
             return 0;
     }
+}
+
+void Pokemon::set_former_ability(Ability fability){
+    this->former_ability = fability;
 }
 
 void Pokemon::create_substitute(){
@@ -180,8 +188,8 @@ Species Pokemon::get_species() const{
     return this->species;
 }
 
-std::array<AttackMove, 4> Pokemon::get_moveset() const{
-    return this->moveset;
+std::array<AttackMove, 4>* Pokemon::get_moveset(){
+    return &this->moveset;
 }
 
 std::array<Type, 2> Pokemon::get_type() const{
@@ -206,6 +214,14 @@ int Pokemon::get_hiddenpower_power() const{
 
 Type Pokemon::get_hiddenpower_type() const{
     return this->hiddenpower;
+}
+
+void Pokemon::set_sub(bool sub){
+    this->substitute = sub;
+}
+
+void Pokemon::set_sub_hp(int subhp){
+    this->substitute_hp = subhp;
 }
 
 ///

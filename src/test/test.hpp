@@ -1,7 +1,6 @@
 #pragma once
 
 #include <fstream>
-#include <functional>
 #include <string>
 #include <vector>
 
@@ -25,10 +24,19 @@ public:
     Test();
     ~Test();
     void test_all();
-    void check(std::string functionname, std::function<bool()> function);
+    template<typename Func>
+    void check(std::string_view funcname, Func func){
+        if(func()){
+            std::cout << funcname << " test successful\n\n";
+        }
+        else{
+            std::cout << funcname << " test NOT successful\n\n";
+        }
+    }
     bool test_import();
     bool test_team_init();
     bool test_move_options();
+    Pokemon* member(int team, int slot);
 private:
     std::vector<Team> teams;
     Battle battle;
