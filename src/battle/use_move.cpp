@@ -366,9 +366,12 @@ void Battle::use_move(Team &atkteam, Team &defteam){
         case Move::Reversal:
         case Move::Water_Spout:
             return;
+        case Move::Self_Destruct:
         case Move::Explosion:
             dmg = calculate_damage(atkteam, defteam);
             defteam.active()->reduce_hp(dmg);
+            atkteam.active()->set_status(Status::Fainted, false);
+            atkteam.active()->reduce_hp(9999);
             return;
         case Move::Extrasensory:
             dmg = calculate_damage(atkteam, defteam);
@@ -486,10 +489,6 @@ void Battle::use_move(Team &atkteam, Team &defteam){
             defteam.active()->reduce_hp(dmg);
             return;
         case Move::Secret_Power:
-            dmg = calculate_damage(atkteam, defteam);
-            defteam.active()->reduce_hp(dmg);
-            return;
-        case Move::Self_Destruct:
             dmg = calculate_damage(atkteam, defteam);
             defteam.active()->reduce_hp(dmg);
             return;
@@ -950,9 +949,9 @@ void Battle::use_move(Team &atkteam, Team &defteam){
         //related
         case Move::Aromatherapy:
         case Move::Heal_Bell:
-            for(int i = 0; i < 6; ++i){
-                if(atkteam.member[i].get_status() != Status::Fainted){
-                    atkteam.member[i].set_status(Status::Healthy, false);
+            for(auto&& member : atkteam.member){
+                if(member.get_status() != Status::Fainted){
+                    member.set_status(Status::Healthy, false);
                 }
             }
             atkteam.sleep_inflict = false;

@@ -62,5 +62,5 @@ private:
     bool test_healing_moves();
     bool test_status_moves();
     bool test_misc_moves();
-    bool weather_compare(const Team &_team, const float &value);
+    bool weather_compare(const Team &_team, const float &value, Weather weather);
 };

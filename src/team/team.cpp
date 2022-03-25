@@ -312,27 +312,35 @@ void Team::get_move_options(){
 
     // free the vector from previous options
     this->move_options.clear();
-    
-    if(this->move_locked){
-        this->move_options.push_back(&this->locked_move);
-    }
-    else{
-        for(auto&& move : *this->active()->get_moveset()){
-            if(move.get_pp() > 0 && !move.get_disabled()){
-                this->move_options.push_back(&move);
-                has_to_struggle = false;
+
+    if(this->active()->get_current_hp() > 0){
+        if(this->move_locked){
+            if(this->locked_move.get_pp() <= 0){
+                this->move_options.push_back(&this->locked_move);        
             }
             else{
                 has_to_struggle = true;
             }
         }
+        else{
+            for(auto&& move : *this->active()->get_moveset()){
+                if(move.get_pp() > 0 && !move.get_disabled()){
+                    this->move_options.push_back(&move);
+                    has_to_struggle = false;
+                }
+                else{
+                    has_to_struggle = true;
+                }
+            }
+        }
+        if(has_to_struggle){
+            this->move_options.push_back(&struggle);
+            }
+        if(this->trapped){
+            return;
+        }
     }
-    if(has_to_struggle){
-        this->move_options.push_back(&struggle);
-    }
-    if(this->trapped){
-        return;
-    }
+
     for(int i = 0; i<6; ++i){
         if(i == this->active_pokemon){
             continue;
@@ -343,10 +351,14 @@ void Team::get_move_options(){
             }
         }
     }
+    if(this->move_options.size() == 0) {
+        unsigned char lolol = 1;
+    }
 }
 
 // can be rewritten for however one wants to make move decisions
 void Team::decide_move(){
     this->prev_movechoice = this->movechoice;
+    //std::cout << this->move_options.size() << std::endl;
     this->movechoice = this->move_options[get_random(0, static_cast<int>(move_options.size()) - 1)];
 }

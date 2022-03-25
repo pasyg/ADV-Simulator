@@ -1,6 +1,7 @@
 #include "battle.hpp"
 
-Battle::Battle(Team team1, Team team2)
+Battle::Battle(Team team1, Team team2) 
+    : logger("replays/test.txt")
 {
     this->team[0] = team1;
     this->team[1] = team2;
@@ -11,7 +12,8 @@ Battle::Battle(Team team1, Team team2)
     this->weather_turns = 0;
 }
 
-Battle::Battle() {
+Battle::Battle() 
+    : logger("replays/test.txt") {
 
 }
 
@@ -20,23 +22,25 @@ Battle::~Battle(){
 }
 
 int Battle::play_battle(){
-    for(int i = 1; i < 100; ++i){
-        if(game_end(0)){
-            return 0;
+    for(int i = 1; i < 1000; ++i){
+        if(this->play_turn()){
+            continue;
         }
-        if(game_end(1)){
-            return 1;
+        else{
+            bool t_1 = game_end(0);
+            bool t_2 = game_end(1);
+            if(t_1 && !t_2){ return 0; }
+            else{ 
+                return t_1 ? 2 : 1; 
+            }
         }
-        this->play_turn();
     }
-
-
     return 2;
 }
 
 bool Battle::game_end(int teamindex){
     for(auto&& member : this->team[teamindex].member){
-        if(member.get_current_hp() > 0){
+        if(member.get_status() != Status::Fainted){
             return false;
         }
     }
@@ -110,7 +114,7 @@ void Battle::calc_first_attacker(){
     int prio2 = move_prio(this->team[1].movechoice->get_move());
 
     // quickclaw holders have a 20% chance to move first in their priority bracket
-    // in singles formats this equates to moving up one priority bracket
+    // in singles formats this is equivalent to moving up one priority bracket
     if(this->team[0].member[this->team[0].active_pokemon].get_item() == Item::Quickclaw){
         if(get_random(1,10) < 3){
             prio1 += 1;

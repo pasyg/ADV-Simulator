@@ -409,19 +409,19 @@ bool Test::test_calc(){
 }
 
 bool Test::test_crit(){
-    this->battle = Battle(this->teams[21], this->teams[26]); 
+    Battle battle(this->teams[21], this->teams[26]); 
     
     return true;
 }
 
 bool Test::test_ability(){
-    this->battle = Battle(this->teams[26], this->teams[21]);
+    Battle battle(this->teams[26], this->teams[21]);
     
-    this->battle.team[0].active_pokemon = 4;
-    this->battle.team[1].active_pokemon = 3;
+    battle.team[0].active_pokemon = 4;
+    battle.team[1].active_pokemon = 3;
     
-    this->battle.team[0].movechoice = &this->battle.team[0].member[4].moveset[1];
-    if(this->battle.ability_multiplier(this->battle.team[0], this->battle.team[1]) != 0.0f){
+    battle.team[0].movechoice = &battle.team[0].member[4].moveset[1];
+    if(battle.ability_multiplier(battle.team[0], battle.team[1]) != 0.0f){
         std::cout << "ability multiplier error \n";
         return false;
     }
@@ -429,12 +429,12 @@ bool Test::test_ability(){
 }
 
 bool Test::test_item(){
-    this->battle = Battle(this->teams[0], this->teams[21]);
+    Battle battle(this->teams[0], this->teams[21]);
 
-    this->battle.team[0].active_pokemon = 4;
-    this->battle.team[0].movechoice = &this->battle.team[0].member[4].moveset[1];
+    battle.team[0].active_pokemon = 4;
+    battle.team[0].movechoice = &battle.team[0].member[4].moveset[1];
 
-    if(this->battle.item_multiplier(this->battle.team[0]) != 1.5f){
+    if(battle.item_multiplier(battle.team[0]) != 1.5f){
         std::cout << "item multiplier error \n";
         return false;
     }
@@ -442,33 +442,33 @@ bool Test::test_item(){
 }
 
 bool Test::test_weather(){
-    this->battle = Battle(this->teams[1], this->teams[4]);
+    Battle battle(this->teams[1], this->teams[4]);
 
-    this->battle.team[0].active_pokemon = 2;
-    this->battle.team[1].active_pokemon = 1;
+    battle.team[0].active_pokemon = 2;
+    battle.team[1].active_pokemon = 1;
 
-    this->battle.team[0].movechoice = &this->battle.team[0].member[2].moveset[0];
-    this->battle.team[1].movechoice = &this->battle.team[1].member[1].moveset[0];
+    battle.team[0].movechoice = &battle.team[0].member[2].moveset[0];
+    battle.team[1].movechoice = &battle.team[1].member[1].moveset[0];
 
-    this->battle.weather = Weather::Sun;
+    battle.weather = Weather::Sun;
 
-    if(!(this-weather_compare(this->battle.team[1], 0.5f)) ||
-       !(this->weather_compare(this->battle.team[0], 2.0f))){
+    if(!(this->weather_compare(battle.team[1], 0.5f, battle.weather)) ||
+       !(this->weather_compare(battle.team[0], 2.0f, battle.weather))){
            return false;
        }
 
-    this->battle.weather = Weather::Rain;
+    battle.weather = Weather::Rain;
 
-    if(!(this-weather_compare(this->battle.team[0], 0.5f)) ||
-       !(this->weather_compare(this->battle.team[1], 2.0f))){
+    if(!(this->weather_compare(battle.team[0], 0.5f, battle.weather)) ||
+       !(this->weather_compare(battle.team[1], 2.0f, battle.weather))){
            return false;
        }
 
     return true;
 }
-
-bool Test::weather_compare(const Team &_team, const float &value){
-    const float result = this->battle.weather_multiplier(_team);
+/// Fehler in weather_multiplier (this) -> change to weather is parameter
+bool Test::weather_compare(const Team &_team, const float &value, Weather weather){
+    const float result = battle.weather_multiplier(_team, weather);
     if(result != value){
         std::cout << "weather multiplier error \n";
         return false;
@@ -518,32 +518,32 @@ bool Test::test_use_move(){
 }
 
 bool Test::test_attacking_moves(){
-    this->battle = Battle(this->teams[0], this->teams[1]);
+    Battle battle(this->teams[0], this->teams[1]);
 
     // skarmory attacks breloom with drill peck
-    this->battle.team[0].movechoice = &this->battle.team[0].member[1].moveset[1];
-    this->battle.use_move(this->battle.team[0], this->battle.team[1]);
-    if(this->battle.team[0].member[1].moveset[1].get_pp() >= this->battle.team[0].member[1].moveset[1].base_pp){
+    battle.team[0].movechoice = &battle.team[0].member[1].moveset[1];
+    battle.use_move(battle.team[0], battle.team[1]);
+    if(battle.team[0].member[1].moveset[1].get_pp() >= battle.team[0].member[1].moveset[1].base_pp){
         return false;
     }
-    if(this->battle.team[1].member[0].current_hp >= this->battle.team[1].member[0].get_stats().hp){
+    if(battle.team[1].member[0].current_hp >= battle.team[1].member[0].get_stats().hp){
         return false;
     }
     return true;
 }
 
 bool Test::test_sideeffects_moves(){
-    this->battle = Battle(this->teams[0], this->teams[1]);
+    Battle battle(this->teams[0], this->teams[1]);
 
     // swampert attacks tyranitar with ice beam
-    this->battle.team[0].movechoice = &this->battle.team[0].member[0].moveset[1];
-    this->battle.team[0].active_pokemon = 0;
-    this->battle.team[1].active_pokemon = 1;
-    this->battle.use_move(this->battle.team[0], this->battle.team[1]);
+    battle.team[0].movechoice = &battle.team[0].member[0].moveset[1];
+    battle.team[0].active_pokemon = 0;
+    battle.team[1].active_pokemon = 1;
+    battle.use_move(battle.team[0], battle.team[1]);
 
     auto is_status = [&](Team t1, Team t2, Status status){
         for(int i = 0; i < 300; ++i){
-            this->battle.use_move(t1, t2);
+            battle.use_move(t1, t2);
             if(t2.active()->get_status() == status){  return true; };
             t1.movechoice->set_pp(10);
             t2.active()->increase_hp(999);
@@ -551,7 +551,7 @@ bool Test::test_sideeffects_moves(){
         return false;
     };
 
-    if(!is_status(this->battle.team[0], this->battle.team[1], Status::Freeze)){
+    if(!is_status(battle.team[0], battle.team[1], Status::Freeze)){
         return false;
     }
 
@@ -561,7 +561,7 @@ bool Test::test_sideeffects_moves(){
 bool Test::test_accuracy_moves(){
     auto is_miss = [&](Team t1, Team t2){
         for(int i = 0; i < 300; ++i){
-            this->battle.use_move(t1, t2);
+            battle.use_move(t1, t2);
             if(t2.active()->current_hp == t2.active()->stats.hp){
                 return true;
             }
@@ -582,19 +582,19 @@ bool Test::test_healing_moves(){
 }
 
 bool Test::test_status_moves(){
-    this->battle = Battle(this->teams[1], this->teams[2]); 
+    Battle battle(this->teams[1], this->teams[2]); 
 
-    this->battle.team[0].active_pokemon = 0;
-    this->battle.team[1].active_pokemon = 0;
+    battle.team[0].active_pokemon = 0;
+    battle.team[1].active_pokemon = 0;
 
-    this->battle.team[0].movechoice = &this->battle.team[0].member[0].moveset[0];
-    this->battle.team[1].movechoice = &this->battle.team[1].member[0].moveset[3];
+    battle.team[0].movechoice = &battle.team[0].member[0].moveset[0];
+    battle.team[1].movechoice = &battle.team[1].member[0].moveset[3];
 
-    this->battle.use_move(this->battle.team[1], this->battle.team[0]);
-    this->battle.use_move(this->battle.team[0], this->battle.team[1]);
+    battle.use_move(battle.team[1], battle.team[0]);
+    battle.use_move(battle.team[0], battle.team[1]);
 
-    if(this->battle.team[0].member[0].get_status() != Status::Paralysis)       { return false; }
-    if(this->battle.team[1].member[0].get_status() != Status::Sleep_inflicted) { return false; }
+    if(battle.team[0].member[0].get_status() != Status::Paralysis)       { return false; }
+    if(battle.team[1].member[0].get_status() != Status::Sleep_inflicted) { return false; }
 
     return true;
 }

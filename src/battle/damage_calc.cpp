@@ -40,7 +40,7 @@ int Battle::calculate_damage(const Team &atkteam, const Team &defteam){
     damage += 2;
     damage = static_cast<int>(static_cast<float>(damage) * this->ability_multiplier(atkteam, defteam));
     damage = static_cast<int>(static_cast<float>(damage) * this->item_multiplier(atkteam));
-    damage = static_cast<int>(static_cast<float>(damage) * this->weather_multiplier(atkteam));
+    damage = static_cast<int>(static_cast<float>(damage) * this->weather_multiplier(atkteam, this->weather));
     if(atkteam.movechoice->get_stab()){
         damage = static_cast<int>(static_cast<float>(damage) * 1.5f);
     }
@@ -353,9 +353,9 @@ float Battle::item_multiplier(const Team &atkteam){
     }
 }
 
-float Battle::weather_multiplier(const Team &atkteam){
+float Battle::weather_multiplier(const Team &atkteam, Weather weather){
     
-    switch(this->weather){
+    switch(weather){
         case Weather::Sun:
             if(*atkteam.movechoice == Type::Fire){ return 2.0; }
             if(*atkteam.movechoice == Type::Water){ return 0.5; }

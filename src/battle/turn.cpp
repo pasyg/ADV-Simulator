@@ -1,42 +1,55 @@
 #include "battle.hpp"
 
 bool Battle::play_turn(){
+    auto switch_faint = [&](Team &team, Team &oppteam){ 
+        if(team.active()->get_current_hp() <= 0){
+            team.get_move_options();
+            team.decide_move();
+            this->use_move(team, oppteam);
+        }
+    };
+
     // calculates which moves either side can use
     this->team[0].get_move_options();
     this->team[1].get_move_options();
+
+    if(this->team[0].move_options.size() == 0 || this->team[1].move_options.size() == 0) {
+        unsigned char lolol = 2; 
+    }
     
     // decides what move will be selected for either side
     this->team[0].decide_move();
     this->team[1].decide_move();
 
-    // false: team1 moves first, true: team2 moves first
+    // false: this->team[this->move_first] moves first, true: this->team[!(this->move_first)] moves first
     this->calc_first_attacker();
 
     // move for the faster mon
-    if(can_move(move_first)){
-        use_move(this->team[move_first], this->team[!move_first]);
+    if(can_move(this->move_first)){
+        use_move(this->team[this->move_first], this->team[!(this->move_first)]);
+    }
+    else{
+        if(game_end(0)){ return false; }
     }
 
-    if(this->team[move_first].active()->get_current_hp() <= 0){
-        if(game_end(move_first)){
-            this->winner = !move_first;
-            return true;
-        }
+    if(check_fainted()){
+        if(game_end(0)){ return false; }
+        if(game_end(1)){ return false; }
+        switch_faint(this->team[0], this->team[1]);
+        switch_faint(this->team[1], this->team[0]);
+        if(!this->end_of_turn()) { return false; }
     }
-
-    if(this->team[!move_first].active()->get_current_hp() <= 0){
-        if(game_end(!move_first)){
-            this->winner = move_first;
-            return true;
-        }
-    }
-
-    // slower mon moves if the turn hasnt been stopped yet
-    if(!check_fainted()){
-        if(can_move(!move_first)){
-            use_move(this->team[!move_first], this->team[move_first]);
-        }
-        return true;
+    else{
+        if(can_move(!(this->move_first))){
+            use_move(this->team[!(this->move_first)], this->team[this->move_first]);
+            if(check_fainted()){
+                if(game_end(0)){ return false; }
+                if(game_end(1)){ return false; }
+                switch_faint(this->team[0], this->team[1]);
+                switch_faint(this->team[1], this->team[0]);
+            }
+        } else{ if(game_end(0)){ return false; } }
+        if(!this->end_of_turn()) { return false; }
     }
     return true;
 }
@@ -75,34 +88,30 @@ bool Battle::can_move(const bool teamindex){
     return true;
 }
 
-// checks turn state after a move and returns true if the second mon can move
-// and false if the turn will be ended
+// checks turn state after a move and returns false if the second mon can move
+// and true if the turn will be ended
 bool Battle::check_fainted(){
-    if(this->team[0].member[this->team[0].active_pokemon].get_current_hp() <= 0){
+    if(this->team[0].active()->get_current_hp() <= 0){
         return true;
     }
-    if(this->team[1].member[this->team[1].active_pokemon].get_current_hp() <= 0){
+    if(this->team[1].active()->get_current_hp() <= 0){
         return true;
     }
     return false;
 }
-
-void Battle::end_of_turn(){
-    Team team1 = this->team[this->move_first];
-    Team team2 = this->team[!(this->move_first)];
-
-    Pokemon* pokemon1 = &this->team[this->move_first].member[this->team[this->move_first].active_pokemon];
-    Pokemon* pokemon2 = &this->team[!(this->move_first)].member[this->team[!(this->move_first)].active_pokemon];
+// NOT FULLY IMPLEMENTED!!!
+bool Battle::end_of_turn(){
 
     this->move_first = this->compare_speed();
+
     // wish recovers 50% of the original users max HP to the pokemon that receives it
-    if(team1.wish == 1){
-        pokemon1->increase_hp(team1.wish_recovery);
-        team1.wish = false;
+    if(this->team[this->move_first].wish == 1){
+        this->team[this->move_first].active()->increase_hp(this->team[this->move_first].wish_recovery);
+        this->team[this->move_first].wish = false;
     }
-    if(team2.wish == 1){
-        pokemon2->increase_hp(team2.wish_recovery);
-        team2.wish = false;
+    if(this->team[!(this->move_first)].wish == 1){
+        this->team[!(this->move_first)].active()->increase_hp(this->team[!(this->move_first)].wish_recovery);
+        this->team[!(this->move_first)].wish = false;
     }
     // weather damage
     switch(this->weather){
@@ -111,12 +120,16 @@ void Battle::end_of_turn(){
         case Weather::Sun:
             break;
         case Weather::Hail:
-            this->weather_damage(Weather::Hail, *pokemon1);
-            this->weather_damage(Weather::Hail, *pokemon2);
+            this->weather_damage(Weather::Hail, *this->team[this->move_first].active());
+            if(game_end(this->move_first)){ return false; }
+            this->weather_damage(Weather::Hail, *this->team[!(this->move_first)].active());
+            if(game_end(!(this->move_first))){ return false; }
             break;
         case Weather::Sand:
-            this->weather_damage(Weather::Sand, *pokemon1);
-            this->weather_damage(Weather::Sand, *pokemon2);
+            this->weather_damage(Weather::Sand, *this->team[this->move_first].active());
+            if(game_end(this->move_first)){ return false; }
+            this->weather_damage(Weather::Sand, *this->team[!(this->move_first)].active());
+            if(game_end(!(this->move_first))){ return false; }
             break;
     }
     // weather turncounter gets decremented by 1 at the end of every turn
@@ -134,91 +147,97 @@ void Battle::end_of_turn(){
     this->move_first = this->compare_speed();
     for(int i = 0; i<2; ++i){
         // ingrain heals the currently active pokemon for 1/16th at the end of every turn
-        if(team1.ingrain == true){
-            pokemon1->increase_hp(static_cast<int>(pokemon1->get_stats().hp / 16.0));
+        if(this->team[this->move_first].ingrain == true){
+            this->team[this->move_first].active()->increase_hp(static_cast<int>(this->team[this->move_first].active()->get_stats().hp / 16.0));
         }
         
         // rain dish
         if(this->weather == Weather::Rain){
-            if(pokemon1->get_ability() == Ability::Rain_Dish){
-                pokemon1->increase_hp(static_cast<int>(pokemon1->get_stats().hp / 16.0));
+            if(this->team[this->move_first].active()->get_ability() == Ability::Rain_Dish){
+                this->team[this->move_first].active()->increase_hp(static_cast<int>(this->team[this->move_first].active()->get_stats().hp / 16.0));
             }
         }
         // speed boost
-        if(pokemon1->get_ability() == Ability::Speed_Boost){
-            team1.set_boost(Statname::Spe, 1);
+        if(this->team[this->move_first].active()->get_ability() == Ability::Speed_Boost){
+            this->team[this->move_first].set_boost(Statname::Spe, 1);
         }
         // truant
-        if(pokemon1->get_ability() == Ability::Truant){
-            team1.truant = !team1.truant;
+        if(this->team[this->move_first].active()->get_ability() == Ability::Truant){
+            this->team[this->move_first].truant = !this->team[this->move_first].truant;
         }
         // shed skin
-        if(pokemon1->get_ability() == Ability::Shed_Skin){
+        if(this->team[this->move_first].active()->get_ability() == Ability::Shed_Skin){
             if(get_random(0,2) > 0){
-                pokemon1->set_status(Status::Healthy, false);
+                this->team[this->move_first].active()->set_status(Status::Healthy, false);
             }
         }
         // leftovers
-        if(pokemon1->get_item() == Item::Leftovers){
-            pokemon1->increase_hp(static_cast<int>(pokemon1->get_stats().hp / 16.0));
+        if(this->team[this->move_first].active()->get_item() == Item::Leftovers){
+            this->team[this->move_first].active()->increase_hp(static_cast<int>(this->team[this->move_first].active()->get_stats().hp / 16.0));
         }
         // berry and herbs
-        team1.use_hp_berry();
-        team1.use_pinch_berry();
+        this->team[this->move_first].use_hp_berry();
+        this->team[this->move_first].use_pinch_berry();
         // leech seed, opponent regenerates the amount of hp the affected pokemon loses
-        if(team1.leechseed == true){
-            pokemon1->reduce_hp(static_cast<int>(pokemon1->get_stats().hp / 8.0));
-            pokemon2->increase_hp(static_cast<int>(pokemon1->get_stats().hp / 8.0));
+        if(this->team[this->move_first].leechseed == true){
+            int dmg = static_cast<int>(this->team[this->move_first].active()->get_stats().hp / 8.0);
+            this->team[this->move_first].active()->reduce_hp(dmg);
+            if(game_end(this->move_first)){ return false; }
+            this->team[!(this->move_first)].active()->increase_hp(dmg);
         }
         // poison, fixed damage of 1/8th
-        if(pokemon1->get_status() == Status::Poison){
-            pokemon1->reduce_hp(static_cast<int>(pokemon1->get_stats().hp / 8.0));
+        if(this->team[this->move_first].active()->get_status() == Status::Poison){
+            this->team[this->move_first].active()->reduce_hp(static_cast<int>(this->team[this->move_first].active()->get_stats().hp / 8.0));
+            if(game_end(this->move_first)){ return false; }
         }
         // toxic, pokemon takes an escalating amount of damage, 
         // increases by 1/16th every consecutive turn on the field
-        if(pokemon1->get_status() == Status::Toxic_poison){
-            pokemon1->reduce_hp(static_cast<int>(team1.turns_on_the_field * (pokemon1->get_stats().hp / 8.0)));
+        if(this->team[this->move_first].active()->get_status() == Status::Toxic_poison){
+            this->team[this->move_first].active()->reduce_hp(static_cast<int>(this->team[this->move_first].turns_on_the_field * (this->team[this->move_first].active()->get_stats().hp / 8.0)));
+            if(game_end(this->move_first)){ return false; }
         }
         // burn
-        if(pokemon1->get_status() == Status::Burn){
-            pokemon1->reduce_hp(static_cast<int>(pokemon1->get_stats().hp / 8.0));
+        if(this->team[this->move_first].active()->get_status() == Status::Burn){
+            this->team[this->move_first].active()->reduce_hp(static_cast<int>(this->team[this->move_first].active()->get_stats().hp / 8.0));
+            if(game_end(this->move_first)){ return false; }
         }
         // nightmare
         // curse
-        if(team1.curse == true){
-            pokemon1->reduce_hp(static_cast<int>(pokemon1->get_stats().hp / 4.0));
+        if(this->team[this->move_first].curse == true){
+            this->team[this->move_first].active()->reduce_hp(static_cast<int>(this->team[this->move_first].active()->get_stats().hp / 4.0));
+            if(game_end(this->move_first)){ return false; }
         }
         // multi turn attacks ??????
         // uproar
-        if(team1.uproar > 0){
-            if(pokemon1->get_status() == Status::Sleep_inflicted || pokemon1->get_status() == Status::Sleep_self){
-                pokemon1->set_status(Status::Healthy, false);
+        if(this->team[this->move_first].uproar > 0){
+            if(this->team[this->move_first].active()->get_status() == Status::Sleep_inflicted || this->team[this->move_first].active()->get_status() == Status::Sleep_self){
+                this->team[this->move_first].active()->set_status(Status::Healthy, false);
             }
-            if(pokemon2->get_status() == Status::Sleep_inflicted || pokemon2->get_status() == Status::Sleep_self){
-                pokemon2->set_status(Status::Healthy, false);
+            if(this->team[!(this->move_first)].active()->get_status() == Status::Sleep_inflicted || this->team[!(this->move_first)].active()->get_status() == Status::Sleep_self){
+                this->team[!(this->move_first)].active()->set_status(Status::Healthy, false);
             }
         }
         // outrage/petaldance/thrash, user gets confused and end of the move counter (2-3 turns)
-        if(team1.selflock > 0){
-            --team1.selflock;
-            if(team1.selflock == 0){
-                team1.set_confusion();
+        if(this->team[this->move_first].selflock > 0){
+            --this->team[this->move_first].selflock;
+            if(this->team[this->move_first].selflock == 0){
+                this->team[this->move_first].set_confusion();
             }
         }
         // decrement disable
 
         // encore
-        --team1.encore;
+        --this->team[this->move_first].encore;
         // taunt / lock-on / mindreader
-        -- team1.taunt;
-        -- team1.lockon;
+        -- this->team[this->move_first].taunt;
+        -- this->team[this->move_first].lockon;
         // yawn
-        if(team1.yawn == 1){
-            if(pokemon1->get_status() == Status::Healthy){
-                pokemon1->set_status(Status::Sleep_inflicted, false);
+        if(this->team[this->move_first].yawn == 1){
+            if(this->team[this->move_first].active()->get_status() == Status::Healthy){
+                this->team[this->move_first].active()->set_status(Status::Sleep_inflicted, false);
             }
         }
-        team1.flinch = false;
+        this->team[this->move_first].flinch = false;
         // future sight / doom desire
         // perish song
         // 
@@ -226,6 +245,7 @@ void Battle::end_of_turn(){
         // not inbetween
         this->move_first = !this->move_first;
     }
+    return true;
 }
 
 void Battle::switch_in_checks(){

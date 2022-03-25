@@ -1,5 +1,6 @@
 #pragma once
 
+#include <fstream>
 #include <string_view>
 
 #include "effectiveness.hpp"
@@ -13,6 +14,7 @@ public:
     Battle(Team team1, Team team2);
     Battle();
     ~Battle();
+    std::ofstream logger;
     std::string_view p1 = "p1";
     std::string_view p2 = "p2";
     std::array<Team, 2> team = {};
@@ -34,7 +36,7 @@ public:
     int crit_multiplier(const Team &atkteam, const Team &defteam);
     float effectiveness_multiplier(const Team &atkteam, const Team &defteam);
     float item_multiplier(const Team &atkteam);
-    float weather_multiplier(const Team &atkteam);
+    float weather_multiplier(const Team &atkteam, Weather weather);
 
     // turn.cpp
     bool play_turn();
@@ -43,7 +45,7 @@ public:
     bool check_fainted();
     void switch_in_checks();
     void weather_damage(const Weather weather, Pokemon &pokemon);
-    void end_of_turn();
+    bool end_of_turn();
 
     // use_move.cpp
     void use_move(Team &atkteam, Team &defteam);
