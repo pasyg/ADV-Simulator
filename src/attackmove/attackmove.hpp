@@ -10,6 +10,7 @@ class AttackMove{
     
 public:
     AttackMove();
+    AttackMove(Move move, int pp);
     ~AttackMove();
 
     void init();

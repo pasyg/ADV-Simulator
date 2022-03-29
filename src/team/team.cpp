@@ -27,7 +27,6 @@ void Team::print_team(){
 }
 
 void Team::team_init(){
-
     // switch move options
     for(int i = 0; i < 6; ++i){
         this->switches[i].set_priority(6);
@@ -59,7 +58,7 @@ void Team::team_init(){
     }
     // initialize each pokemon
     for(auto&& pokemon : this->member){
-        if(pokemon.get_species() != Species::no_pokemon){
+        if(pokemon.get_species() != Species::None){
             pokemon.init();
         }
     }
@@ -200,100 +199,103 @@ void Team::set_boost(Statname stat, int boost){
 }
 
 void Team::use_pinch_berry(){
-    if(this->member[this->active_pokemon].get_current_hp() < 
-        (this->member[this->active_pokemon].get_stats().hp / 4.0)){
-        switch(this->member[this->active_pokemon].get_item()){
+    if(this->active()->get_current_hp() < 
+        (this->active()->get_stats().hp / 4.0)){
+        switch(this->active()->get_item()){
             case Item::Liechiberry:
                 this->set_boost(Statname::Atk, 1);
-                this->member[this->active_pokemon].remove_item();
+                this->active()->remove_item();
                 return;
             case Item::Ganlonberry:
                 this->set_boost(Statname::Def, 1);
-                this->member[this->active_pokemon].remove_item();
+                this->active()->remove_item();
                 return;
             case Item::Petayaberry:
                 this->set_boost(Statname::Satk, 1);
-                this->member[this->active_pokemon].remove_item();
+                this->active()->remove_item();
                 return;
             case Item::Apicotberry:
                 this->set_boost(Statname::Sdef, 1);
-                this->member[this->active_pokemon].remove_item();
+                this->active()->remove_item();
                 return;
             case Item::Salacberry:
                 this->set_boost(Statname::Spe, 1);
-                this->member[this->active_pokemon].remove_item();
+                this->active()->remove_item();
                 return;
         }
     }
 }
 
 void Team::set_confusion(){
+    if(this->active()->get_ability() == Ability::Own_Tempo){ return; }
     if(this->confusion < 1){
         this->confusion = get_random(2,5);
     }
 }
 
 void Team::use_hp_berry(){
-    if(this->member[this->active_pokemon].get_current_hp() < 
-        (this->member[this->active_pokemon].get_stats().hp / 2.0)){
-        switch(this->member[this->active_pokemon].get_item()){
+    auto berry_heal = [&](){
+            this->active()->increase_hp(static_cast<int>(this->active()->get_stats().hp / 8.0));
+        };
+
+    if(this->active()->get_current_hp() < 
+        (this->active()->get_stats().hp / 2.0)){
+        switch(this->active()->get_item()){
             case Item::Aguavberry:
-                switch(this->member[this->active_pokemon].get_nature()){
+                switch(this->active()->get_nature()){
                     case Nature::Naughty:
                     case Nature::Rash:
                     case Nature::Naive:
                     case Nature::Lax:
                         this->set_confusion();
                 }
-                goto berry_heal;
-
+                berry_heal();
+                break;
             case Item::Figyberry:
-                switch(this->member[this->active_pokemon].get_nature()){
+                switch(this->active()->get_nature()){
                     case Nature::Modest:
                     case Nature::Timid:
                     case Nature::Calm:
                     case Nature::Bold:
                         this->set_confusion();
                 }
-                goto berry_heal;
-
+                berry_heal();
+                break;
             case Item::Iapapaberry:
-                switch(this->member[this->active_pokemon].get_nature()){
+                switch(this->active()->get_nature()){
                     case Nature::Lonely:
                     case Nature::Mild:
                     case Nature::Gentle:
                     case Nature::Hasty:
                         this->set_confusion();
                 }
-                goto berry_heal;
-
+                berry_heal();
+                break;
             case Item::Magoberry:
-                switch(this->member[this->active_pokemon].get_nature()){
+                switch(this->active()->get_nature()){
                     case Nature::Brave:
                     case Nature::Quiet:
                     case Nature::Sassy:
                     case Nature::Relaxed:
                         this->set_confusion();
                 }
-                goto berry_heal;
-
+                berry_heal();
+                break;
             case Item::Wikiberry:
-                switch(this->member[this->active_pokemon].get_nature()){
+                switch(this->active()->get_nature()){
                     case Nature::Adamant:
                     case Nature::Jolly:
                     case Nature::Careful:
                     case Nature::Impish:
                         this->set_confusion();
                 }
-
-            berry_heal:
-                this->member[this->active_pokemon].increase_hp(
-                    static_cast<int>(this->member[this->active_pokemon].get_stats().hp / 8.0)
-                );
+                break;
             case Item::Oranberry:
-                this->member[this->active_pokemon].increase_hp(10);
+                this->active()->increase_hp(10);
+                break;
             case Item::Sitrusberry:
-                this->member[this->active_pokemon].increase_hp(30);
+                this->active()->increase_hp(30);
+                break;
         }
     }
 }
@@ -303,12 +305,9 @@ Pokemon* Team::active(){
 }
 
 void Team::get_move_options(){
-
     const std::array<AttackMove, 4> *moves = this->active()->get_moveset();
-    bool has_to_struggle = false;
-    static AttackMove struggle;
-    struggle.set_move(Move::Struggle);
-    struggle.set_pp(9999);
+    // Struggle will be chosen if pokemon can use no other move (not switches)
+    static AttackMove struggle(Move::Struggle, 9999);
 
     // free the vector from previous options
     this->move_options.clear();
@@ -318,29 +317,24 @@ void Team::get_move_options(){
             if(this->locked_move.get_pp() <= 0){
                 this->move_options.push_back(&this->locked_move);        
             }
-            else{
-                has_to_struggle = true;
-            }
         }
         else{
             for(auto&& move : *this->active()->get_moveset()){
                 if(move.get_pp() > 0 && !move.get_disabled()){
                     this->move_options.push_back(&move);
-                    has_to_struggle = false;
-                }
-                else{
-                    has_to_struggle = true;
                 }
             }
         }
-        if(has_to_struggle){
+        // pokemon has to struggle if no other move can be chosen
+        if(this->move_options.size() == 0){
             this->move_options.push_back(&struggle);
-            }
+        }
+        // if trapped, pokemon can't switch
         if(this->trapped){
             return;
         }
     }
-
+    // add non fainted pokemon as switch options
     for(int i = 0; i<6; ++i){
         if(i == this->active_pokemon){
             continue;
@@ -351,14 +345,4 @@ void Team::get_move_options(){
             }
         }
     }
-    if(this->move_options.size() == 0) {
-        unsigned char lolol = 1;
-    }
-}
-
-// can be rewritten for however one wants to make move decisions
-void Team::decide_move(){
-    this->prev_movechoice = this->movechoice;
-    //std::cout << this->move_options.size() << std::endl;
-    this->movechoice = this->move_options[get_random(0, static_cast<int>(move_options.size()) - 1)];
 }

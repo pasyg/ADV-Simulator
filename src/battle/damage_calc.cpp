@@ -1,7 +1,7 @@
 #include "battle.hpp"
 
 
-int Battle::calculate_damage(const Team &atkteam, const Team &defteam){
+int Battle::calculate_damage(const Team &atkteam, Team &defteam){
     
     int damage = 0;
     int atk_stat = 0;
@@ -13,6 +13,9 @@ int Battle::calculate_damage(const Team &atkteam, const Team &defteam){
             atk_stat = atkteam.member[atkteam.active_pokemon].get_stats().atk;
             if(!(critical_hit && atkteam.atkboost < 0)){
                 atk_stat = get_stat_boosted(atkteam.member[atkteam.active_pokemon].get_stats().atk, Statname::Atk, atkteam.atkboost);
+            }
+            if(atkteam.movechoice->get_type() == Type::Fire && atkteam.flash_fire){
+                atk_stat *= 1.5;
             }
             def_stat = defteam.member[defteam.active_pokemon].get_stats().def;
             if(!(critical_hit && defteam.defboost > 0)){
@@ -89,38 +92,34 @@ bool Battle::is_crit(const Team &atkteam, const Team &defteam){
     return false;
 }
 
-float Battle::ability_multiplier(const Team &atkteam, const Team &defteam){
+float Battle::ability_multiplier(const Team &atkteam, Team &defteam){
     float atk_multiplier = 1;
     float def_multiplier = 1;
 
+    auto pinch_ability = [&](Type type)
+                        { 
+                            if(*atkteam.movechoice == type &&
+                            (atkteam.member[atkteam.active_pokemon].current_hp <
+                            static_cast<int>(atkteam.member[atkteam.active_pokemon].get_stats().hp / 3.0))){
+                                atk_multiplier = 1.5;
+                                }
+                            };
+    auto ability_heal = [](Team &team){
+        team.active()->increase_hp(team.active()->get_stats().hp / 3.0);
+    };
+
     switch(atkteam.member[atkteam.active_pokemon].get_ability()){
         case Ability::Blaze:
-            if(*atkteam.movechoice == Type::Fire &&
-               (atkteam.member[atkteam.active_pokemon].current_hp <
-               static_cast<int>(atkteam.member[atkteam.active_pokemon].get_stats().hp / 3.0))){
-                   atk_multiplier = 1.5;
-               }
+            pinch_ability(Type::Fire);
                break;
         case Ability::Overgrow:
-            if(*atkteam.movechoice == Type::Grass &&
-               (atkteam.member[atkteam.active_pokemon].current_hp <
-               static_cast<int>(atkteam.member[atkteam.active_pokemon].get_stats().hp / 3.0))){
-                   atk_multiplier = 1.5;
-               }
+            pinch_ability(Type::Grass);
             break;
         case Ability::Torrent:
-            if(*atkteam.movechoice == Type::Water &&
-               (atkteam.member[atkteam.active_pokemon].current_hp <
-               static_cast<int>(atkteam.member[atkteam.active_pokemon].get_stats().hp / 3.0))){
-                   atk_multiplier = 1.5;
-               }
+            pinch_ability(Type::Water);
             break;
         case Ability::Swarm:
-            if(*atkteam.movechoice == Type::Bug &&
-               (atkteam.member[atkteam.active_pokemon].current_hp <
-               static_cast<int>(atkteam.member[atkteam.active_pokemon].get_stats().hp / 3.0))){
-                   atk_multiplier = 1.5;
-               }
+            pinch_ability(Type::Bug);
             break;
         case Ability::Pure_Power:
         case Ability::Huge_Power:
@@ -167,11 +166,14 @@ float Battle::ability_multiplier(const Team &atkteam, const Team &defteam){
         case Ability::Volt_Absorb:
             if(*atkteam.movechoice == Type::Electric){
                 def_multiplier = 0;
+                ability_heal(defteam);
             }
             break;
         case Ability::Water_Absorb:
             if(*atkteam.movechoice == Type::Water){
                 def_multiplier = 0;
+                ability_heal(defteam);
+                
             }
             break;
         case Ability::Wonder_Guard:

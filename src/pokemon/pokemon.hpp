@@ -111,7 +111,8 @@ public:
     ///
     Stats basestats;
     std::array<AttackMove, 4> moveset;
-    std::array<Type, 2> type = {Type::Typeless, Type::Typeless};
+    std::array<Type, 2> type = { Type::Typeless, Type::Typeless };
+    std::array<Type, 2> former_type = { Type::Typeless, Type::Typeless };
     bool revealed = false;
     ///
     /// calculated

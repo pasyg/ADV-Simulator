@@ -75,6 +75,23 @@ void Pokemon::set_status(const Status p_status, const bool safeguard){
     if(safeguard){
         return;
     }
+    switch(p_status){
+        case Status::Burn:
+            if(*this == Type::Fire){ return; }
+            if(this->get_ability() == Ability::Water_Veil){ return; }
+        case Status::Freeze:
+            if(*this == Type::Ice){ return; }
+            if(this->get_ability() == Ability::Magma_Armor){ return; }
+        case Status::Paralysis:
+            if(this->get_ability() == Ability::Limber){ return; }
+        case Status::Poison:
+        case Status::Toxic_poison:
+            if(*this == Type::Poison){ return; }
+        case Status::Sleep_inflicted:
+        case Status::Sleep_self:
+            if(this->get_ability() == Ability::Insomnia){ return; }
+            if(this->get_ability() == Ability::Vital_Spirit){ return; }
+    }
     this->status = p_status;
     if(p_status == Status::Sleep_self){
         this->sleep_turns = 2;
@@ -146,7 +163,7 @@ void Pokemon::reduce_hp(const int damage){
     else{
         this->current_hp -= damage;
     }
-    if(this->current_hp < 0){
+    if(this->current_hp <= 0){
         this->set_status(Status::Fainted, false);
         this->current_hp = 0;
     }

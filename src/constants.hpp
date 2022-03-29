@@ -2,6 +2,8 @@
 
 namespace constants{
 
+    constexpr int turn_cap = 100;
+
     constexpr int pp_up = 3;
     constexpr bool ohko_clause = true;
 

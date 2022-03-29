@@ -10,7 +10,8 @@ struct PokemonType{
 };
 
 enum class Species : std::uint16_t {
-	no_pokemon,
+	None,
+	Unrevealed,
 	// Generation 1
 	Bulbasaur,
 	Ivysaur,

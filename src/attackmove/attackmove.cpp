@@ -6,6 +6,11 @@ AttackMove::AttackMove(){
 
 }
 
+AttackMove::AttackMove(Move move_, int pp_){
+    this->move = move_;
+    this->pp = pp_;
+}
+
 AttackMove::~AttackMove(){
 
 }

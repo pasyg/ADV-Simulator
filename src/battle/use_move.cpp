@@ -2,17 +2,133 @@
 
 
 void Battle::use_move(Team &atkteam, Team &defteam){ 
+    auto boost = [](Team &team, const Statname stat, const int boost, const int chance, bool self){
+        if(stat == Statname::Acc && team.active()->get_ability() == Ability::Keen_Eye){ return; }
+        if(team.active()->get_ability() == Ability::Clear_Body 
+           || team.active()->get_ability() == Ability::White_Smoke
+           || team.active()->get_ability() == Ability::Hyper_Cutter){
+            if(!self && boost < 0){
+                return;
+            }
+        }
+        if(get_random(1, 100) <= chance){
+            team.set_boost(stat, boost);
+        }
+    };
+
+    auto switchIn = [&](Team &team, Team &team2, int target){
+            team.active()->set_ability(team.active()->former_ability);
+            if(team.active()->get_ability() == Ability::Natural_Cure){ 
+                team.active()->status == Status::Healthy; 
+            }
+            team.active_pokemon = target;
+            switch (team.active()->get_ability())
+            {
+            case Ability::Drizzle:
+                this->weather = Weather::Rain;
+                break;
+            case Ability::Drought:
+                this->weather = Weather::Sun;
+                break;
+            case Ability::Forecast:
+                break;
+            case Ability::Intimidate:
+                boost(team2, Statname::Atk, -1, 100, false);
+                break;
+            case Ability::Sand_Stream:
+                this->weather = Weather::Sand;
+                break;
+            case Ability::Trace:
+                team.active()->set_former_ability(Ability::Trace);
+                team.active()->set_ability(team2.active()->get_ability());
+                break;
+            default:
+                break;
+            }
+    };
+    auto apply_status = [&](Status status, bool safeguard){
+        defteam.active()->set_status(Status::Burn, defteam.safeguard);
+
+    };
+    switch(atkteam.active()->get_status()){
+        case Status::Sleep_inflicted:
+        case Status::Sleep_self:
+            if(atkteam.active()->get_ability() == Ability::Early_Bird){
+                atkteam.active()->sleep_turns -= 2;
+            }
+            else{
+                atkteam.active()->sleep_turns -= 1;
+            }
+            if(atkteam.active()->sleep_turns > 0){ return; };
+            break;
+        case Status::Freeze:
+            if(get_random(1,4) < 2){ return; };
+            break;
+    }
+    if(is_sound_move(atkteam.movechoice->get_move())){ return; }
+    if(is_contact_move(atkteam.movechoice->get_move())){
+        switch (defteam.active()->get_ability())
+        {
+        case Ability::Cute_Charm:
+            if(get_random(1, 10) < 4){ atkteam.infatuated = true; }
+        case Ability::Effect_Spore:
+            if(get_random(1, 10) < 2){
+                switch(get_random(0, 2)){
+                    case 0: atkteam.active()->set_status(Status::Poison, atkteam.safeguard);
+                        if(atkteam.active()->get_ability() == Ability::Synchronize){
+                            defteam.active()->set_status(Status::Poison, defteam.safeguard);
+                        }
+                    break;
+                    case 1: atkteam.active()->set_status(Status::Sleep_inflicted, atkteam.safeguard);
+                        if(atkteam.active()->get_ability() == Ability::Synchronize){
+                            defteam.active()->set_status(Status::Sleep_inflicted, defteam.safeguard);
+                        }
+                    break;
+                    case 2: atkteam.active()->set_status(Status::Paralysis, atkteam.safeguard);
+                        if(atkteam.active()->get_ability() == Ability::Synchronize){
+                            defteam.active()->set_status(Status::Paralysis, defteam.safeguard);
+                        }
+                    break;
+                }
+            }break;
+        case Ability::Flame_Body: if(get_random(1, 10) < 4){ atkteam.active()->set_status(Status::Burn, atkteam.safeguard);} break;
+        case Ability::Poison_Point: if(get_random(1, 10) < 4){ atkteam.active()->set_status(Status::Poison, atkteam.safeguard);} break;
+        case Ability::Rough_Skin: atkteam.active()->reduce_hp(atkteam.active()->get_stats().hp / 16.0); break;
+        case Ability::Static: if(get_random(1, 10) < 4){ atkteam.active()->set_status(Status::Paralysis, atkteam.safeguard);} break;
+        default:
+            break;
+        }
+    }
+    int serene_grace = 1;
+    if(atkteam.active()->get_ability() == Ability::Serene_Grace){ serene_grace = 2; }
+    
     if(defteam.active()->get_ability() == Ability::Pressure){
         atkteam.movechoice->reduce_pp(2);
     }
     else{
         atkteam.movechoice->reduce_pp(1);
     }
+    if(defteam.active()->get_ability() == Ability::Flash_Fire && atkteam.movechoice->get_type() == Type::Fire){
+        defteam.flash_fire = true;
+    }
+    if(defteam.active()->get_ability() == Ability::Color_Change){
+        defteam.active()->former_type = std::move(defteam.active()->type);
+        defteam.active()->type[0] = atkteam.movechoice->get_type();
+        defteam.active()->type[1] = Type::Typeless;
+    }
     int dmg = 0;
     int switch_target = 0;
     int accuracy = move_accuracy(atkteam.movechoice->get_move(), this->weather);
+    // change to switch
+    if(atkteam.active()->get_ability() == Ability::Compound_Eyes){ accuracy *= 1.3; }
+    if(atkteam.active()->get_ability() == Ability::Hustle && atkteam.movechoice->category == MoveCategory::Physical){
+        accuracy *= 0.8;
+    }
+    if(defteam.active()->get_item() == Item::Brightpowder || defteam.active()->get_item() == Item::Laxincense){
+        accuracy *= 0.9;
+    }
     // ADD ITEMS etc.
-    if(accuracy > 0){
+    if(accuracy > 0 && !atkteam.lockon){
         int stages = atkteam.get_boost(Statname::Acc) - defteam.get_boost(Statname::Eva);
         if(stages > 6){ stages = 6; };
         if(stages < -6){ stages = -6; };
@@ -63,52 +179,23 @@ void Battle::use_move(Team &atkteam, Team &defteam){
         /// switches
         ///
         case Move::Switch0:
-            atkteam.active()->set_ability(atkteam.active()->former_ability);
-            atkteam.active_pokemon = 0;
-            goto SWITCHIN;
+            switchIn(atkteam, defteam, 0);
+            return;
         case Move::Switch1:
-            atkteam.active()->set_ability(atkteam.active()->former_ability);
-            atkteam.active_pokemon = 1;
-            goto SWITCHIN;
+            switchIn(atkteam, defteam, 1);
+            return;
         case Move::Switch2:
-            atkteam.active()->set_ability(atkteam.active()->former_ability);
-            atkteam.active_pokemon = 2;
-            goto SWITCHIN;
+            switchIn(atkteam, defteam, 2);
+            return;
         case Move::Switch3:
-            atkteam.active()->set_ability(atkteam.active()->former_ability);
-            atkteam.active_pokemon = 3;
-            goto SWITCHIN;
+            switchIn(atkteam, defteam, 3);
+            return;
         case Move::Switch4:
-            atkteam.active()->set_ability(atkteam.active()->former_ability);
-            atkteam.active_pokemon = 4;
-            goto SWITCHIN;
+            switchIn(atkteam, defteam, 4);
+            return;
         case Move::Switch5:
-            atkteam.active()->set_ability(atkteam.active()->former_ability);
-            atkteam.active_pokemon = 5;
-        SWITCHIN:
-            switch (atkteam.active()->get_ability())
-            {
-            case Ability::Drizzle:
-                this->weather = Weather::Rain;
-                break;
-            case Ability::Drought:
-                this->weather = Weather::Sun;
-                break;
-            case Ability::Forecast:
-                break;
-            case Ability::Intimidate:
-                defteam.set_boost(Statname::Atk, -1);
-                break;
-            case Ability::Sand_Stream:
-                this->weather = Weather::Sand;
-                break;
-            case Ability::Trace:
-                atkteam.active()->set_former_ability(Ability::Trace);
-                atkteam.active()->set_ability(defteam.active()->get_ability());
-                break;
-            default:
-                break;
-            }
+            switchIn(atkteam, defteam, 5);
+            return;
         // splash...
         case Move::Splash: 
         case Move::Teleport: return;
@@ -126,13 +213,13 @@ void Battle::use_move(Team &atkteam, Team &defteam){
             defteam.active()->reduce_hp(dmg);
             return;
         case Move::Seismic_Toss:
-            dmg = 100;
+            dmg = atkteam.active()->get_level();
             if(*defteam.active() != Type::Ghost){
                 defteam.active()->reduce_hp(dmg);
             }
             return;
         case Move::Night_Shade:
-            dmg = 100;
+            dmg = atkteam.active()->get_level();
             if(*defteam.active() != Type::Normal){
                 defteam.active()->reduce_hp(dmg);
             }	
@@ -220,10 +307,8 @@ void Battle::use_move(Team &atkteam, Team &defteam){
         case Move::Acid:
             dmg = calculate_damage(atkteam, defteam);
             defteam.active()->reduce_hp(dmg);
-            if(dmg > 0){
-                if(get_random(1,10) == 1){
-                    defteam.set_boost(Statname::Def, -1);
-                }
+            if(dmg > 0 && defteam.active()->get_ability() != Ability::Shield_Dust){
+                boost(defteam, Statname::Def, -1, 10, false);
             }
             return;
         case Move::Ancient_Power:
@@ -242,18 +327,18 @@ void Battle::use_move(Team &atkteam, Team &defteam){
         case Move::Aurora_Beam:
             dmg = calculate_damage(atkteam, defteam);
             defteam.active()->reduce_hp(dmg);
-            if(get_random(1,10) == 1){
-                defteam.set_boost(Statname::Atk, 1);
-            }
+            boost(defteam, Statname::Atk, 1, 10, false);
             return;
         case Move::Astonish:
         case Move::Bite:
         case Move::Rock_Slide:
             dmg = calculate_damage(atkteam, defteam);
-            if(dmg > 0){
+            if(dmg > 0 && defteam.active()->get_ability() != Ability::Shield_Dust){
                 defteam.active()->reduce_hp(dmg);
-                if(get_random(1,10) < 4){
-                    defteam.flinch = true;
+                if(defteam.active()->get_ability() != Ability::Inner_Focus){   
+                    if(get_random(1,10) < 4){   
+                        defteam.flinch = true;
+                    }
                 }
             }
             return;
@@ -275,7 +360,7 @@ void Battle::use_move(Team &atkteam, Team &defteam){
         case Move::Heat_Wave:
             dmg = calculate_damage(atkteam, defteam);
             defteam.active()->reduce_hp(dmg);
-            if(dmg > 0){
+            if(dmg > 0 && defteam.active()->get_ability() != Ability::Shield_Dust){
                 if(get_random(1,10)){
                     if(defteam.active()->get_status() == Status::Healthy){
                         defteam.active()->set_status(Status::Burn, defteam.safeguard);
@@ -287,7 +372,7 @@ void Battle::use_move(Team &atkteam, Team &defteam){
         case Move::Ice_Beam:
         case Move::Ice_Punch:
             dmg = calculate_damage(atkteam, defteam);
-            if(dmg > 0){
+            if(dmg > 0 && defteam.active()->get_ability() != Ability::Shield_Dust){
                 defteam.active()->reduce_hp(dmg);
                 if(defteam.active()->get_status() == Status::Healthy){
                     if(get_random(1,10) < 2){
@@ -299,7 +384,7 @@ void Battle::use_move(Team &atkteam, Team &defteam){
         case Move::Body_Slam:
         case Move::Thunder:
             dmg = calculate_damage(atkteam, defteam);
-            if(dmg > 0){
+            if(dmg > 0 && defteam.active()->get_ability() != Ability::Shield_Dust){
                 defteam.active()->reduce_hp(dmg);
                 if(defteam.active()->get_status() == Status::Healthy){
                     if(get_random(1,10) < 4){
@@ -311,31 +396,46 @@ void Battle::use_move(Team &atkteam, Team &defteam){
         ////////////////// done until here
         case Move::Bone_Club:
             dmg = calculate_damage(atkteam, defteam);
-            defteam.active()->reduce_hp(dmg);
+            if(dmg > 0 && defteam.active()->get_ability() != Ability::Shield_Dust){
+                defteam.active()->reduce_hp(dmg);
+                if(defteam.active()->get_ability() != Ability::Inner_Focus){   
+                    if(get_random(1,10) < 2){   
+                        defteam.flinch = true;
+                    }
+                }
+            }
             return;
         case Move::Bubble:
-            dmg = calculate_damage(atkteam, defteam);
-            defteam.active()->reduce_hp(dmg);
-            return;
         case Move::Bubble_Beam:
+        case Move::Constrict:
             dmg = calculate_damage(atkteam, defteam);
-            defteam.active()->reduce_hp(dmg);
+            if(dmg > 0 && defteam.active()->get_ability() != Ability::Shield_Dust){
+                defteam.active()->reduce_hp(dmg);
+                boost(defteam, Statname::Spe, -1, 20, false);
+            }
             return;
         case Move::Confusion:
             dmg = calculate_damage(atkteam, defteam);
-            defteam.active()->reduce_hp(dmg);
-            return;
-        case Move::Constrict:
-            dmg = calculate_damage(atkteam, defteam);
-            defteam.active()->reduce_hp(dmg);
+            if(dmg > 0 && defteam.active()->get_ability() != Ability::Shield_Dust){
+                defteam.active()->reduce_hp(dmg);
+                if(get_random(1,10) < 2){
+                    defteam.set_confusion();
+                }
+            }
             return;
         case Move::Crunch:
             dmg = calculate_damage(atkteam, defteam);
-            defteam.active()->reduce_hp(dmg);
+            if(dmg > 0 && defteam.active()->get_ability() != Ability::Shield_Dust){
+                defteam.active()->reduce_hp(dmg);
+                boost(defteam, Statname::Sdef, -1, 30, false);
+            }
             return;
         case Move::Crush_Claw:
             dmg = calculate_damage(atkteam, defteam);
-            defteam.active()->reduce_hp(dmg);
+            if(dmg > 0 && defteam.active()->get_ability() != Ability::Shield_Dust){
+                defteam.active()->reduce_hp(dmg);
+                boost(defteam, Statname::Def, -1, 50, false);
+            }
             return;
         case Move::Dizzy_Punch:
             dmg = calculate_damage(atkteam, defteam);
@@ -368,6 +468,7 @@ void Battle::use_move(Team &atkteam, Team &defteam){
             return;
         case Move::Self_Destruct:
         case Move::Explosion:
+            if(defteam.active()->get_ability() == Ability::Damp) { return; }
             dmg = calculate_damage(atkteam, defteam);
             defteam.active()->reduce_hp(dmg);
             atkteam.active()->set_status(Status::Fainted, false);
@@ -408,6 +509,10 @@ void Battle::use_move(Team &atkteam, Team &defteam){
         case Move::Knock_Off:
             dmg = calculate_damage(atkteam, defteam);
             defteam.active()->reduce_hp(dmg);
+            if(defteam.active()->get_ability() != Ability::Sticky_Hold && dmg > 0){
+                defteam.active()->previous_item = defteam.active()->get_item();
+                defteam.active()->set_item(Item::None);
+            }
             return;
         case Move::Leaf_Blade:
             dmg = calculate_damage(atkteam, defteam);
@@ -546,7 +651,13 @@ void Battle::use_move(Team &atkteam, Team &defteam){
             return;
         case Move::Thief:
             dmg = calculate_damage(atkteam, defteam);
-            defteam.active()->reduce_hp(dmg);
+            if(dmg > 0){
+                defteam.active()->reduce_hp(dmg);
+                if(atkteam.active()->get_item() == Item::None && defteam.active()->get_ability() != Ability::Sticky_Hold){
+                    atkteam.active()->set_item(defteam.active()->get_item());
+                    defteam.active()->set_item(Item::None);
+                }
+            }   
             return;
         case Move::Thunder_Punch:
         case Move::Thunder_Shock:
@@ -589,6 +700,7 @@ void Battle::use_move(Team &atkteam, Team &defteam){
         case Move::Overheat:
             dmg = calculate_damage(atkteam, defteam);
             defteam.active()->reduce_hp(dmg);
+            boost(atkteam, Statname::Satk, -2, 100, true);
             return;	
 	    case Move::Psywave:
             dmg = 10 * get_random(0, 10);
@@ -687,144 +799,127 @@ void Battle::use_move(Team &atkteam, Team &defteam){
         /// trapping moves
         ///
         case Move::Bind:
-        case Move::Block:
         case Move::Clamp:
         case Move::Fire_Spin:
-        case Move::Mean_Look:
         case Move::Sand_Tomb:
-        case Move::Spider_Web:
         case Move::Whirlpool:
         case Move::Wrap:
+            dmg = calculate_damage(atkteam, defteam);
+            if(dmg <= 0){ return; }
+            defteam.active()->reduce_hp(dmg);
+        case Move::Block:
+        case Move::Mean_Look:
+        case Move::Spider_Web:
+            defteam.trapped = true;
+            return;
 
         case Move::Belly_Drum:
-            atkteam.set_boost(Statname::Atk, 12);
+            boost(atkteam, Statname::Atk, 12, 100, true);
             return;
         case Move::Bulk_Up:
-            atkteam.set_boost(Statname::Atk, 1);
-            atkteam.set_boost(Statname::Def, 1);
+            boost(atkteam, Statname::Atk, 1, 100, true);
+            boost(atkteam, Statname::Def, 1, 100, true);
             return;
         case Move::Curse:
-            atkteam.set_boost(Statname::Atk, 1);
-            atkteam.set_boost(Statname::Def, 1);
-            atkteam.set_boost(Statname::Spe, -1);
+            boost(atkteam, Statname::Atk, 1, 100, true);
+            boost(atkteam, Statname::Def, 1, 100, true);
+            boost(atkteam, Statname::Spe, -1, 100, true);
             return;
         case Move::Dragon_Dance:
-            atkteam.set_boost(Statname::Atk, 1);
-            atkteam.set_boost(Statname::Spe, 1);
+            boost(atkteam, Statname::Atk, 1, 100, true);
+            boost(atkteam, Statname::Spe, 1, 100, true);
             return;
         case Move::Howl:
-            atkteam.set_boost(Statname::Atk, 1);
+            boost(atkteam, Statname::Atk, 1, 100, true);
             return;
         case Move::Meditate:
-            atkteam.set_boost(Statname::Atk, 1);
+            boost(atkteam, Statname::Atk, 1, 100, true);
             return;
         case Move::Sharpen:
-            atkteam.set_boost(Statname::Atk, 1);
+            boost(atkteam, Statname::Atk, 1, 100, true);
             return;
         case Move::Swagger:
-            defteam.set_boost(Statname::Atk, 1);
+            boost(defteam, Statname::Atk, 2, 100, false);
             atkteam.set_confusion();
             return;
         case Move::Swords_Dance:
-            atkteam.set_boost(Statname::Atk, 2);
+            boost(atkteam, Statname::Atk, 2, 100, true);
             return;
-
         case Move::Acid_Armor:
-            atkteam.set_boost(Statname::Def, 2);
-            return;
         case Move::Barrier:
-            atkteam.set_boost(Statname::Def, 2);
+        case Move::Iron_Defense:
+            boost(atkteam, Statname::Def, 2, 100, true);
             return;
         case Move::Cosmic_Power:
-            atkteam.set_boost(Statname::Def, 1);
-            atkteam.set_boost(Statname::Sdef, 1);
+            boost(atkteam, Statname::Def, 1, 100, true);
+            boost(atkteam, Statname::Sdef, 1, 100, true);
             return;
         case Move::Defense_Curl:
-            atkteam.set_boost(Statname::Def, 1);
-            return;
         case Move::Harden:
-            atkteam.set_boost(Statname::Def, 1);
-            return;
-        case Move::Iron_Defense:
-            atkteam.set_boost(Statname::Def, 2);
-            return;
         case Move::Withdraw:
-            atkteam.set_boost(Statname::Def, 1);
+            boost(atkteam, Statname::Def, 1, 100, true);
             return;
-
         case Move::Calm_Mind:
-            atkteam.set_boost(Statname::Satk, 1);
-            atkteam.set_boost(Statname::Sdef, 1);
+            boost(atkteam, Statname::Satk, 1, 100, true);
+            boost(atkteam, Statname::Sdef, 1, 100, true);
             return;
         case Move::Growth:
-            atkteam.set_boost(Statname::Satk, 1);
+            boost(atkteam, Statname::Satk, 1, 100, true);
             return;
         case Move::Tail_Glow:
-            atkteam.set_boost(Statname::Satk, 2);
+            boost(atkteam, Statname::Satk, 2, 100, true);
             return;
-        
         case Move::Amnesia:
-            atkteam.set_boost(Statname::Sdef, 2);
+            boost(atkteam, Statname::Sdef, 2, 100, true);
             return;
-
         case Move::Agility:
-            atkteam.set_boost(Statname::Spe, 2);
+            boost(atkteam, Statname::Spe, 2, 100, true);
             return;
 
         case Move::Double_Team:
-            atkteam.set_boost(Statname::Eva, 1);
-            return;
         case Move::Minimize:
-            atkteam.set_boost(Statname::Eva, 1);
+            boost(atkteam, Statname::Eva, 1, 100, true);
             return;
 ////////////////////////////////////////////////////
         case Move::Focus_Energy:
 ////////////////////////////////////////////////////
         case Move::Charm:
-            defteam.set_boost(Statname::Atk, -2);
-            return;
         case Move::Feather_Dance:
-            defteam.set_boost(Statname::Atk, -2);
+            boost(defteam, Statname::Atk, -2, 100, false);
             return;
         case Move::Growl:
-            defteam.set_boost(Statname::Atk, -1);
+            boost(defteam, Statname::Atk, -1, 100, false);
             return;
         case Move::Tickle:
-            defteam.set_boost(Statname::Atk, -1);
-            defteam.set_boost(Statname::Satk, -1);
+            boost(defteam, Statname::Atk, -1, 100, false);
+            boost(defteam, Statname::Satk, -1, 100, false);
             return;
-
         case Move::Leer:
-            defteam.set_boost(Statname::Def, -1);
+        case Move::Tail_Whip:
+            boost(defteam, Statname::Def, -1, 100, false);
             return;
         case Move::Screech:
-            defteam.set_boost(Statname::Def, -2);
+            boost(defteam, Statname::Def, -2, 100, false);
             return;
-        case Move::Tail_Whip:
-            defteam.set_boost(Statname::Def, -1);
-            return;
-
         case Move::Fake_Tears:
         case Move::Metal_Sound:
-            defteam.set_boost(Statname::Sdef, -2);
+            boost(defteam, Statname::Sdef, -2, 100, false);
             return;
-
         case Move::Cotton_Spore:
         case Move::Scary_Face:
-            defteam.set_boost(Statname::Spe, -2);
+            boost(defteam, Statname::Spe, -2, 100, false);
             return;
         case Move::String_Shot:
-            defteam.set_boost(Statname::Spe, -1);
+            boost(defteam, Statname::Spe, -1, 100, false);
             return;
-
         case Move::Flash:
         case Move::Kinesis:
         case Move::Sand_Attack:
         case Move::Smokescreen:
-            defteam.set_boost(Statname::Acc, -1);
+            boost(defteam, Statname::Acc, -1, 100, false);
             return;
         case Move::Sweet_Scent:
-            defteam.set_boost(Statname::Eva, -1);
+            boost(defteam, Statname::Eva, -1, 100, false);
             return;
 
         case Move::Psych_Up:
@@ -1053,7 +1148,9 @@ void Battle::use_move(Team &atkteam, Team &defteam){
         case Move::Helping_Hand:
         case Move::Imprison:
         case Move::Leech_Seed:
-            defteam.leechseed = true;
+            if(*defteam.active() != Type::Grass){
+                defteam.leechseed = true;
+            }
             return;
         case Move::Light_Screen:
             atkteam.lightscreen = true;
@@ -1063,8 +1160,8 @@ void Battle::use_move(Team &atkteam, Team &defteam){
         case Move::Magic_Coat:
         case Move::Memento:
             atkteam.active()->reduce_hp(999);
-            defteam.set_boost(Statname::Atk, 2);
-            defteam.set_boost(Statname::Satk, 2);
+            boost(defteam, Statname::Atk, -2, 100, false);
+            boost(defteam, Statname::Satk, -2, 100, false);
             return;
         case Move::Mimic:
         case Move::Mind_Reader:
@@ -1080,7 +1177,6 @@ void Battle::use_move(Team &atkteam, Team &defteam){
         case Move::Protect:
         case Move::Recycle:
         case Move::Reflect:
-        case Move::Roar:
         case Move::Role_Play:
         case Move::Sketch:
         case Move::Skill_Swap:
@@ -1095,9 +1191,294 @@ void Battle::use_move(Team &atkteam, Team &defteam){
         case Move::Taunt:
         case Move::Torment:
         case Move::Transform:
-        case Move::Trick:
         case Move::Water_Sport:
+        case Move::Trick:
+            if(defteam.active()->get_ability() != Ability::Sticky_Hold){
+                Item tmp = defteam.active()->get_item();
+                defteam.active()->set_item(atkteam.active()->get_item());
+                atkteam.active()->set_item(tmp);
+            }
+        case Move::Roar:
         case Move::Whirlwind:
+            if(defteam.active()->get_ability() != Ability::Suction_Cups){
+                std::vector<int> targets = {};
+                for(int i = 0; i < 6; ++i){
+                    if(defteam.member[i].current_hp > 0) {
+                        targets.push_back(i);
+                    }
+                }
+                if(targets.size() > 1){
+                    switchIn(defteam, atkteam, get_random(0, targets.size() - 1));
+                }
+            }
             return;
+    }
+}
+
+bool Battle::is_sound_move(Move move){
+    switch(move){
+        case Move::Boomburst:
+        case Move::Bug_Buzz:
+        case Move::Chatter:
+        case Move::Clanging_Scales:
+        case Move::Clangorous_Soulblaze:
+        case Move::Confide:
+        case Move::Disarming_Voice:
+        case Move::Echoed_Voice:
+        case Move::Grass_Whistle:
+        case Move::Growl:
+        case Move::Heal_Bell:
+        case Move::Howl:
+        case Move::Hyper_Voice:
+        case Move::Metal_Sound:
+        case Move::Noble_Roar:
+        case Move::Parting_Shot:
+        case Move::Perish_Song:
+        case Move::Relic_Song:
+        case Move::Roar:
+        case Move::Round:
+        case Move::Screech:
+        case Move::Sing:
+        case Move::Snarl:
+        case Move::Snore:
+        case Move::Sparkling_Aria:
+        case Move::Supersonic:
+        case Move::Uproar:
+            return true;
+        default:
+        return false;
+    }
+}
+
+bool Battle::is_contact_move(Move move){
+    switch(move){
+        case Move::Pound:
+        case Move::Karate_Chop:
+        case Move::Double_Slap:
+        case Move::Comet_Punch:
+        case Move::Mega_Punch:
+        case Move::Fire_Punch:
+        case Move::Ancient_Power:
+        case Move::Overheat:
+        case Move::Ice_Punch:
+        case Move::Thunder_Punch:
+        case Move::Scratch:
+        case Move::Vice_Grip:
+        case Move::Guillotine:
+        case Move::Cut:
+        case Move::Wing_Attack:
+        case Move::Fly:
+        case Move::Bind:
+        case Move::Slam:
+        case Move::Vine_Whip:
+        case Move::Stomp:
+        case Move::Double_Kick:
+        case Move::Mega_Kick:
+        case Move::Jump_Kick:
+        case Move::Rolling_Kick:
+        case Move::Headbutt:
+        case Move::Horn_Attack:
+        case Move::Fury_Attack:
+        case Move::Horn_Drill:
+        case Move::Tackle:
+        case Move::Body_Slam:
+        case Move::Wrap:
+        case Move::Take_Down:
+        case Move::Thrash:
+        case Move::Double_Edge:
+        case Move::Bite:
+        case Move::Peck:
+        case Move::Drill_Peck:
+        case Move::Submission:
+        case Move::Low_Kick:
+        case Move::Counter:
+        case Move::Seismic_Toss:
+        case Move::Strength:
+        case Move::Petal_Dance:
+        case Move::Dig:
+        case Move::Quick_Attack:
+        case Move::Rage:
+        case Move::Bide:
+        case Move::Lick:
+        case Move::Waterfall:
+        case Move::Clamp:
+        case Move::Skull_Bash:
+        case Move::Constrict:
+        case Move::High_Jump_Kick:
+        case Move::Leech_Life:
+        case Move::Dizzy_Punch:
+        case Move::Crabhammer:
+        case Move::Fury_Swipes:
+        case Move::Hyper_Fang:
+        case Move::Super_Fang:
+        case Move::Slash:
+        case Move::Struggle:
+        case Move::Triple_Kick:
+        case Move::Thief:
+        case Move::Flame_Wheel:
+        case Move::Flail:
+        case Move::Reversal:
+        case Move::Mach_Punch:
+        case Move::Feint_Attack:
+        case Move::Outrage:
+        case Move::Rollout:
+        case Move::False_Swipe:
+        case Move::Spark:
+        case Move::Fury_Cutter:
+        case Move::Steel_Wing:
+        case Move::Return:
+        case Move::Frustration:
+        case Move::Dynamic_Punch:
+        case Move::Megahorn:
+        case Move::Pursuit:
+        case Move::Rapid_Spin:
+        case Move::Iron_Tail:
+        case Move::Metal_Claw:
+        case Move::Vital_Throw:
+        case Move::Cross_Chop:
+        case Move::Crunch:
+        case Move::Extreme_Speed:
+        case Move::Rock_Smash:
+        case Move::Facade:
+        case Move::Focus_Punch:
+        case Move::Smelling_Salts:
+        case Move::Superpower:
+        case Move::Revenge:
+        case Move::Brick_Break:
+        case Move::Knock_Off:
+        case Move::Endeavor:
+        case Move::Dive:
+        case Move::Arm_Thrust:
+        case Move::Blaze_Kick:
+        case Move::Ice_Ball:
+        case Move::Needle_Arm:
+        case Move::Poison_Fang:
+        case Move::Crush_Claw:
+        case Move::Meteor_Mash:
+        case Move::Astonish:
+        case Move::Shadow_Punch:
+        case Move::Sky_Uppercut:
+        case Move::Aerial_Ace:
+        case Move::Dragon_Claw:
+        case Move::Bounce:
+        case Move::Poison_Tail:
+        case Move::Covet:
+        case Move::Volt_Tackle:
+        case Move::Leaf_Blade:
+        case Move::Wake_Up_Slap:
+        case Move::Hammer_Arm:
+        case Move::Gyro_Ball:
+        case Move::Pluck:
+        case Move::U_turn:
+        case Move::Close_Combat:
+        case Move::Payback:
+        case Move::Assurance:
+        case Move::Trump_Card:
+        case Move::Wring_Out:
+        case Move::Punishment:
+        case Move::Last_Resort:
+        case Move::Sucker_Punch:
+        case Move::Flare_Blitz:
+        case Move::Force_Palm:
+        case Move::Poison_Jab:
+        case Move::Night_Slash:
+        case Move::Aqua_Tail:
+        case Move::X_Scissor:
+        case Move::Dragon_Rush:
+        case Move::Drain_Punch:
+        case Move::Brave_Bird:
+        case Move::Giga_Impact:
+        case Move::Bullet_Punch:
+        case Move::Avalanche:
+        case Move::Shadow_Claw:
+        case Move::Thunder_Fang:
+        case Move::Ice_Fang:
+        case Move::Fire_Fang:
+        case Move::Shadow_Sneak:
+        case Move::Zen_Headbutt:
+        case Move::Rock_Climb:
+        case Move::Power_Whip:
+        case Move::Cross_Poison:
+        case Move::Iron_Head:
+        case Move::Grass_Knot:
+        case Move::Bug_Bite:
+        case Move::Wood_Hammer:
+        case Move::Aqua_Jet:
+        case Move::Head_Smash:
+        case Move::Double_Hit:
+        case Move::Crush_Grip:
+        case Move::Shadow_Force:
+        case Move::Storm_Throw:
+        case Move::Heavy_Slam:
+        case Move::Flame_Charge:
+        case Move::Low_Sweep:
+        case Move::Foul_Play:
+        case Move::Chip_Away:
+        case Move::Sky_Drop:
+        case Move::Circle_Throw:
+        case Move::Acrobatics:
+        case Move::Retaliate:
+        case Move::Dragon_Tail:
+        case Move::Wild_Charge:
+        case Move::Drill_Run:
+        case Move::Dual_Chop:
+        case Move::Heart_Stamp:
+        case Move::Horn_Leech:
+        case Move::Sacred_Sword:
+        case Move::Razor_Shell:
+        case Move::Heat_Crash:
+        case Move::Steamroller:
+        case Move::Tail_Slap:
+        case Move::Head_Charge:
+        case Move::Gear_Grind:
+        case Move::Bolt_Strike:
+        case Move::V_create:
+        case Move::Flying_Press:
+        case Move::Fell_Stinger:
+        case Move::Phantom_Force:
+        case Move::Draining_Kiss:
+        case Move::Play_Rough:
+        case Move::Nuzzle:
+        case Move::Hold_Back:
+        case Move::Infestation:
+        case Move::Power_Up_Punch:
+        case Move::Dragon_Ascent:
+        case Move::Catastropika:
+        case Move::First_Impression:
+        case Move::Darkest_Lariat:
+        case Move::Ice_Hammer:
+        case Move::High_Horsepower:
+        case Move::Solar_Blade:
+        case Move::Throat_Chop:
+        case Move::Anchor_Shot:
+        case Move::Lunge:
+        case Move::Fire_Lash:
+        case Move::Power_Trip:
+        case Move::Smart_Strike:
+        case Move::Trop_Kick:
+        case Move::Dragon_Hammer:
+        case Move::Brutal_Swing:
+        case Move::Malicious_Moonsault:
+        case Move::Soul_Stealing_7_Star_Strike:
+        case Move::Pulverizing_Pancake:
+        case Move::Psychic_Fangs:
+        case Move::Stomping_Tantrum:
+        case Move::Accelerock:
+        case Move::Liquidation:
+        case Move::Spectral_Thief:
+        case Move::Sunsteel_Strike:
+        case Move::Zing_Zap:
+        case Move::Multi_Attack:
+        case Move::Plasma_Fists:
+        case Move::Searing_Sunraze_Smash:
+        case Move::Lets_Snuggle_Forever:
+        case Move::Zippy_Zap:
+        case Move::Floaty_Fall:
+        case Move::Sizzly_Slide:
+        case Move::Veevee_Volley:
+        case Move::Double_Iron_Bash:
+            return true;
+        default:
+            return false;
     }
 }

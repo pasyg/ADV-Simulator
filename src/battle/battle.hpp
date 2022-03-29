@@ -23,6 +23,9 @@ public:
     bool move_first = true;
     bool winner = false; // false: team 1, true: team 2
 
+    //decide_move.cpp
+    void decide_move(Team &team);
+
     // battle.cpp
     int play_battle();
     int get_stat_boosted(int statvalue, const Statname &stat,  const int &boost);
@@ -30,9 +33,9 @@ public:
     void calc_first_attacker();
 
     // damage_calc.cpp
-    int calculate_damage(const Team &atkteam, const Team &defteam);
+    int calculate_damage(const Team &atkteam, Team &defteam);
     bool is_crit(const Team &atkteam, const Team &defteam);
-    float ability_multiplier(const Team &atkteam, const Team &defteam);
+    float ability_multiplier(const Team &atkteam, Team &defteam);
     int crit_multiplier(const Team &atkteam, const Team &defteam);
     float effectiveness_multiplier(const Team &atkteam, const Team &defteam);
     float item_multiplier(const Team &atkteam);
@@ -49,4 +52,6 @@ public:
 
     // use_move.cpp
     void use_move(Team &atkteam, Team &defteam);
+    bool is_sound_move(Move move);
+    bool is_contact_move(Move move);
 };

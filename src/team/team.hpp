@@ -16,7 +16,6 @@ public:
     ~Team();
     void print_team();
     int get_boost(Statname stat);
-    void decide_move();
     void get_move_options();
     void set_boost(Statname stat, int boost);
     void set_confusion();
@@ -68,6 +67,7 @@ public:
     int speboost = 0;
     int accboost = 0;
     int evaboost = 0; // evasion
+    bool flash_fire = false;
     
     int confusion = 0;
     int encore = 0;

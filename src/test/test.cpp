@@ -84,7 +84,7 @@ bool Test::init_test_species(){
     if(member(0, 4)->get_species() != Species::Aerodactyl){
         return false;
     }
-    if(member(0, 5)->get_species() != Species::no_pokemon){
+    if(member(0, 5)->get_species() != Species::None){
         return false;
     }
     if(member(5, 0)->get_species() != Species::Salamence){

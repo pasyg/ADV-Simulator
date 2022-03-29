@@ -8,6 +8,7 @@
 enum class Move : std::uint16_t{
     
     None,
+	Unrevealed,
 	Pass,
 	Switch,
 	Switch0,

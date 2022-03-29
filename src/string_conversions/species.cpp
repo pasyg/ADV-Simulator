@@ -403,7 +403,8 @@ Species species_from_string(std::string_view const str){
 
     static const std::unordered_map<std::string_view, Species> map{
 	
-			{ "", Species::no_pokemon },
+			{ "", Species::None },
+			{ "Unrevealed", Species::Unrevealed },
 			{ "Abomasnow", Species::Abomasnow },
 			{ "Abomasnowmega", Species::Abomasnow },
 			{ "Abra", Species::Abra },

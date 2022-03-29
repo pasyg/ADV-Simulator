@@ -39,6 +39,7 @@ set(Simulator_SOURCES
 
     "src/battle/battle.cpp"
     "src/battle/damage_calc.cpp"
+    "src/battle/decide_move.cpp"
     "src/battle/turn.cpp"
     "src/battle/use_move.cpp"
 
