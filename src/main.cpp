@@ -15,10 +15,10 @@ int main(int argc, char* argv[]) {
       int winner = battle.play_battle();
       // switch(winner){
       //   case 0: 
-      //     std::cout << "Team 1 wins!\n";
+      //     std::cout << "winner: Team 1 wins!\n";
       //     break;
       //   case 1:
-      //     std::cout << "Team 2 wins!\n" ;
+      //     std::cout << "winner: Team 2 wins!\n" ;
       //     break;
       //   case 2:
       //     std::cout << "TIIIIEEEE!!!!\n";

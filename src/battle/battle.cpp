@@ -30,8 +30,8 @@ int Battle::play_battle(){
         }
         // if the game is over, return winner or tie
         else{
-            bool t_1 = game_end(0);
-            bool t_2 = game_end(1);
+            bool t_1 = game_end(this->team[0]);
+            bool t_2 = game_end(this->team[1]);
             if(t_1 && !t_2){ return 0; }
             else{ 
                 return t_1 ? 2 : 1; 
@@ -40,9 +40,10 @@ int Battle::play_battle(){
     }
     return 2;
 }
+
 // loop through team to check if game has to end
-bool Battle::game_end(int teamindex){
-    for(auto&& member : this->team[teamindex].member){
+bool Battle::game_end(const Team &team){
+    for(auto&& member : team.member){
         if(member.get_status() != Status::Fainted){
             return false;
         }

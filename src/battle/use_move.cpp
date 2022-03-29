@@ -50,21 +50,6 @@ void Battle::use_move(Team &atkteam, Team &defteam){
         defteam.active()->set_status(Status::Burn, defteam.safeguard);
 
     };
-    switch(atkteam.active()->get_status()){
-        case Status::Sleep_inflicted:
-        case Status::Sleep_self:
-            if(atkteam.active()->get_ability() == Ability::Early_Bird){
-                atkteam.active()->sleep_turns -= 2;
-            }
-            else{
-                atkteam.active()->sleep_turns -= 1;
-            }
-            if(atkteam.active()->sleep_turns > 0){ return; };
-            break;
-        case Status::Freeze:
-            if(get_random(1,4) < 2){ return; };
-            break;
-    }
     if(is_sound_move(atkteam.movechoice->get_move())){ return; }
     if(is_contact_move(atkteam.movechoice->get_move())){
         switch (defteam.active()->get_ability())
@@ -777,12 +762,13 @@ void Battle::use_move(Team &atkteam, Team &defteam){
         case Move::Skull_Bash:
         case Move::Sky_Attack:
         case Move::Solar_Beam:
-            if(atkteam.charged == 0){
-                atkteam.charged = 1;
+            if(atkteam.charged == false){
+                atkteam.charged = true;
             }
             else{
                 dmg = calculate_damage(atkteam, defteam);
                 defteam.active()->reduce_hp(dmg);
+                atkteam.charged = false;
             }
             return;
         ///
@@ -1014,6 +1000,7 @@ void Battle::use_move(Team &atkteam, Team &defteam){
             if(defteam.active()->get_status() == Status::Healthy){
                 if(*defteam.active() != Type::Steel && *defteam.active() != Type::Poison){
                     defteam.active()->set_status(Status::Toxic_poison, defteam.safeguard);
+                    defteam.turns_on_the_field = 1;
                 }
             }
             return;
@@ -1189,6 +1176,8 @@ void Battle::use_move(Team &atkteam, Team &defteam){
         case Move::Substitute:
         case Move::Swallow:
         case Move::Taunt:
+            if(defteam.taunt <= 0){ defteam.taunt = 2; };
+            return;
         case Move::Torment:
         case Move::Transform:
         case Move::Water_Sport:
@@ -1198,6 +1187,7 @@ void Battle::use_move(Team &atkteam, Team &defteam){
                 defteam.active()->set_item(atkteam.active()->get_item());
                 atkteam.active()->set_item(tmp);
             }
+            return;
         case Move::Roar:
         case Move::Whirlwind:
             if(defteam.active()->get_ability() != Ability::Suction_Cups){
@@ -1246,7 +1236,7 @@ bool Battle::is_sound_move(Move move){
         case Move::Uproar:
             return true;
         default:
-        return false;
+            return false;
     }
 }
 

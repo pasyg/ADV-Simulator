@@ -43,8 +43,8 @@ public:
 
     // turn.cpp
     bool play_turn();
-    bool game_end(int teamindex);
-    bool can_move(const bool teamindex);
+    bool game_end(const Team &team);
+    bool can_move(Team &team);
     bool check_fainted();
     void switch_in_checks();
     void weather_damage(const Weather weather, Pokemon &pokemon);
