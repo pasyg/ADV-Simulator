@@ -14,13 +14,15 @@ class Team{
 public:
     Team();
     ~Team();
+    int teamsize;
+    std::string team;
     void print_team();
     int get_boost(Statname stat);
     void get_move_options();
     void set_boost(Statname stat, int boost);
     void set_confusion();
     void swap(int slot);
-    void team_init();
+    void init();
 
     void use_hp_berry();
     void use_pinch_berry();
@@ -39,6 +41,7 @@ public:
     ///
     /// one turn
     ///
+    bool meanlook = false;
     bool charged = false; // charge moves (solarbeam, fly,...)
     bool endure = false;
     bool flinch = false;
@@ -48,6 +51,7 @@ public:
     bool protect = false;
     bool truant = false;
     bool safeguard = false;
+    int wrap = 0;
     int lastdamage = 0;
     int protect_acc = 100;
     ///
@@ -82,7 +86,7 @@ public:
     int uproar = 0;
     int yawn = false;  
 
-    AttackMove locked_move;
+    AttackMove* locked_move;
     bool move_locked = false;
     bool block = false;
     bool charge = false;

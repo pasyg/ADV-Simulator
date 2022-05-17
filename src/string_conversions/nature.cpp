@@ -31,10 +31,9 @@ std::string_view to_string(Nature const name){
     }
 }
 
-Nature nature_from_string(std::string_view const str){ 
-
+template<>
+auto from_string(std::string_view const str) -> Nature{
     static const std::unordered_map<std::string_view, Nature> map{ 
-        
         {  "", Nature::Bashful  },
         { "Adamant", Nature::Adamant },
         { "Bashful", Nature::Bashful },

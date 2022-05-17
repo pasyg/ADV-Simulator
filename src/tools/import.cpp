@@ -11,7 +11,7 @@ void set_moves(std::string &moves, Pokemon &pokemon){
     size_t moveindex = 0;
     moves += ",";
     while((posmoves = moves.find(delimiter)) != std::string::npos){
-        moveset[moveindex].set_move(move_from_string(moves.substr(0, posmoves)));
+        moveset[moveindex].set_move(from_string<Move>(moves.substr(0, posmoves)));
         moves.erase(0, posmoves + delimiter.length());
         ++moveindex;
     }
@@ -128,19 +128,19 @@ std::vector<Team> import_team(std::string_view path){
             }
             for(int i = 0; i < 6; ++i){
                 if(data[i][1] == ""){
-                    importteam.member[i].set_species(species_from_string(data[i][0]));
+                    importteam.member[i].set_species(from_string<Species>(data[i][0]));
                     importteam.member[i].set_name(data[i][0]);
                 }
                 else{
-                    importteam.member[i].set_species(species_from_string(data[i][1]));
+                    importteam.member[i].set_species(from_string<Species>(data[i][1]));
                     importteam.member[i].set_name(data[i][1]);
                 }
-                importteam.member[i].set_item(item_from_string(data[i][2]));
-                importteam.member[i].set_ability(ability_from_string(data[i][3]));
+                importteam.member[i].set_item(from_string<Item>(data[i][2]));
+                importteam.member[i].set_ability(from_string<Ability>(data[i][3]));
                 set_moves(data[i][4], importteam.member[i]);
-                importteam.member[i].set_nature(nature_from_string(data[i][5]));
+                importteam.member[i].set_nature(from_string<Nature>(data[i][5]));
                 set_evs(data[i][6], importteam.member[i]);
-                importteam.member[i].set_gender(gender_from_string(data[i][7]));
+                importteam.member[i].set_gender(from_string<Gender>(data[i][7]));
                 set_ivs(data[i][8], importteam.member[i]);
                 if(data[i][10] == ""){
                     // defaults to level 100

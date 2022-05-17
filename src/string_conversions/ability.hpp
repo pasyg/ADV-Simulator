@@ -5,6 +5,9 @@
 
 #include "data/abilities.hpp"
 
+#include "string_conversions/from_string.hpp"
+
 std::string_view to_string(Ability const name);
 
-Ability ability_from_string(std::string_view const str);
+template<>
+auto from_string<Ability>(std::string_view const str) -> Ability;

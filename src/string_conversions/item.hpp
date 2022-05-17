@@ -5,6 +5,9 @@
 
 #include "data/item.hpp"
 
+#include "string_conversions/from_string.hpp"
+
 std::string_view to_string(Item const name);
 
-Item item_from_string(std::string_view const str);
+template<>
+auto from_string<Item>(std::string_view const str) -> Item;

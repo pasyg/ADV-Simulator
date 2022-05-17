@@ -83,10 +83,9 @@ std::string_view to_string(Ability const ability) {
     }
 }
 
-Ability ability_from_string(std::string_view const str){
-	
+template<>
+auto from_string(std::string_view const str) -> Ability{
     static const std::unordered_map<std::string_view, Ability> map{
-        
         {  "", Ability::Air_Lock   },
         {  "Stench", Ability::Stench  },
         {  "Drizzle", Ability::Drizzle  },

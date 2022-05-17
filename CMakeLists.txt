@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.0.0)
 project(Simulator VERSION 0.1.0)
 
-set (CMAKE_CXX_STANDARD 17)
+set (CMAKE_CXX_STANDARD 20)
 
 if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release)
@@ -40,6 +40,7 @@ set(Simulator_SOURCES
     "src/battle/battle.cpp"
     "src/battle/damage_calc.cpp"
     "src/battle/decide_move.cpp"
+    "src/battle/log.cpp"
     "src/battle/turn.cpp"
     "src/battle/use_move.cpp"
 
@@ -57,7 +58,9 @@ set(Simulator_SOURCES
     "src/string_conversions/nature.cpp"
     "src/string_conversions/species.cpp"
     "src/string_conversions/status.cpp"
+    "src/string_conversions/string_conversions.cpp"
     "src/string_conversions/type.cpp"
+    "src/string_conversions/weather.cpp"
 
     "src/tools/import.cpp"
     "src/tools/rng.cpp"

@@ -369,10 +369,9 @@ std::string_view to_string(Move const move){
     }
 }
 
-Move move_from_string(std::string_view const str){
-
+template<>
+auto from_string(std::string_view const str) -> Move{
 	static const std::unordered_map<std::string_view, Move> map{
-
 			{  "", Move::None },
 			{  "Absorb",  Move::Absorb },
 			{  "Accelerock",  Move::Accelerock },

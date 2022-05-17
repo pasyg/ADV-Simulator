@@ -68,10 +68,9 @@ std::string_view to_string(Item const item){
     }
 }
 
-Item item_from_string(std::string_view str){ 
-  
+template<>
+auto from_string(std::string_view const str) -> Item{
     static const std::unordered_map<std::string_view, Item> map{ 
-        
         { "", Item::None },
         { "Leftovers", Item::Leftovers },
         { "LumBerry", Item::Lumberry },

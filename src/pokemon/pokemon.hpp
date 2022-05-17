@@ -29,6 +29,7 @@ public:
     void set_sub_hp(int subhp);
     void create_substitute();
 
+    int hp_percentage();
     void init();
     void stat_init();
     Stats get_stats() const;

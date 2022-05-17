@@ -23,7 +23,7 @@ Pokemon* Test::member(int team, int slot){
 void Test::reset(){
 
     for(auto&& team : this->teams){
-        team.team_init();
+        team.init();
     }
 }
 
@@ -259,7 +259,7 @@ bool Test::test_team_init(){
 
     if(this->import_test == true){
         for(auto&& team : this->teams){
-            team.team_init();
+            team.init();
         }
         if(!this->init_test_species()) return false;
         if(!this->init_test_stats()) return false;

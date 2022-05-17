@@ -5,6 +5,9 @@
 
 #include "data/type.hpp"
 
+#include "string_conversions/from_string.hpp"
+
 std::string_view to_string(Type const name);
 
-Type type_from_string(std::string_view const str);
+template<>
+auto from_string<Type>(std::string_view const str) -> Type;

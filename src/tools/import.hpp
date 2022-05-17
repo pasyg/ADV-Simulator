@@ -2,14 +2,7 @@
 #include <fstream>
 #include <string>
 
-#include "string_conversions/ability.hpp"
-#include "string_conversions/gender.hpp"
-#include "string_conversions/item.hpp"
-#include "string_conversions/moves.hpp"
-#include "string_conversions/nature.hpp"
-#include "string_conversions/species.hpp"
-#include "string_conversions/status.hpp"
-#include "string_conversions/type.hpp"
+#include "string_conversions/string_conversions.hpp"
 
 #include "rng.hpp"
 #include "battle.hpp"

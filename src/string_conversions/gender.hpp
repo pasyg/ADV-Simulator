@@ -6,6 +6,9 @@
 
 #include "data/gender.hpp"
 
+#include "string_conversions/from_string.hpp"
+
 std::string_view to_string(Gender const name);
 
-Gender gender_from_string(std::string_view const str);
+template<>
+auto from_string<Gender>(std::string_view const str) -> Gender;

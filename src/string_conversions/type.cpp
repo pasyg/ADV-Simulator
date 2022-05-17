@@ -25,10 +25,9 @@ std::string_view to_string(Type const name){
     }
 }
 
-Type type_from_string(std::string_view const str){
-    
+template<>
+auto from_string(std::string_view const str) -> Type{
    static const std::unordered_map<std::string_view, Type> map{
-       
        { "Normal", Type::Normal },
        { "Flying", Type::Flying },
        { "Bug", Type::Bug },

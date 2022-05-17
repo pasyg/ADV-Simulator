@@ -1,7 +1,7 @@
 #include "team.hpp"
 #include "rng.hpp"
 
-Team::Team(){
+Team::Team() : teamsize(0){
 
 }
 
@@ -26,7 +26,7 @@ void Team::print_team(){
     }
 }
 
-void Team::team_init(){
+void Team::init(){
     // switch move options
     for(int i = 0; i < 6; ++i){
         this->switches[i].set_priority(6);
@@ -60,6 +60,7 @@ void Team::team_init(){
     for(auto&& pokemon : this->member){
         if(pokemon.get_species() != Species::None){
             pokemon.init();
+            this->teamsize++;
         }
     }
     
@@ -313,11 +314,13 @@ void Team::get_move_options(){
     this->move_options.clear();
 
     if(this->active()->get_current_hp() > 0){
+        // if pokemon is locked into a move, add it
         if(this->move_locked){
-            if(this->locked_move.get_pp() <= 0){
-                this->move_options.push_back(&this->locked_move);        
+            if(this->locked_move->get_pp() > 0){
+                this->move_options.push_back(this->locked_move);        
             }
         }
+        // add all moves that are not disabled and have more than 0 PP
         else{
             for(auto&& move : *this->active()->get_moveset()){
                 if(move.get_pp() > 0 && !move.get_disabled()){
@@ -336,6 +339,7 @@ void Team::get_move_options(){
     }
     // add non fainted pokemon as switch options
     for(int i = 0; i<6; ++i){
+        // don't switch to self
         if(i == this->active_pokemon){
             continue;
         }

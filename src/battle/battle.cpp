@@ -1,28 +1,103 @@
 #include "battle.hpp"
 
-Battle::Battle(Team team1, Team team2) 
-    : logger("replays/test.txt")
+Battle::Battle(Team team1, Team team2, const std::string &filepath) 
+    : logger(filepath)
 {
-    this->team[0] = team1;
-    this->team[1] = team2;
-    this->team[0].team_init();
-    this->team[1].team_init();
+    this->init(team1, team2);
 
-    this->weather = Weather::Clear;
-    this->weather_turns = 0;
+    this->logger << constants::log::html_header;
+    this->logger << constants::log::generation;
+    this->logger << constants::log::sleep_clause;
+    this->logger << constants::log::prio_switch_clause;
+    this->logger << constants::log::species_clause;
+    this->logger << constants::log::ohko_clause;
+    this->logger << constants::log::evasion_clause;
+    this->logger << constants::log::endless_clause;
+    this->logger << constants::log::hp_percentage_mod;
+    this->logger << constants::log::baton_pass_clause;
+    this->logger << "|teamsize|p1|" << this->team[0].teamsize << "\n";
+    this->logger << "|teamsize|p2|" << this->team[1].teamsize << "\n";
+    this->logger << constants::log::start;
 }
 
-Battle::Battle() 
-    : logger("replays/test.txt") {
+Battle::Battle(Team team1, Team team2){
+    this->init(team1, team2);
+}
+
+Battle::Battle(){
 
 }
 
 Battle::~Battle(){
+    if(this->logger.is_open()){
+        this->logger << constants::log::html_end;
+        this->logger.close();
+    }
+}
 
+void Battle::init(Team &team1, Team &team2){
+
+    this->team[0] = team1;
+    this->team[1] = team2;
+    this->team[0].init();
+    this->team[1].init();
+
+    this->team[0].team = "p1a";
+    this->team[1].team = "p2a";
+
+    this->abilities_simultaneous();
+}
+
+void Battle::abilities_simultaneous(){
+    bool first = this->compare_speed();
+
+    this->weather = Weather::Clear;
+    this->weather_turns = 0;
+
+    switch(this->team[first].active()->get_ability()){
+        case Ability::Sand_Stream:
+            this->weather = Weather::Sand;
+            break;
+        case Ability::Drizzle:
+            this->weather = Weather::Rain;
+            break;
+        case Ability::Drought:
+            this->weather = Weather::Sun;
+            break;
+        case Ability::Intimidate:
+            this->team[!first].set_boost(Statname::Atk, -1);
+            break;
+    }
+    switch(this->team[!first].active()->get_ability()){
+        case Ability::Sand_Stream:
+            this->weather = Weather::Sand;
+            break;
+        case Ability::Drizzle:
+            this->weather = Weather::Rain;
+            break;
+        case Ability::Drought:
+            this->weather = Weather::Sun;
+            break;
+        case Ability::Intimidate:
+            this->team[first].set_boost(Statname::Atk, -1);
+            break;
+    }
 }
 
 int Battle::play_battle(){
+    if(this->logger.is_open()){
+        this->logger << "|switch|p1a: " + to_string(this->team[0].active()->species) + "|" + to_string(this->team[0].active()->species)
+                        + "," + to_string(this->team[0].active()->gender) + std::to_string(this->team[0].active()->level) + "/"
+                        + std::to_string(100) + "\n";
+        this->logger << "|switch|p2a: " + to_string(this->team[1].active()->species) + "|" + to_string(this->team[1].active()->species)
+                        + "," + to_string(this->team[1].active()->gender) + std::to_string(this->team[1].active()->level) + "/"
+                        + std::to_string(100) + "\n"; 
+    }
     for(int i = 1; i < constants::turn_cap; ++i){
+        if(this->logger.is_open()){
+            this->logger << "|upkeep\n";
+            this->logger << "|turn|" + std::to_string(i) + "\n";
+        }
         // loop playing turns as long as no winner has been declared,
         // or turn limit (i) hasn't been reached
         if(this->play_turn()){
@@ -87,6 +162,9 @@ int Battle::get_stat_boosted(int statvalue, const Statname &stat,  const int &bo
 ///
 void Battle::calc_first_attacker(){
 
+    static std::array<Move, 7> switches = {Move::Switch, Move::Switch0, Move::Switch1, Move::Switch2, Move::Switch3,
+                                        Move::Switch4, Move::Switch5};
+
     int prio1 = move_prio(this->team[0].movechoice->get_move());
     int prio2 = move_prio(this->team[1].movechoice->get_move());
 
@@ -101,6 +179,16 @@ void Battle::calc_first_attacker(){
         if(get_random(1,10) < 3){
             prio2 += 1;
         }
+    }
+    if(std::any_of(switches.cbegin(), switches.cend(), [&](Move pSwitch)
+                                                        { if(pSwitch == this->team[0].movechoice->get_move())
+                                                         { return true;} return false;})){
+        prio1 = 7;
+    }
+    if(std::any_of(switches.cbegin(), switches.cend(), [&](Move pSwitch)
+                                                        { if(pSwitch == this->team[1].movechoice->get_move())
+                                                         { return true;} return false;})){
+        prio2 = 7;
     }
     if(prio1 > prio2){
         this->move_first = false;

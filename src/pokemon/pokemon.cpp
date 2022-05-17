@@ -71,6 +71,10 @@ void Pokemon::set_current_hp(int hp){
     this->current_hp = hp;
 }
 
+int Pokemon::hp_percentage(){
+    return (this->current_hp * 100) / this->stats.hp;
+}
+
 void Pokemon::set_status(const Status p_status, const bool safeguard){
     if(safeguard){
         return;

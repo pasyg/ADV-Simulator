@@ -5,6 +5,9 @@
 
 #include "natures.hpp"
 
+#include "string_conversions/from_string.hpp"
+
 std::string_view to_string(Nature const name);
 
-Nature nature_from_string(std::string_view const str);
+template<>
+auto from_string<Nature>(std::string_view const str) -> Nature;

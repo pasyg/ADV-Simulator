@@ -16,10 +16,9 @@ std::string_view to_string(Status const status){
     }
 }
 
-Status status_from_string(std::string_view const str){
-
+template<>
+auto from_string(std::string_view const str) -> Status{
     static const std::unordered_map<std::string_view, Status> map{
-        
         { "healthy", Status::Healthy },
         { "fainted", Status::Fainted },
         { "paralysis", Status::Paralysis },

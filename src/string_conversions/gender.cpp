@@ -11,10 +11,9 @@ std::string_view to_string(Gender const name){
     }
 }
 
-Gender gender_from_string(std::string_view const str){
-
+template<>
+auto from_string(std::string_view const str) -> Gender{
     static const std::unordered_map<std::string_view, Gender> map{
-        
         {"M", Gender::Male },
         {"F", Gender::Female },
         {"", Gender::Genderless }

@@ -6,9 +6,14 @@ bool Battle::play_turn(){
     // initiate the forced switchout if so
     auto switch_faint = [&](Team &team, Team &oppteam){ 
         if(team.active()->get_current_hp() <= 0){
+            faint_log(team);
             team.get_move_options();
             this->decide_move(team);
             this->use_move(team, oppteam);
+            return true;
+        }
+        else{
+            return false;
         }
     };
     // set trapped if trapped
@@ -20,10 +25,13 @@ bool Battle::play_turn(){
         else{
             team.trapped = false;
         }
-        if(oppteam.active()->get_ability() == Ability::Arena_Trap 
-           && *team.active() != Type::Flying
-           && team.active()->get_ability() != Ability::Levitate){
-               team.trapped = true;
+        if((oppteam.active()->get_ability() == Ability::Arena_Trap 
+           && (*team.active() != Type::Flying
+           && team.active()->get_ability() != Ability::Levitate))
+           
+           || (*team.active() == Type::Steel && oppteam.active()->get_ability() == Ability::Magnet_Pull)
+           || oppteam.meanlook){
+            team.trapped = true;
         }
         else{
             team.trapped = false;
@@ -66,8 +74,11 @@ bool Battle::play_turn(){
             if(check_fainted()){
                 if(game_end(this->team[0])){ return false; }
                 if(game_end(this->team[1])){ return false; }
-                switch_faint(this->team[0], this->team[1]);
-                switch_faint(this->team[1], this->team[0]);
+                bool t1 = switch_faint(this->team[0], this->team[1]);
+                bool t2 = switch_faint(this->team[1], this->team[0]);
+                if(t1 && t2){ 
+                    this->abilities_simultaneous(); 
+                }
             }
         } else{ if(game_end(this->team[0])){ return false; } }
         if(!this->end_of_turn()) { return false; }
@@ -85,8 +96,9 @@ bool Battle::can_move(Team &team){
     {
         case Status::Freeze:
             if(get_random(1,4) == 2){
-                return true;
+                break;
             }
+            cant_move_log(team, "frz");
             return false;
         case Status::Sleep_inflicted:
         case Status::Sleep_self:
@@ -101,12 +113,14 @@ bool Battle::can_move(Team &team){
                 break;
             }
             if(team.movechoice->get_move() != Move::Sleep_Talk){
+                cant_move_log(team, "slp");
                 return false;
             }else{
                 break;
             }
         case Status::Paralysis:
             if(get_random(1, 4) == 1){
+                cant_move_log(team, "par");
                 return false;
             }
         default: 
@@ -147,13 +161,30 @@ bool Battle::end_of_turn(){
     bool second = !first;
 
     // wish recovers 50% of the original users max HP to the pokemon that receives it
-    if(this->team[this->move_first].wish == 1){
-        this->team[this->move_first].active()->increase_hp(this->team[this->move_first].wish_recovery);
-        this->team[this->move_first].wish = false;
+    if(this->team[first].wish == 1){
+        this->team[first].active()->increase_hp(this->team[first].wish_recovery);    
+        // replay log
+        this->heal_log(this->team[first], *this->team[first].active(), "move: Wish| [wisher] whatever");
+        this->team[first].wish = false;
     }
     if(this->team[second].wish == 1){
         this->team[second].active()->increase_hp(this->team[second].wish_recovery);
+        // replay log
+        this->heal_log(this->team[second], *this->team[second].active(), "move: Wish| [wisher] whatever");
         this->team[second].wish = false;
+    }
+    // weather turncounter gets decremented by 1 at the end of every turn
+    weather_turns--;
+
+    // reset weather if it runs out
+    if(weather_turns == 0){
+        this->weather = Weather::Clear;
+        // replay log
+        this->weather_end();
+    }
+    else{
+        // replay log
+        this->weather_upkeep();
     }
     // weather damage
     switch(this->weather){
@@ -162,24 +193,17 @@ bool Battle::end_of_turn(){
         case Weather::Sun:
             break;
         case Weather::Hail:
-            this->weather_damage(Weather::Hail, *this->team[this->move_first].active());
-            if(game_end(this->team[this->move_first])){ return false; }
-            this->weather_damage(Weather::Hail, *this->team[second].active());
-            if(game_end(this->team[!(this->move_first)])){ return false; }
+            this->weather_damage(Weather::Hail, *this->team[first].active(), first);
+            if(game_end(this->team[first])){ return false; }
+            this->weather_damage(Weather::Hail, *this->team[second].active(), second);
+            if(game_end(this->team[second])){ return false; }
             break;
         case Weather::Sand:
-            this->weather_damage(Weather::Sand, *this->team[this->move_first].active());
-            if(game_end(this->team[this->move_first])){ return false; }
-            this->weather_damage(Weather::Sand, *this->team[second].active());
-            if(game_end(this->team[!(this->move_first)])){ return false; }
+            this->weather_damage(Weather::Sand, *this->team[first].active(), first);
+            if(game_end(this->team[first])){ return false; }
+            this->weather_damage(Weather::Sand, *this->team[second].active(), second);
+            if(game_end(this->team[second])){ return false; }
             break;
-    }
-    // weather turncounter gets decremented by 1 at the end of every turn
-    weather_turns--;
-
-    // reset weather if it runs out
-    if(weather_turns == 0){
-        this->weather = Weather::Clear;
     }
     // end of turn effects
     // after weather damage, the faster mon will run through all these effects first
@@ -191,12 +215,14 @@ bool Battle::end_of_turn(){
         // ingrain heals the currently active pokemon for 1/16th at the end of every turn
         if(this->team[first].ingrain == true){
             this->team[first].active()->increase_hp(static_cast<int>(this->team[first].active()->get_stats().hp / 16.0));
+            // replay log
+            this->heal_log(this->team[first], *this->team[first].active(), "move: Ingrain\n");
         }
-        
         // rain dish
         if(this->weather == Weather::Rain){
             if(this->team[first].active()->get_ability() == Ability::Rain_Dish){
                 this->team[first].active()->increase_hp(static_cast<int>(this->team[first].active()->get_stats().hp / 16.0));
+                this->heal_log(this->team[first], *this->team[first].active(), "ability: Rain Dish\n");
             }
         }
         // speed boost, boost speed by 1
@@ -214,8 +240,10 @@ bool Battle::end_of_turn(){
             }
         }
         // leftovers healing
-        if(this->team[first].active()->get_item() == Item::Leftovers){
+        if(this->team[first].active()->get_item() == Item::Leftovers && 
+           this->team[first].active()->current_hp < this->team[first].active()->get_stats().hp){
             this->team[first].active()->increase_hp(static_cast<int>(this->team[first].active()->get_stats().hp / 16.0));
+            this->heal_log(this->team[first], *this->team[first].active(), "item: Leftovers\n");
         }
         // berry and herbs
         this->team[first].use_hp_berry();
@@ -278,6 +306,8 @@ bool Battle::end_of_turn(){
         // taunt / lock-on / mindreader
         -- this->team[first].taunt;
         -- this->team[first].lockon;
+        -- this->team[first].wrap;
+        if(this->team[first].wrap <= 0){ this->team[first].trapped = false; }
         // yawn
         if(this->team[first].yawn == 1){
             if(this->team[first].active()->get_status() == Status::Healthy){
@@ -297,10 +327,10 @@ bool Battle::end_of_turn(){
 }
 
 void Battle::switch_in_checks(){
-
+// ???
 }
 
-void Battle::weather_damage(const Weather weather, Pokemon &pokemon){
+void Battle::weather_damage(const Weather weather, Pokemon &pokemon, int team){
 
     if(weather == Weather::Sand){
         switch(pokemon.get_type()[0]){
@@ -318,6 +348,8 @@ void Battle::weather_damage(const Weather weather, Pokemon &pokemon){
                 return;
             default:
                 pokemon.reduce_hp(static_cast<int>(pokemon.get_stats().hp / 16.0));
+                // replay log
+                this->damage_log(this->team[team], *this->team[team].active(), "Sandstorm\n");
         }
     }
 
@@ -333,6 +365,8 @@ void Battle::weather_damage(const Weather weather, Pokemon &pokemon){
                 return;
             default:
                 pokemon.reduce_hp(static_cast<int>(pokemon.get_stats().hp / 16.0));
+                // replay log
+                this->damage_log(this->team[team], *this->team[team].active(), "Hail\n");
         }
     }
 }

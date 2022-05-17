@@ -51,11 +51,15 @@ int Battle::calculate_damage(const Team &atkteam, Team &defteam){
     damage = static_cast<int>(static_cast<float>(damage) * static_cast<float>(get_random(85, 100)) / 100.0f);
 
     if(critical_hit){
-        return damage *= 2;
+        defteam.active()->reduce_hp(damage*2);
+        crit_log(defteam);
+        atk_damage_log(defteam);
     }
     else{
-        return damage;
+        defteam.active()->reduce_hp(damage);
+        atk_damage_log(defteam);
     }
+    return damage;
 }
 
 bool Battle::is_crit(const Team &atkteam, const Team &defteam){
