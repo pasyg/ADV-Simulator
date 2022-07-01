@@ -95,7 +95,7 @@ bool Battle::can_move(Team &team){
     switch (team.active()->get_status())
     {
         case Status::Freeze:
-            if(get_random(1,4) == 2){
+            if(this->transition.randomChance(1, 5)){
                 break;
             }
             cant_move_log(team, "frz");
@@ -119,7 +119,7 @@ bool Battle::can_move(Team &team){
                 break;
             }
         case Status::Paralysis:
-            if(get_random(1, 4) == 1){
+            if(this->transition.randomChance(1, 4)){
                 cant_move_log(team, "par");
                 return false;
             }
@@ -130,11 +130,11 @@ bool Battle::can_move(Team &team){
     if(team.truant == true){ return false; }
     // infatuation
     if(team.infatuated){
-        if(get_random(1, 2) == 1){ return false; }
+        if(this->transition.randomChance(1, 2)){ return false; }
     }
     // confusion selfhit
     if(team.confusion > 0){
-        if(get_random(1, 2) == 1){
+        if(this->transition.randomChance(1, 2)){
             team.movechoice->set_move(Move::Hit_Self);
             team.active()->reduce_hp(calculate_damage(team, team));
             return false;
@@ -235,7 +235,7 @@ bool Battle::end_of_turn(){
         }
         // shed skin, 1/3 chance of removing status condition
         if(this->team[first].active()->get_ability() == Ability::Shed_Skin){
-            if(get_random(0,2) > 0){
+            if(this->transition.randomChance(1, 3)){
                 this->team[first].active()->set_status(Status::Healthy, false);
             }
         }

@@ -48,7 +48,8 @@ int Battle::calculate_damage(const Team &atkteam, Team &defteam){
         damage = static_cast<int>(static_cast<float>(damage) * 1.5f);
     }
     damage = static_cast<int>(static_cast<float>(damage) * effectiveness_multiplier(atkteam, defteam));
-    damage = static_cast<int>(static_cast<float>(damage) * static_cast<float>(get_random(85, 100)) / 100.0f);
+    // Need to implement custom damage rolls
+    damage = static_cast<int>(static_cast<float>(damage) * static_cast<float>(85 + this->transition.random(16)) / 100.0f);
 
     if(critical_hit){
         defteam.active()->reduce_hp(damage*2);
@@ -66,29 +67,19 @@ bool Battle::is_crit(const Team &atkteam, const Team &defteam){
 
     switch(crit_multiplier(atkteam, defteam)){
         case 0:
-            if(get_random(0, 15) == 0){
-                return true;
-            }
+            return this->transition.randomChance(1, 16);
             break;
         case 1:
-            if(get_random(0, 7) == 0){
-                return true;
-            }
+            return this->transition.randomChance(1, 8);
             break;
         case 2:
-            if(get_random(0, 3) == 0){
-                return true;
-            }
+            return this->transition.randomChance(1, 4);
             break;
         case 3:
-            if(get_random(0, 2) == 0){
-                return true;
-            }
+            return this->transition.randomChance(1, 3);
             break;
         case 4:
-            if(get_random(0, 1) == 0){
-                return true;
-            }
+            return this->transition.randomChance(1, 2);
             break;
         default:
             return false;

@@ -11,7 +11,8 @@ void Battle::use_move(Team &atkteam, Team &defteam){
                 return;
             }
         }
-        if(get_random(1, 100) <= chance){
+        // "this" Might cause issue
+        if(this->transition.randomChance(chance, 100)){
             team.set_boost(stat, boost);
         }
     };

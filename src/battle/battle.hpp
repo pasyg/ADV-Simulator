@@ -9,6 +9,7 @@
 #include "rng.hpp"
 #include "benchmark.hpp"
 #include "weather.hpp"
+#include "transition.hpp"
 
 class Battle{
 public:
@@ -24,6 +25,8 @@ public:
     int weather_turns = 0;
     bool move_first = true;
     bool winner = false; // false: team 1, true: team 2
+
+    Transition transition;
 
     //decide_move.cpp
     void decide_move(Team &team);
