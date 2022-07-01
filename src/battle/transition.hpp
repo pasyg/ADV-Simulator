@@ -40,4 +40,4 @@ private:
     int q = 1;
     std::vector<std::string> log_string;
 
-}
+};

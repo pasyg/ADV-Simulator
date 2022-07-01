@@ -1,5 +1,9 @@
+#pragma once
+
 #include <random>
 #include <array>
+
+int get_random (int a, int b);
 
 class prng {
     std::mt19937::result_type seed;
