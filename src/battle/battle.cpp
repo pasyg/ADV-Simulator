@@ -170,16 +170,28 @@ void Battle::calc_first_attacker(){
 
     // quickclaw holders have a 20% chance to move first in their priority bracket
     // in singles formats this is equivalent to moving up one priority bracket
-    if(this->team[0].active()->get_item() == Item::Quickclaw){
-        if(get_random(1,10) < 3){
+    // if(this->team[0].active()->get_item() == Item::Quickclaw){
+    //     if(get_random(1,10) < 3){
+    //         prio1 += 1;
+    //     }
+    // }    
+    // if(this->team[1].active()->get_item() == Item::Quickclaw){
+    //     if(get_random(1,10) < 3){
+    //         prio2 += 1;
+    //     }
+    // }
+
+    // Both claws proc at the same time
+    if (this->device.randomChance(1, 5)) {
+        if(this->team[0].active()->get_item() == Item::Quickclaw){
             prio1 += 1;
         }
-    }    
-    if(this->team[1].active()->get_item() == Item::Quickclaw){
-        if(get_random(1,10) < 3){
-            prio2 += 1;
-        }
+        if(this->team[1].active()->get_item() == Item::Quickclaw){
+            prio1 += 1;
+        }  
     }
+
+
     if(std::any_of(switches.cbegin(), switches.cend(), [&](Move pSwitch)
                                                         { if(pSwitch == this->team[0].movechoice->get_move())
                                                          { return true;} return false;})){
@@ -233,8 +245,7 @@ bool Battle::compare_speed(){
     }
     if(speed1 < speed2){
         return true;
-    }
-    else{
-        return get_random(0,1);
+    }else{
+        return this->transition.random(2);
     }
 }
