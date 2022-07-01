@@ -101,7 +101,7 @@ void Pokemon::set_status(const Status p_status, const bool safeguard){
         this->sleep_turns = 2;
     }
     if(p_status == Status::Sleep_inflicted){
-        this->sleep_turns = get_random(2,5);
+        this->sleep_turns = get_random(2,5); // TODO
     }
 }
 

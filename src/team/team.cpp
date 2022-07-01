@@ -230,7 +230,7 @@ void Team::use_pinch_berry(){
 void Team::set_confusion(){
     if(this->active()->get_ability() == Ability::Own_Tempo){ return; }
     if(this->confusion < 1){
-        this->confusion = get_random(2,5);
+        this->confusion = get_random(2,5); // TODO Needs major overhaul
     }
 }
 

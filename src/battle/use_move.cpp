@@ -2,7 +2,7 @@
 
 
 void Battle::use_move(Team &atkteam, Team &defteam){ 
-    auto boost = [](Team &team, const Statname stat, const int boost, const int chance, bool self){
+    auto boost = [&](Team &team, const Statname stat, const int boost, const int chance, bool self){
         if(stat == Statname::Acc && team.active()->get_ability() == Ability::Keen_Eye){ return; }
         if(team.active()->get_ability() == Ability::Clear_Body 
            || team.active()->get_ability() == Ability::White_Smoke
