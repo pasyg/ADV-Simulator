@@ -182,7 +182,7 @@ void Battle::calc_first_attacker(){
     // }
 
     // Both claws proc at the same time
-    if (this->device.randomChance(1, 5)) {
+    if (this->transition.randomChance(1, 5)) {
         if(this->team[0].active()->get_item() == Item::Quickclaw){
             prio1 += 1;
         }
