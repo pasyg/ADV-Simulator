@@ -65,10 +65,10 @@ void Battle::use_move(Team &atkteam, Team &defteam){
         switch (defteam.active()->get_ability())
         {
         case Ability::Cute_Charm:
-            if(get_random(1, 10) < 4){ atkteam.infatuated = true; }
+            if(this->transition.randomChance(3, 10)){ atkteam.infatuated = true; }
         case Ability::Effect_Spore:
-            if(get_random(1, 10) < 2){
-                switch(get_random(0, 2)){
+            if(this->transition.randomChance(1, 10)){
+                switch(this->transition.random(3)){
                     case 0: atkteam.active()->set_status(Status::Poison, atkteam.safeguard);
                         if(atkteam.active()->get_ability() == Ability::Synchronize){
                             defteam.active()->set_status(Status::Poison, defteam.safeguard);
@@ -86,10 +86,10 @@ void Battle::use_move(Team &atkteam, Team &defteam){
                     break;
                 }
             }break;
-        case Ability::Flame_Body: if(get_random(1, 10) < 4){ atkteam.active()->set_status(Status::Burn, atkteam.safeguard);} break;
-        case Ability::Poison_Point: if(get_random(1, 10) < 4){ atkteam.active()->set_status(Status::Poison, atkteam.safeguard);} break;
+        case Ability::Flame_Body: if(this->transition.randomChance(3, 10)){ atkteam.active()->set_status(Status::Burn, atkteam.safeguard);} break;
+        case Ability::Poison_Point: if(this->transition.randomChance(3, 10)){ atkteam.active()->set_status(Status::Poison, atkteam.safeguard);} break;
         case Ability::Rough_Skin: atkteam.active()->reduce_hp(atkteam.active()->get_stats().hp / 16.0); break;
-        case Ability::Static: if(get_random(1, 10) < 4){ atkteam.active()->set_status(Status::Paralysis, atkteam.safeguard);} break;
+        case Ability::Static: if(this->transition.randomChance(3, 10)){ atkteam.active()->set_status(Status::Paralysis, atkteam.safeguard);} break;
         default:
             break;
         }
@@ -182,7 +182,7 @@ void Battle::use_move(Team &atkteam, Team &defteam){
                 accuracy = static_cast<int>(accuracy * 33 / 100);
                 break;
         }
-        if(get_random(1,100) > accuracy){ 
+        if(!this->transition.randomChance(accuracy, 100)){ 
             miss_log();
             return; 
         };
@@ -341,7 +341,7 @@ void Battle::use_move(Team &atkteam, Team &defteam){
             calculate_damage(atkteam, defteam);
             
             if(dmg > 0){
-                if(get_random(1,10) == 1){
+                if(this->transition.randomChance(1, 10)){
                     defteam.set_boost(Statname::Atk, 1);
                     defteam.set_boost(Statname::Def, 1);
                     defteam.set_boost(Statname::Satk, 1);
@@ -362,7 +362,7 @@ void Battle::use_move(Team &atkteam, Team &defteam){
             if(dmg > 0 && defteam.active()->get_ability() != Ability::Shield_Dust){
                 
                 if(defteam.active()->get_ability() != Ability::Inner_Focus){   
-                    if(get_random(1,10) < 4){   
+                    if(this->transition.randomChance(3, 10)){   
                         defteam.flinch = true;
                     }
                 }
@@ -386,7 +386,8 @@ void Battle::use_move(Team &atkteam, Team &defteam){
             calculate_damage(atkteam, defteam);
             
             if(dmg > 0 && defteam.active()->get_ability() != Ability::Shield_Dust){
-                if(get_random(1,10)){
+                if(this->transition.randomChance(1, 10)){
+                    // Should have function try_set_status()
                     if(defteam.active()->get_status() == Status::Healthy){
                         defteam.active()->set_status(Status::Burn, defteam.safeguard);
                     }
@@ -400,7 +401,7 @@ void Battle::use_move(Team &atkteam, Team &defteam){
             if(dmg > 0 && defteam.active()->get_ability() != Ability::Shield_Dust){
                 
                 if(defteam.active()->get_status() == Status::Healthy){
-                    if(get_random(1,10) < 2){
+                    if(this->transition.randomChance(1, 10)){
                         defteam.active()->set_status(Status::Freeze, defteam.safeguard);
                     }
                 }
@@ -412,7 +413,7 @@ void Battle::use_move(Team &atkteam, Team &defteam){
             if(dmg > 0 && defteam.active()->get_ability() != Ability::Shield_Dust){
                 
                 if(defteam.active()->get_status() == Status::Healthy){
-                    if(get_random(1,10) < 4){
+                    if(this->transition.randomChance(3, 10)){
                         defteam.active()->set_status(Status::Paralysis, defteam.safeguard);
                     }
                 }
@@ -424,7 +425,7 @@ void Battle::use_move(Team &atkteam, Team &defteam){
             if(dmg > 0 && defteam.active()->get_ability() != Ability::Shield_Dust){
                 
                 if(defteam.active()->get_ability() != Ability::Inner_Focus){   
-                    if(get_random(1,10) < 2){   
+                    if(this->transition.randomChance(1, 10)){   
                         defteam.flinch = true;
                     }
                 }
@@ -443,8 +444,8 @@ void Battle::use_move(Team &atkteam, Team &defteam){
             calculate_damage(atkteam, defteam);
             if(dmg > 0 && defteam.active()->get_ability() != Ability::Shield_Dust){
                 
-                if(get_random(1,10) < 2){
-                    defteam.set_confusion();
+                if(this->transition.randomChance(1, 10)){
+                    defteam.set_confusion(); // Reminder to look at confusion, sleep, encore, etc
                 }
             }
             return;
@@ -728,7 +729,7 @@ void Battle::use_move(Team &atkteam, Team &defteam){
             boost(atkteam, Statname::Satk, -2, 100, true);
             return;	
 	    case Move::Psywave:
-            dmg = 10 * get_random(0, 10);
+            dmg = 10 * get_random(0, 10); // Don't recall actual mechanic
             dmg *= 50;
             dmg *= atkteam.active()->get_level();
             dmg = static_cast<int>(dmg / 100.0);
@@ -760,7 +761,7 @@ void Battle::use_move(Team &atkteam, Team &defteam){
         case Move::Pin_Missile:
         case Move::Rock_Blast:
         case Move::Spike_Cannon:
-            for(int i = 0; i < get_random(2,5); ++i){
+            for(int i = 0; i < get_random(2,5); ++i){ // TODO Pretty sure these probs are wrong. Easy fix.
                 calculate_damage(atkteam, defteam);
                 
             }
@@ -833,7 +834,7 @@ void Battle::use_move(Team &atkteam, Team &defteam){
             calculate_damage(atkteam, defteam);
             if(dmg <= 0){ return; }
             
-            if(defteam.wrap <= 0){ defteam.wrap = get_random(2, 5); }
+            if(defteam.wrap <= 0){ defteam.wrap = get_random(2, 5); } // Need to lookup
         case Move::Block:
         case Move::Mean_Look:
         case Move::Spider_Web:
@@ -1242,7 +1243,7 @@ void Battle::use_move(Team &atkteam, Team &defteam){
                     }
                 }
                 if(targets.size() > 1){
-                    switchIn(defteam, atkteam, get_random(0, targets.size() - 1));
+                    switchIn(defteam, atkteam, this->transition.random(targets.size()));
                 }
             }
             return;
