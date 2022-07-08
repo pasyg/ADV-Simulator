@@ -334,14 +334,14 @@ void Battle::use_move(Team &atkteam, Team &defteam){
             calculate_damage(atkteam, defteam);
             
             if(dmg > 0 && defteam.active()->get_ability() != Ability::Shield_Dust){
-                boost(defteam, Statname::Def, -1, 10, false);
+                boost(defteam, Statname::Def, -1, 10 * serene_grace, false);
             }
             return;
         case Move::Ancient_Power:
             calculate_damage(atkteam, defteam);
             
             if(dmg > 0){
-                if(this->transition.randomChance(1, 10)){
+                if(this->transition.randomChance(serene_grace, 10)){
                     defteam.set_boost(Statname::Atk, 1);
                     defteam.set_boost(Statname::Def, 1);
                     defteam.set_boost(Statname::Satk, 1);
@@ -353,7 +353,7 @@ void Battle::use_move(Team &atkteam, Team &defteam){
         case Move::Aurora_Beam:
             calculate_damage(atkteam, defteam);
             
-            boost(defteam, Statname::Atk, 1, 10, false);
+            boost(defteam, Statname::Atk, 1, 10 * serene_grace, false);
             return;
         case Move::Astonish:
         case Move::Bite:
@@ -362,7 +362,7 @@ void Battle::use_move(Team &atkteam, Team &defteam){
             if(dmg > 0 && defteam.active()->get_ability() != Ability::Shield_Dust){
                 
                 if(defteam.active()->get_ability() != Ability::Inner_Focus){   
-                    if(this->transition.randomChance(3, 10)){   
+                    if(this->transition.randomChance(3 * serene_grace, 10)){   
                         defteam.flinch = true;
                     }
                 }
@@ -386,7 +386,7 @@ void Battle::use_move(Team &atkteam, Team &defteam){
             calculate_damage(atkteam, defteam);
             
             if(dmg > 0 && defteam.active()->get_ability() != Ability::Shield_Dust){
-                if(this->transition.randomChance(1, 10)){
+                if(this->transition.randomChance(serene_grace, 10)){
                     // Should have function try_set_status()
                     if(defteam.active()->get_status() == Status::Healthy){
                         defteam.active()->set_status(Status::Burn, defteam.safeguard);
@@ -401,7 +401,7 @@ void Battle::use_move(Team &atkteam, Team &defteam){
             if(dmg > 0 && defteam.active()->get_ability() != Ability::Shield_Dust){
                 
                 if(defteam.active()->get_status() == Status::Healthy){
-                    if(this->transition.randomChance(1, 10)){
+                    if(this->transition.randomChance(serene_grace, 10)){
                         defteam.active()->set_status(Status::Freeze, defteam.safeguard);
                     }
                 }
@@ -413,7 +413,7 @@ void Battle::use_move(Team &atkteam, Team &defteam){
             if(dmg > 0 && defteam.active()->get_ability() != Ability::Shield_Dust){
                 
                 if(defteam.active()->get_status() == Status::Healthy){
-                    if(this->transition.randomChance(3, 10)){
+                    if(this->transition.randomChance(3 * serene_grace, 10)){
                         defteam.active()->set_status(Status::Paralysis, defteam.safeguard);
                     }
                 }
@@ -425,7 +425,7 @@ void Battle::use_move(Team &atkteam, Team &defteam){
             if(dmg > 0 && defteam.active()->get_ability() != Ability::Shield_Dust){
                 
                 if(defteam.active()->get_ability() != Ability::Inner_Focus){   
-                    if(this->transition.randomChance(1, 10)){   
+                    if(this->transition.randomChance(serene_grace, 10)){   
                         defteam.flinch = true;
                     }
                 }
@@ -437,14 +437,14 @@ void Battle::use_move(Team &atkteam, Team &defteam){
             calculate_damage(atkteam, defteam);
             if(dmg > 0 && defteam.active()->get_ability() != Ability::Shield_Dust){
                 
-                boost(defteam, Statname::Spe, -1, 20, false);
+                boost(defteam, Statname::Spe, -1, 10 * serene_grace, false);
             }
             return;
         case Move::Confusion:
             calculate_damage(atkteam, defteam);
             if(dmg > 0 && defteam.active()->get_ability() != Ability::Shield_Dust){
                 
-                if(this->transition.randomChance(1, 10)){
+                if(this->transition.randomChance(serene_grace, 10)){
                     defteam.set_confusion(); // Reminder to look at confusion, sleep, encore, etc
                 }
             }
@@ -453,14 +453,14 @@ void Battle::use_move(Team &atkteam, Team &defteam){
             calculate_damage(atkteam, defteam);
             if(dmg > 0 && defteam.active()->get_ability() != Ability::Shield_Dust){
                 
-                boost(defteam, Statname::Sdef, -1, 30, false);
+                boost(defteam, Statname::Sdef, -1, 30 * serene_grace, false);
             }
             return;
         case Move::Crush_Claw:
             calculate_damage(atkteam, defteam);
             if(dmg > 0 && defteam.active()->get_ability() != Ability::Shield_Dust){
                 
-                boost(defteam, Statname::Def, -1, 50, false);
+                boost(defteam, Statname::Def, -1, 50 * serene_grace, false);
             }
             return;
         case Move::Dizzy_Punch:
