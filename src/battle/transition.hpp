@@ -12,6 +12,9 @@ public:
     prng device;
 
     bool randomChance (int numerator, int denominator) {
+        if (numerator >= denominator) {
+            return true;
+        }
         const int x = this->device.random_int(denominator);
         this->q *= denominator;
         if (x <= numerator) {
@@ -27,6 +30,11 @@ public:
     int random(int a) {
         this->q *= a;
         return this->device.random_int(a);
+    }
+
+    int random(int a, int b) {
+        this->q *= b-a;
+        return a + this->device.random_int(b - a);
     }
 
     void reset () {
