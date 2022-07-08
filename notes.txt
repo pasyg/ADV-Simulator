@@ -6,8 +6,11 @@ its probably best that we have circular references, like showdown. E.g. pokemon-
 Multihit moves have the wrong probablity
 Check on the Psywave rolls
 Implement custom rolls
-Serene Grace (randomChance > 1)
+    Serene Grace (randomChance > 1)
 
 BIG:
 Review ps (repo) first commits. This should show all RNG relevant for ADV
 Implement TransitionData
+
+7/8/22
+Serene Grace, changed all relevant randomChance() calls and boost calls (wrapper for randomChance)
