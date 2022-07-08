@@ -168,19 +168,6 @@ void Battle::calc_first_attacker(){
     int prio1 = move_prio(this->team[0].movechoice->get_move());
     int prio2 = move_prio(this->team[1].movechoice->get_move());
 
-    // quickclaw holders have a 20% chance to move first in their priority bracket
-    // in singles formats this is equivalent to moving up one priority bracket
-    // if(this->team[0].active()->get_item() == Item::Quickclaw){
-    //     if(get_random(1,10) < 3){
-    //         prio1 += 1;
-    //     }
-    // }    
-    // if(this->team[1].active()->get_item() == Item::Quickclaw){
-    //     if(get_random(1,10) < 3){
-    //         prio2 += 1;
-    //     }
-    // }
-
     // Both claws proc at the same time
     if (this->transition.randomChance(1, 5)) {
         if(this->team[0].active()->get_item() == Item::Quickclaw){
