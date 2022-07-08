@@ -729,7 +729,7 @@ void Battle::use_move(Team &atkteam, Team &defteam){
             boost(atkteam, Statname::Satk, -2, 100, true);
             return;	
 	    case Move::Psywave:
-            dmg = 10 * get_random(0, 10); // Don't recall actual mechanic
+            dmg = 10 * this->transition.random(11); // TODO Confirm this is not '10'
             dmg *= 50;
             dmg *= atkteam.active()->get_level();
             dmg = static_cast<int>(dmg / 100.0);
@@ -761,9 +761,8 @@ void Battle::use_move(Team &atkteam, Team &defteam){
         case Move::Pin_Missile:
         case Move::Rock_Blast:
         case Move::Spike_Cannon:
-            for(int i = 0; i < get_random(2,5); ++i){ // TODO Pretty sure these probs are wrong. Easy fix.
+            for(int i = 0; i < this->transition.random(2, 6); ++i){ // TODO Pretty sure these probs are wrong. Easy fix.
                 calculate_damage(atkteam, defteam);
-                
             }
             return;
         case Move::Bonemerang:
