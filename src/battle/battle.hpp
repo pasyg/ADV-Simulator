@@ -1,6 +1,7 @@
 #pragma once
 
 #include <fstream>
+#include <limits>
 
 #include "string_conversions/string_conversions.hpp"
 
@@ -61,6 +62,10 @@ public:
     void use_move(Team &atkteam, Team &defteam);
     bool is_sound_move(Move move);
     bool is_contact_move(Move move);
+    void contact_move(Team &atkteam, Team &defteam);
+    void opp_boost(Team &team, const Statname stat, const int boost, const int chance);
+    void switch_in(Team &atkteam, Team &defteam, const int target);
+    int calculate_accuracy(Team &atkteam, Team &defteam);
 
     // log.cpp
     void cant_move_log(Team &team, std::string_view reason);
