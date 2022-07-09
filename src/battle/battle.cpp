@@ -165,16 +165,16 @@ void Battle::calc_first_attacker(){
     static std::array<Move, 7> switches = {Move::Switch, Move::Switch0, Move::Switch1, Move::Switch2, Move::Switch3,
                                         Move::Switch4, Move::Switch5};
 
-    int prio1 = move_prio(this->team[0].movechoice->get_move());
-    int prio2 = move_prio(this->team[1].movechoice->get_move());
+    double prio1 = move_prio(this->team[0].movechoice->get_move());
+    double prio2 = move_prio(this->team[1].movechoice->get_move());
 
     // Both claws proc at the same time
     if (this->transition.randomChance(1, 5)) {
         if(this->team[0].active()->get_item() == Item::Quickclaw){
-            prio1 += 1;
+            prio1 += 0.5;
         }
         if(this->team[1].active()->get_item() == Item::Quickclaw){
-            prio1 += 1;
+            prio1 += 0.5;
         }  
     }
 
@@ -227,6 +227,7 @@ bool Battle::compare_speed(){
         default:
             break;
     }
+
     if(speed1 > speed2){
         return false;
     }
