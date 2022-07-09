@@ -96,6 +96,7 @@ bool Battle::can_move(Team &team){
     {
         case Status::Freeze:
             if(this->transition.randomChance(1, 5)){
+                team.active()->set_status(Status::Healthy, false);
                 break;
             }
             cant_move_log(team, "frz");
