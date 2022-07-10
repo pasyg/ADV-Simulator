@@ -66,6 +66,7 @@ public:
     void opp_boost(Team &team, const Statname stat, const int boost, const int chance);
     void switch_in(Team &atkteam, Team &defteam, const int target);
     int calculate_accuracy(Team &atkteam, Team &defteam);
+    int used_pp(Team &atkteam, Team &defteam);
 
     // log.cpp
     void cant_move_log(Team &team, std::string_view reason);
