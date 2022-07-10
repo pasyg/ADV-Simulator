@@ -277,18 +277,18 @@ bool Test::test_move_options(){
 
     std::cout << "== move options test ==\n";
 
-    member(0, 0)->moveset[0].reduce_pp(999);
-    member(0, 0)->moveset[1].reduce_pp(999);
-    this->teams[0].get_move_options();
+    member(0, 0)->moveset[0].reduce_pp(std::numeric_limits<int>::max());
+    member(0, 0)->moveset[1].reduce_pp(std::numeric_limits<int>::max());
+    this->teams[0].get_move_options(this->teams[1].imprison_moves);
     for(auto&& option : this->teams[0].move_options){
         if(option->get_move() == Move::Hydro_Pump || option->get_move() == Move::Ice_Beam){
             return false;
         }
     }
 
-    member(1, 2)->reduce_hp(999);
-    member(1, 4)->reduce_hp(999);
-    this->teams[1].get_move_options();
+    member(1, 2)->reduce_hp(std::numeric_limits<int>::max());
+    member(1, 4)->reduce_hp(std::numeric_limits<int>::max());
+    this->teams[1].get_move_options(this->teams[1].imprison_moves);
     for(auto&& option : this->teams[1].move_options){
         if(option->get_move() == Move::Switch2 ||
            option->get_move() == Move::Switch4){
@@ -297,13 +297,13 @@ bool Test::test_move_options(){
   }
     for(auto&& pokemon : this->teams[1].member){
         if(pokemon.get_species() != Species::Breloom){
-            pokemon.reduce_hp(9999);
+            pokemon.reduce_hp(std::numeric_limits<int>::max());
         }
     }
     for(auto&& move : member(1, 0)->moveset){
-        move.reduce_pp(999);
+        move.reduce_pp(std::numeric_limits<int>::max());
     }
-    this->teams[1].get_move_options();
+    this->teams[1].get_move_options(this->teams[1].imprison_moves);
     if(this->teams[1].move_options[0]->get_move() != Move::Struggle){
         return false;
     }
@@ -354,7 +354,7 @@ bool Test::test_substitute(){
     if(member(0, 0)->substitute_hp != 85){
         return false;
     }
-    member(0, 0)->reduce_hp(999);
+    member(0, 0)->reduce_hp(std::numeric_limits<int>::max());
     if(member(0, 0)->get_status() == Status::Fainted ||
        member(0, 0)->current_hp != 341){
            return false;
@@ -546,7 +546,7 @@ bool Test::test_sideeffects_moves(){
             battle.use_move(t1, t2);
             if(t2.active()->get_status() == status){  return true; };
             t1.movechoice->set_pp(10);
-            t2.active()->increase_hp(999);
+            t2.active()->increase_hp(std::numeric_limits<int>::max());
         }
         return false;
     };
