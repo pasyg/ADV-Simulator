@@ -7,7 +7,7 @@ bool Battle::play_turn(){
     auto switch_faint = [&](Team &team, Team &oppteam){ 
         if(team.active()->get_current_hp() <= 0){
             faint_log(team);
-            team.get_move_options();
+            team.get_move_options(oppteam.imprison_moves);
             this->decide_move(team);
             this->use_move(team, oppteam);
             return true;
@@ -42,8 +42,8 @@ bool Battle::play_turn(){
     is_trapped(this->team[1], this->team[0]);
 
     // calculate which moves each side can use
-    this->team[0].get_move_options();
-    this->team[1].get_move_options();
+    this->team[0].get_move_options(this->team[1].imprison_moves);
+    this->team[1].get_move_options(this->team[0].imprison_moves);
     
     // decide what move will be selected for each side
     this->decide_move(this->team[0]);
@@ -59,6 +59,7 @@ bool Battle::play_turn(){
     else{
         if(game_end(this->team[0])){ return false; }
     }
+
     // check if turn ends if one of the active pokemon dies
     if(check_fainted()){
         if(game_end(this->team[0])){ return false; }
@@ -67,6 +68,7 @@ bool Battle::play_turn(){
         switch_faint(this->team[1], this->team[0]);
         if(!this->end_of_turn()) { return false; }
     }
+
     // slower pokemon uses move now, check if any pokemon died and has to be swapped out
     else{
         if(can_move(this->team[!(this->move_first)])){
@@ -219,6 +221,7 @@ bool Battle::end_of_turn(){
             // replay log
             this->heal_log(this->team[first], *this->team[first].active(), "move: Ingrain\n");
         }
+
         // rain dish
         if(this->weather == Weather::Rain){
             if(this->team[first].active()->get_ability() == Ability::Rain_Dish){
@@ -226,29 +229,35 @@ bool Battle::end_of_turn(){
                 this->heal_log(this->team[first], *this->team[first].active(), "ability: Rain Dish\n");
             }
         }
+
         // speed boost, boost speed by 1
         if(this->team[first].active()->get_ability() == Ability::Speed_Boost){
             this->team[first].set_boost(Statname::Spe, 1);
         }
+
         // truant
         if(this->team[first].active()->get_ability() == Ability::Truant){
             this->team[first].truant = !this->team[first].truant;
         }
+
         // shed skin, 1/3 chance of removing status condition
         if(this->team[first].active()->get_ability() == Ability::Shed_Skin){
             if(this->transition.randomChance(1, 3)){
                 this->team[first].active()->set_status(Status::Healthy, false);
             }
         }
+
         // leftovers healing
         if(this->team[first].active()->get_item() == Item::Leftovers && 
            this->team[first].active()->current_hp < this->team[first].active()->get_stats().hp){
             this->team[first].active()->increase_hp(static_cast<int>(this->team[first].active()->get_stats().hp / 16.0));
             this->heal_log(this->team[first], *this->team[first].active(), "item: Leftovers\n");
         }
+
         // berry and herbs
         this->team[first].use_hp_berry();
         this->team[first].use_pinch_berry();
+
         // leech seed, opponent regenerates the amount of hp the affected pokemon loses
         if(this->team[first].leechseed == true){
             int dmg = static_cast<int>(this->team[first].active()->get_stats().hp / 8.0);
@@ -261,29 +270,34 @@ bool Battle::end_of_turn(){
                 this->team[second].active()->increase_hp(dmg);
             }
         }
+
         // poison, fixed damage of 1/8th
         if(this->team[first].active()->get_status() == Status::Poison){
             this->team[first].active()->reduce_hp(static_cast<int>(this->team[first].active()->get_stats().hp / 8.0));
             if(game_end(this->team[first])){ return false; }
         }
+
         // toxic, pokemon takes an escalating amount of damage, 
         // increases by 1/16th every consecutive turn on the field
         if(this->team[first].active()->get_status() == Status::Toxic_poison){
             this->team[first].active()->reduce_hp(static_cast<int>(this->team[first].turns_on_the_field * (this->team[first].active()->get_stats().hp / 8.0)));
             if(game_end(this->team[first])){ return false; }
         }
+
         // burn, fixed 1/8th max hp damage
         if(this->team[first].active()->get_status() == Status::Burn){
             this->team[first].active()->reduce_hp(static_cast<int>(this->team[first].active()->get_stats().hp / 8.0));
             if(game_end(this->team[first])){ return false; }
         }
         // nightmare
+
         // curse
         if(this->team[first].curse == true){
             this->team[first].active()->reduce_hp(static_cast<int>(this->team[first].active()->get_stats().hp / 4.0));
             if(game_end(this->team[first])){ return false; }
         }
         // multi turn attacks ??????
+
         // uproar
         if(this->team[first].uproar > 0){
             if(this->team[first].active()->get_status() == Status::Sleep_inflicted || this->team[first].active()->get_status() == Status::Sleep_self){
@@ -293,6 +307,7 @@ bool Battle::end_of_turn(){
                 this->team[second].active()->set_status(Status::Healthy, false);
             }
         }
+
         // outrage/petaldance/thrash, user gets confused and end of the move counter (2-3 turns)
         if(this->team[first].selflock > 0){
             --this->team[first].selflock;
@@ -304,17 +319,20 @@ bool Battle::end_of_turn(){
 
         // encore
         --this->team[first].encore;
+
         // taunt / lock-on / mindreader
         -- this->team[first].taunt;
         -- this->team[first].lockon;
         -- this->team[first].wrap;
         if(this->team[first].wrap <= 0){ this->team[first].trapped = false; }
+        
         // yawn
         if(this->team[first].yawn == 1){
             if(this->team[first].active()->get_status() == Status::Healthy){
                 this->team[first].active()->set_status(Status::Sleep_inflicted, false);
             }
         }
+
         this->team[first].flinch = false;
         // future sight / doom desire
         // perish song
