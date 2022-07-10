@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <array>
+#include <limits>
 #include <memory>
 #include <vector>
 
@@ -18,7 +19,8 @@ public:
     std::string team;
     void print_team();
     int get_boost(Statname stat);
-    void get_move_options();
+    void get_move_options(std::array<Move, 3> impmoves);
+    bool taunt_move(const Move move);
     void set_boost(Statname stat, int boost);
     void set_confusion();
     void swap(int slot);
@@ -41,6 +43,7 @@ public:
     ///
     /// one turn
     ///
+    std::array<Move, 3> imprison_moves;
     bool meanlook = false;
     bool charged = false; // charge moves (solarbeam, fly,...)
     bool endure = false;
@@ -49,6 +52,7 @@ public:
     bool grudge = false;
     bool magiccoat = false;
     bool protect = false;
+    bool torment = false;
     bool truant = false;
     bool safeguard = false;
     int wrap = 0;

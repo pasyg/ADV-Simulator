@@ -305,10 +305,10 @@ Pokemon* Team::active(){
     return &this->member[this->active_pokemon];
 }
 
-void Team::get_move_options(){
+void Team::get_move_options(std::array<Move, 3> impmoves){
     const std::array<AttackMove, 4> *moves = this->active()->get_moveset();
     // Struggle will be chosen if pokemon can use no other move (not switches)
-    static AttackMove struggle(Move::Struggle, 9999);
+    static AttackMove struggle(Move::Struggle, std::numeric_limits<int>::max());
 
     // free the vector from previous options
     this->move_options.clear();
@@ -320,33 +320,197 @@ void Team::get_move_options(){
                 this->move_options.push_back(this->locked_move);        
             }
         }
-        // add all moves that are not disabled and have more than 0 PP
+        // add all moves that are not disabled and have more than 0 PP and not hindered by imprison, taunt or torment
         else{
             for(auto&& move : *this->active()->get_moveset()){
+                // can't select disabled moves
                 if(move.get_pp() > 0 && !move.get_disabled()){
-                    this->move_options.push_back(&move);
+                    continue;
+                }
+                // can't select certain moves when taunted
+                if(!(taunt_move(move.get_move()) && this->taunt)){
+                    continue;
+                }
+                // can't select same move twice in a row when tormented
+                if(this->torment){
+                    if(this->prev_movechoice->get_move() == move.get_move()){
+                        continue;
+                    }
+                }
+                // can't select moves shared with opponent when opponents imprison is active
+                if(std::any_of(impmoves.cbegin(), impmoves.cend(), 
+                                [&move](Move impmove) -> bool { return move.get_move() == impmove; })){
+                        continue;
+                }
+                // add move to options
+                this->move_options.push_back(&move);
+                }
+            // pokemon has to struggle if no other move can be chosen
+            if(this->move_options.size() == 0){
+                this->move_options.push_back(&struggle);
+            }
+            // if trapped, pokemon can't switch
+            if(this->trapped){
+                return;
+            }
+        }
+        // add non fainted pokemon as switch options
+        for(int i = 0; i<6; ++i){
+            // don't switch to self
+            if(i == this->active_pokemon){
+                continue;
+            }
+            else{
+                if(this->member[i].get_status() != Status::Fainted){
+                    this->move_options.push_back(&this->switches[i]);
                 }
             }
         }
-        // pokemon has to struggle if no other move can be chosen
-        if(this->move_options.size() == 0){
-            this->move_options.push_back(&struggle);
-        }
-        // if trapped, pokemon can't switch
-        if(this->trapped){
-            return;
-        }
     }
-    // add non fainted pokemon as switch options
-    for(int i = 0; i<6; ++i){
-        // don't switch to self
-        if(i == this->active_pokemon){
-            continue;
-        }
-        else{
-            if(this->member[i].get_status() != Status::Fainted){
-                this->move_options.push_back(&this->switches[i]);
-            }
-        }
+}
+
+// returns true if move is affected by taunt
+bool Team::taunt_move(const Move move){
+    switch(move){
+        case Move::Acid_Armor:
+        case Move::Agility:
+        case Move::Amnesia:
+        case Move::Barrier:
+        case Move::Bide:
+        case Move::Confuse_Ray:
+        case Move::Conversion:
+        case Move::Conversion_2:
+        case Move::Counter:
+        case Move::Defense_Curl:
+        case Move::Double_Team:
+        case Move::Flash:
+        case Move::Focus_Energy:
+        case Move::Glare:
+        case Move::Growl:
+        case Move::Growth:
+        case Move::Harden:
+        case Move::Haze:
+        case Move::Hypnosis:
+        case Move::Kinesis:
+        case Move::Leech_Seed:
+        case Move::Leer:
+        case Move::Light_Screen:
+        case Move::Lovely_Kiss:
+        case Move::Meditate:
+        case Move::Metronome:
+        case Move::Mimic:
+        case Move::Minimize:
+        case Move::Mirror_Move:
+        case Move::Mist:
+        case Move::Poison_Gas:
+        case Move::Poison_Powder:
+        case Move::Recover:
+        case Move::Reflect:
+        case Move::Rest:
+        case Move::Roar:
+        case Move::Sand_Attack:
+        case Move::Screech:
+        case Move::Sharpen:
+        case Move::Sing:
+        case Move::Sleep_Powder:
+        case Move::Smog:
+        case Move::Smokescreen:
+        case Move::Soft_Boiled:
+        case Move::Splash:
+        case Move::Spore:
+        case Move::String_Shot:
+        case Move::Stun_Spore:
+        case Move::Substitute:
+        case Move::Swords_Dance:
+        case Move::Tail_Whip:
+        case Move::Teleport:
+        case Move::Thunder_Wave:
+        case Move::Toxic:
+        case Move::Transform:
+        case Move::Whirlwind:
+        case Move::Withdraw:
+        case Move::Attract:
+        case Move::Baton_Pass:
+        case Move::Belly_Drum:
+        case Move::Charm:
+        case Move::Cotton_Spore:
+        case Move::Curse:
+        case Move::Destiny_Bond:
+        case Move::Detect:
+        case Move::Encore:
+        case Move::Endure:
+        case Move::Foresight:
+        case Move::Heal_Bell:
+        case Move::Lock_On:
+        case Move::Mean_Look:
+        case Move::Milk_Drink:
+        case Move::Mind_Reader:
+        case Move::Mirror_Coat:
+        case Move::Moonlight:
+        case Move::Morning_Sun:
+        case Move::Pain_Split:
+        case Move::Perish_Song:
+        case Move::Present:
+        case Move::Protect:
+        case Move::Psych_Up:
+        case Move::Rain_Dance:
+        case Move::Safeguard:
+        case Move::Sandstorm:
+        case Move::Scary_Face:
+        case Move::Sketch:
+        case Move::Sleep_Talk:
+        case Move::Spider_Web:
+        case Move::Spikes:
+        case Move::Sunny_Day:
+        case Move::Swagger:
+        case Move::Sweet_Kiss:
+        case Move::Sweet_Scent:
+        case Move::Synthesis:
+        case Move::Aromatherapy:
+        case Move::Assist:
+        case Move::Block:
+        case Move::Bulk_Up:
+        case Move::Calm_Mind:
+        case Move::Cosmic_Power:
+        case Move::Covet:
+        case Move::Dragon_Dance:
+        case Move::Fake_Tears:
+        case Move::Feather_Dance:
+        case Move::Flatter:
+        case Move::Follow_Me:
+        case Move::Grass_Whistle:
+        case Move::Hail:
+        case Move::Helping_Hand:
+        case Move::Howl:
+        case Move::Imprison:
+        case Move::Ingrain:
+        case Move::Iron_Defense:
+        case Move::Magic_Coat:
+        case Move::Memento:
+        case Move::Metal_Sound:
+        case Move::Mud_Shot:
+        case Move::Mud_Sport:
+        case Move::Odor_Sleuth:
+        case Move::Recycle:
+        case Move::Refresh:
+        case Move::Role_Play:
+        case Move::Skill_Swap:
+        case Move::Slack_Off:
+        case Move::Snatch:
+        case Move::Stockpile:
+        case Move::Swallow:
+        case Move::Tail_Glow:
+        case Move::Taunt:
+        case Move::Teeter_Dance:
+        case Move::Tickle:
+        case Move::Torment:
+        case Move::Trick:
+        case Move::Water_Sport:
+        case Move::Will_O_Wisp:
+        case Move::Wish:
+        case Move::Yawn:
+            return true;
+        default:
+            return false;
     }
 }
