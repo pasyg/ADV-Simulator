@@ -782,13 +782,12 @@ void Battle::use_move(Team &atkteam, Team &defteam){
             atkteam.set_boost(Statname::Satk, -2);
             return;	
 	    case Move::Psywave:
-            dmg = 10 * this->transition.random(11); // TODO Confirm this is not '10'
-            dmg *= 50;
-            dmg *= atkteam.active()->get_level();
-            dmg = static_cast<int>(dmg / 100.0);
-            
-            if(dmg < 1){
-                dmg = 1;
+            if(*defteam.active() == Type::Dark){
+                return;
+            }
+            else{
+                dmg = this->transition.random(10) * 10 + 50;
+                defteam.active()->reduce_hp(dmg);
             }
             return;	
 	    case Move::Rage:
