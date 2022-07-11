@@ -14,6 +14,7 @@
 #include "status.hpp"
 #include "rng.hpp"
 
+#include "string_conversions.hpp"
 
 class Pokemon{
 public:
@@ -29,6 +30,7 @@ public:
     void set_sub_hp(int subhp);
     void create_substitute();
 
+    void print_pokemon();
     int hp_percentage();
     void init();
     void stat_init();

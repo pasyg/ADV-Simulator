@@ -20,6 +20,9 @@ int main(int argc, char* argv[]) {
   std::cout << "\nStart gaming!\n";
   
   std::vector<Team> teams = import_team("brr");
+
+  teams[0].print_team();
+  teams[5].print_team();
   {
   //   Timer timer;
   //   int fract = played_games / 10;
