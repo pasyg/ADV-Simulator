@@ -67,6 +67,7 @@ public:
     void switch_in(Team &atkteam, Team &defteam, const int target);
     int calculate_accuracy(Team &atkteam, Team &defteam);
     int used_pp(Team &atkteam, Team &defteam);
+    void try_set_status(Team &team, Status status);
 
     // log.cpp
     void cant_move_log(Team &team, std::string_view reason);
