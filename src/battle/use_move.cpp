@@ -316,6 +316,9 @@ void Battle::use_move(Team &atkteam, Team &defteam){
         atkteam.locked_move = atkteam.movechoice;
     }
     
+    // for multihit moves
+    int hits = 0;
+    
     switch(atkteam.movechoice->get_move()){
         ///
         /// switches
@@ -812,7 +815,6 @@ void Battle::use_move(Team &atkteam, Team &defteam){
         case Move::Pin_Missile:
         case Move::Rock_Blast:
         case Move::Spike_Cannon:
-            int hits = 0;
             switch(this->transition.random(7)){
                 case 0:
                 case 1:
