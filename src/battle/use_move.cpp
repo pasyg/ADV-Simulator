@@ -267,6 +267,12 @@ int Battle::used_pp(Team &atkteam, Team &defteam){
     return pp;
 }
 
+void Battle::try_set_status(Team &team, Status status){
+    if(team.active()->get_status() == Status::Healthy){
+        team.active()->set_status(status, team.safeguard);
+    }
+}
+
 void Battle::use_move(Team &atkteam, Team &defteam){ 
 
     // get rid of these sh*tters
@@ -318,7 +324,7 @@ void Battle::use_move(Team &atkteam, Team &defteam){
     
     // for multihit moves
     int hits = 0;
-    
+
     switch(atkteam.movechoice->get_move()){
         ///
         /// switches
@@ -506,9 +512,7 @@ void Battle::use_move(Team &atkteam, Team &defteam){
             if(dmg > 0 && defteam.active()->get_ability() != Ability::Shield_Dust){
                 if(this->transition.randomChance(serene_grace, 10)){
                     // Should have function try_set_status()
-                    if(defteam.active()->get_status() == Status::Healthy){
-                        defteam.active()->set_status(Status::Burn, defteam.safeguard);
-                    }
+                    try_set_status(defteam, Status::Burn);
                 }
             }
             return;
@@ -517,10 +521,8 @@ void Battle::use_move(Team &atkteam, Team &defteam){
         case Move::Ice_Punch:
             dmg = calculate_damage(atkteam, defteam);
             if(dmg > 0 && defteam.active()->get_ability() != Ability::Shield_Dust){
-                if(defteam.active()->get_status() == Status::Healthy){
-                    if(this->transition.randomChance(serene_grace, 10)){
-                        defteam.active()->set_status(Status::Freeze, defteam.safeguard);
-                    }
+                if(this->transition.randomChance(serene_grace, 10)){
+                    try_set_status(defteam, Status::Freeze);
                 }
             }
             return;
@@ -528,10 +530,8 @@ void Battle::use_move(Team &atkteam, Team &defteam){
         case Move::Thunder:
             dmg = calculate_damage(atkteam, defteam);
             if(dmg > 0 && defteam.active()->get_ability() != Ability::Shield_Dust){
-                if(defteam.active()->get_status() == Status::Healthy){
-                    if(this->transition.randomChance(3 * serene_grace, 10)){
-                        defteam.active()->set_status(Status::Paralysis, defteam.safeguard);
-                    }
+                if(this->transition.randomChance(3 * serene_grace, 10)){
+                    try_set_status(defteam, Status::Paralysis);
                 }
             }
             return;
@@ -767,9 +767,7 @@ void Battle::use_move(Team &atkteam, Team &defteam){
         ////////////////// 
         case Move::Zap_Cannon:
             dmg = calculate_damage(atkteam, defteam);
-            if(defteam.active()->get_status() == Status::Healthy){
-                defteam.active()->set_status(Status::Paralysis, defteam.safeguard);
-            }
+            try_set_status(defteam, Status::Paralysis);
             return;	
         case Move::Luster_Purge:
 	    case Move::Mist_Ball:
@@ -1055,22 +1053,16 @@ void Battle::use_move(Team &atkteam, Team &defteam){
 
         // paralysis
         case Move::Glare:
-            if(defteam.active()->get_status() == Status::Healthy){
-                if(*defteam.active() != Type::Ghost){
-                    defteam.active()->set_status(Status::Paralysis, defteam.safeguard);
-                }
+            if(*defteam.active() != Type::Ghost){
+                try_set_status(defteam, Status::Paralysis);
             }
             return;
         case Move::Stun_Spore:
-            if(defteam.active()->get_status() == Status::Healthy){
-                defteam.active()->set_status(Status::Paralysis, defteam.safeguard);
-            }
+                try_set_status(defteam, Status::Paralysis);
             return;
         case Move::Thunder_Wave:
-            if(defteam.active()->get_status() == Status::Healthy){
-                if(*defteam.active() != Type::Ground){
-                    defteam.active()->set_status(Status::Paralysis, defteam.safeguard);
-                }
+            if(*defteam.active() != Type::Ground){
+                try_set_status(defteam, Status::Paralysis);
             }
             return;
         // sleep
@@ -1080,9 +1072,7 @@ void Battle::use_move(Team &atkteam, Team &defteam){
         case Move::Sing:
         case Move::Sleep_Powder:
         case Move::Spore:
-            if(defteam.active()->get_status() == Status::Healthy){
-                defteam.active()->set_status(Status::Sleep_inflicted, defteam.safeguard);
-            }
+                try_set_status(defteam, Status::Sleep_inflicted);
             return;
         case Move::Yawn:
             defteam.yawn = 2;
@@ -1097,26 +1087,20 @@ void Battle::use_move(Team &atkteam, Team &defteam){
         case Move::Sleep_Talk:
         // poison
         case Move::Poison_Powder:
-            if(defteam.active()->get_status() == Status::Healthy){
-                if(*defteam.active() != Type::Steel && *defteam.active() != Type::Poison){
-                    defteam.active()->set_status(Status::Poison, defteam.safeguard);
-                }
+            if(*defteam.active() != Type::Steel && *defteam.active() != Type::Poison){
+                try_set_status(defteam, Status::Paralysis);
             }
             return;
         case Move::Toxic:
-            if(defteam.active()->get_status() == Status::Healthy){
-                if(*defteam.active() != Type::Steel && *defteam.active() != Type::Poison){
-                    defteam.active()->set_status(Status::Toxic_poison, defteam.safeguard);
-                    defteam.turns_on_the_field = 1;
-                }
+            if(*defteam.active() != Type::Steel && *defteam.active() != Type::Poison){
+                try_set_status(defteam, Status::Paralysis);
+                defteam.turns_on_the_field = 1;
             }
             return;
         // burn
         case Move::Will_O_Wisp:
-            if(defteam.active()->get_status() == Status::Healthy){
-                if(*defteam.active() != Type::Fire){
-                    defteam.active()->set_status(Status::Burn, defteam.safeguard);
-                }
+            if(*defteam.active() != Type::Fire){
+                try_set_status(defteam, Status::Burn);
             }
             return;
         case Move::Refresh:
