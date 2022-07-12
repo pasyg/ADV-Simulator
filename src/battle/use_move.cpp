@@ -268,8 +268,56 @@ int Battle::used_pp(Team &atkteam, Team &defteam){
 }
 
 void Battle::try_set_status(Team &team, Status status){
-    if(team.active()->get_status() == Status::Healthy){
-        team.active()->set_status(status, team.safeguard);
+    if(team.active()->get_status() != Status::Healthy && status != Status::Sleep_self){
+        return;
+    }
+
+    switch(status){
+        case Status::Burn:
+            if(*team.active() == Type::Fire){
+                return;
+            }
+            if(team.active()->get_ability() == Ability::Water_Veil){
+                return;
+            }
+            team.active()->set_status(Status::Burn, team.safeguard);
+            return;
+        case Status::Freeze:
+            if(*team.active() == Type::Ice){
+                return;
+            }
+            if(team.active()->get_ability() == Ability::Magma_Armor || team.active()->get_ability() == Ability::Shield_Dust){
+                return;
+            }
+            team.active()->set_status(Status::Freeze, team.safeguard);
+            return;
+        case Status::Paralysis:
+            team.active()->set_status(Status::Paralysis, team.safeguard);
+            return;
+        case Status::Poison:
+            if(*team.active() == Type::Poison || *team.active() == Type::Steel){
+                return;
+            }
+            team.active()->set_status(Status::Poison, team.safeguard);
+            return;
+        case Status::Toxic_poison:
+            if(*team.active() == Type::Poison || *team.active() == Type::Steel){
+                return;
+            }
+            team.active()->set_status(Status::Toxic_poison, team.safeguard);
+            return;
+        case Status::Sleep_inflicted:
+            if(this->uproar || team.active()->get_ability() == Ability::Insomnia){
+                return;
+            }
+            team.active()->set_status(Status::Sleep_inflicted, team.safeguard);
+            return;
+        case Status::Sleep_self:
+            if(this->uproar || team.active()->get_ability() == Ability::Insomnia){
+                return;
+            }
+            team.active()->set_status(Status::Sleep_self, false);
+            return;
     }
 }
 
