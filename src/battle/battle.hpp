@@ -23,6 +23,7 @@ public:
     std::string_view p2 = "p2a";
     std::array<Team, 2> team = {};
     Weather weather = Weather::Clear;
+    bool uproar = false;
     int weather_turns = 0;
     bool move_first = true;
     bool winner = false; // false: team 1, true: team 2
