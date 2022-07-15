@@ -98,7 +98,7 @@ bool Battle::can_move(Team &team){
     {
         case Status::Freeze:
             if(this->transition.randomChance(1, 5)){
-                team.active()->set_status(Status::Healthy, false);
+                team.active()->set_status(Status::Healthy);
                 break;
             }
             cant_move_log(team, "frz");
@@ -112,7 +112,7 @@ bool Battle::can_move(Team &team){
                 team.active()->sleep_turns -= 1;
             }
             if(team.active()->sleep_turns < 1){
-                team.active()->set_status(Status::Healthy, false);
+                team.active()->set_status(Status::Healthy);
                 break;
             }
             if(team.movechoice->get_move() != Move::Sleep_Talk){
@@ -139,7 +139,7 @@ bool Battle::can_move(Team &team){
     if(team.confusion > 0){
         if(this->transition.randomChance(1, 2)){
             team.movechoice->set_move(Move::Hit_Self);
-            team.active()->reduce_hp(calculate_damage(team, team));
+            team.active()->reduce_hp_direct(calculate_damage(team, team));
             return false;
         }
     }
@@ -243,7 +243,7 @@ bool Battle::end_of_turn(){
         // shed skin, 1/3 chance of removing status condition
         if(this->team[first].active()->get_ability() == Ability::Shed_Skin){
             if(this->transition.randomChance(1, 3)){
-                this->team[first].active()->set_status(Status::Healthy, false);
+                this->team[first].active()->set_status(Status::Healthy);
             }
         }
 
@@ -261,7 +261,7 @@ bool Battle::end_of_turn(){
         // leech seed, opponent regenerates the amount of hp the affected pokemon loses
         if(this->team[first].leechseed == true){
             int dmg = static_cast<int>(this->team[first].active()->get_stats().hp / 8.0);
-            this->team[first].active()->reduce_hp(dmg);
+            this->team[first].active()->reduce_hp_direct(dmg);
             if(game_end(this->team[first])){ return false; }
             if(this->team[first].active()->get_ability() == Ability::Liquid_Ooze){
                 this->team[second].active()->increase_hp(dmg);     
@@ -273,27 +273,27 @@ bool Battle::end_of_turn(){
 
         // poison, fixed damage of 1/8th
         if(this->team[first].active()->get_status() == Status::Poison){
-            this->team[first].active()->reduce_hp(static_cast<int>(this->team[first].active()->get_stats().hp / 8.0));
+            this->team[first].active()->reduce_hp_direct(static_cast<int>(this->team[first].active()->get_stats().hp / 8.0));
             if(game_end(this->team[first])){ return false; }
         }
 
         // toxic, pokemon takes an escalating amount of damage, 
         // increases by 1/16th every consecutive turn on the field
         if(this->team[first].active()->get_status() == Status::Toxic_poison){
-            this->team[first].active()->reduce_hp(static_cast<int>(this->team[first].turns_on_the_field * (this->team[first].active()->get_stats().hp / 8.0)));
+            this->team[first].active()->reduce_hp_direct(static_cast<int>(this->team[first].turns_on_the_field * (this->team[first].active()->get_stats().hp / 8.0)));
             if(game_end(this->team[first])){ return false; }
         }
 
         // burn, fixed 1/8th max hp damage
         if(this->team[first].active()->get_status() == Status::Burn){
-            this->team[first].active()->reduce_hp(static_cast<int>(this->team[first].active()->get_stats().hp / 8.0));
+            this->team[first].active()->reduce_hp_direct(static_cast<int>(this->team[first].active()->get_stats().hp / 8.0));
             if(game_end(this->team[first])){ return false; }
         }
         // nightmare
 
         // curse
         if(this->team[first].curse == true){
-            this->team[first].active()->reduce_hp(static_cast<int>(this->team[first].active()->get_stats().hp / 4.0));
+            this->team[first].active()->reduce_hp_direct(static_cast<int>(this->team[first].active()->get_stats().hp / 4.0));
             if(game_end(this->team[first])){ return false; }
         }
         // multi turn attacks ??????
@@ -301,10 +301,10 @@ bool Battle::end_of_turn(){
         // uproar
         if(this->team[first].uproar > 0){
             if(this->team[first].active()->get_status() == Status::Sleep_inflicted || this->team[first].active()->get_status() == Status::Sleep_self){
-                this->team[first].active()->set_status(Status::Healthy, false);
+                this->team[first].active()->set_status(Status::Healthy);
             }
             if(this->team[second].active()->get_status() == Status::Sleep_inflicted || this->team[second].active()->get_status() == Status::Sleep_self){
-                this->team[second].active()->set_status(Status::Healthy, false);
+                this->team[second].active()->set_status(Status::Healthy);
             }
         }
 
@@ -321,6 +321,7 @@ bool Battle::end_of_turn(){
         --this->team[first].encore;
 
         // taunt / lock-on / mindreader
+        -- this->team[first].safeguard;
         -- this->team[first].taunt;
         -- this->team[first].lockon;
         -- this->team[first].wrap;
@@ -329,18 +330,26 @@ bool Battle::end_of_turn(){
         // yawn
         if(this->team[first].yawn == 1){
             if(this->team[first].active()->get_status() == Status::Healthy){
-                this->team[first].active()->set_status(Status::Sleep_inflicted, false);
+                this->team[first].active()->set_status(Status::Sleep_inflicted);
             }
         }
-
-        this->team[first].flinch = false;
-        // future sight / doom desire
-        // perish song
-        // 
         // game decided after both fsight/DD AND perishsong
         // not inbetween
         first = !first;
         second = !second;
+    }
+    for(int i = 0; i<2; ++i){
+        this->team[first].flinch = false;
+        // future sight / doom desire
+        -- this->team[first].delayed_damage_turns;
+        if(this->team[first].delayed_damage_turns == 0){
+            team[second].active()->reduce_hp_attack(team[first].delayed_damage);
+        }
+        // perish song
+        -- team[first].perishsong;
+        if(team[first].perishsong == 0){
+            team[first].active()->kill();
+        }
     }
     return true;
 }
@@ -366,7 +375,7 @@ void Battle::weather_damage(const Weather weather, Pokemon &pokemon, int team){
             case Type::Steel:
                 return;
             default:
-                pokemon.reduce_hp(static_cast<int>(pokemon.get_stats().hp / 16.0));
+                pokemon.reduce_hp_direct(static_cast<int>(pokemon.get_stats().hp / 16.0));
                 // replay log
                 this->damage_log(this->team[team], *this->team[team].active(), "Sandstorm\n");
         }
@@ -383,7 +392,7 @@ void Battle::weather_damage(const Weather weather, Pokemon &pokemon, int team){
             case Type::Ice:
                 return;
             default:
-                pokemon.reduce_hp(static_cast<int>(pokemon.get_stats().hp / 16.0));
+                pokemon.reduce_hp_direct(static_cast<int>(pokemon.get_stats().hp / 16.0));
                 // replay log
                 this->damage_log(this->team[team], *this->team[team].active(), "Hail\n");
         }

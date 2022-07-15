@@ -8,6 +8,11 @@ Pokemon::~Pokemon(){
     
 }
 
+void Pokemon::kill(){
+    this->set_current_hp(0);
+    this->status = Status::Fainted;
+}
+
 void Pokemon::print_pokemon(){
     std::cout << "Species: " << to_string(this->get_species()) << "\n";
     std::cout << "Ability: " << to_string(this->get_ability()) << "\n";
@@ -100,34 +105,11 @@ int Pokemon::hp_percentage(){
     return (this->current_hp * 100) / this->stats.hp;
 }
 
-void Pokemon::set_status(const Status p_status, const bool safeguard){
-    if(safeguard){
-        return;
-    }
-    switch(p_status){
-        case Status::Burn:
-            if(*this == Type::Fire){ return; }
-            if(this->get_ability() == Ability::Water_Veil){ return; }
-        case Status::Freeze:
-            if(*this == Type::Ice){ return; }
-            if(this->get_ability() == Ability::Magma_Armor){ return; }
-        case Status::Paralysis:
-            if(this->get_ability() == Ability::Limber){ return; }
-        case Status::Poison:
-        case Status::Toxic_poison:
-            if(*this == Type::Poison){ return; }
-        case Status::Sleep_inflicted:
-        case Status::Sleep_self:
-            if(this->get_ability() == Ability::Insomnia){ return; }
-            if(this->get_ability() == Ability::Vital_Spirit){ return; }
-    }
-    this->status = p_status;
-    if(p_status == Status::Sleep_self){
-        this->sleep_turns = 2;
-    }
+void Pokemon::set_status(const Status p_status){
     if(p_status == Status::Sleep_inflicted){
         this->sleep_turns = get_random(2,5); // TODO
     }
+    this->status = p_status;
 }
 
 void Pokemon::set_revealed(const bool p_revealed){
@@ -180,8 +162,15 @@ void Pokemon::create_substitute(){
         substitute_hp = static_cast<int>(this->stats.hp / 4.0);
     }
 }
+void Pokemon::reduce_hp_direct(const int damage){
+    this->current_hp -= damage;
+    
+    if(this->current_hp <= 0){
+        this->kill();
+    }
+}
 
-void Pokemon::reduce_hp(const int damage){
+void Pokemon::reduce_hp_attack(const int damage){
     if(this->substitute){
         this->substitute_hp -= damage;
         if(this->substitute_hp <= 0){
@@ -193,8 +182,7 @@ void Pokemon::reduce_hp(const int damage){
         this->current_hp -= damage;
     }
     if(this->current_hp <= 0){
-        this->set_status(Status::Fainted, false);
-        this->current_hp = 0;
+        this->kill();
     }
 }
 

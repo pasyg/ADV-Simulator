@@ -30,6 +30,7 @@ public:
     void set_sub_hp(int subhp);
     void create_substitute();
 
+    void kill();
     void print_pokemon();
     int hp_percentage();
     void init();
@@ -42,10 +43,11 @@ public:
     int get_current_hp();
     void set_current_hp(int hp);
     void remove_item();
-    void reduce_hp(const int damage);
+    void reduce_hp_direct(const int damage);
+    void reduce_hp_attack(const int damage);
     void increase_hp(const int heal);
 
-    void set_status(const Status p_status, const bool safeguard);
+    void set_status(const Status p_status);
     void set_revealed(const bool p_revealed);
     void set_item(const Item p_item);
     

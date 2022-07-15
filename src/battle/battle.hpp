@@ -12,7 +12,8 @@
 #include "weather.hpp"
 #include "transition.hpp"
 
-class Battle{
+class Battle
+{
 public:
     Battle(Team team1, Team team2, const std::string &filepath);
     Battle(Team team1, Team team2);
@@ -30,14 +31,14 @@ public:
 
     Transition transition;
 
-    //decide_move.cpp
+    // decide_move.cpp
     void decide_move(Team &team);
 
     // battle.cpp
     void init(Team &team1, Team &team2);
     void abilities_simultaneous();
     int play_battle();
-    int get_stat_boosted(int statvalue, const Statname &stat,  const int &boost);
+    int get_stat_boosted(int statvalue, const Statname &stat, const int &boost);
     bool compare_speed();
     void calc_first_attacker();
 
@@ -68,7 +69,8 @@ public:
     void switch_in(Team &atkteam, Team &defteam, const int target);
     int calculate_accuracy(Team &atkteam, Team &defteam);
     int used_pp(Team &atkteam, Team &defteam);
-    void try_set_status(Team &team, Status status);
+    bool can_set_status(Team &team, Status status);
+    void set_status(Team &atkteam, Team &defteam, Status status);
 
     // log.cpp
     void cant_move_log(Team &team, std::string_view reason);

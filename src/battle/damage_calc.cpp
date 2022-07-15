@@ -52,12 +52,13 @@ int Battle::calculate_damage(const Team &atkteam, Team &defteam){
     damage = static_cast<int>(static_cast<float>(damage) * static_cast<float>(85 + this->transition.random(16)) / 100.0f);
 
     if(critical_hit){
-        defteam.active()->reduce_hp(damage*2);
+        damage *= 2;
+        defteam.active()->reduce_hp_attack(damage);
         crit_log(defteam);
         atk_damage_log(defteam);
     }
     else{
-        defteam.active()->reduce_hp(damage);
+        defteam.active()->reduce_hp_attack(damage);
         atk_damage_log(defteam);
     }
     return damage;
@@ -207,6 +208,7 @@ int Battle::crit_multiplier(const Team &atkteam, const Team &defteam){
     switch(atkteam.movechoice->get_move()){
         case Move::Future_Sight:
         case Move::Doom_Desire:
+        case Move::Spit_Up:
             return 0;
         case Move::Aeroblast:
         case Move::Air_Cutter:
