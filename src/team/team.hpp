@@ -44,6 +44,7 @@ public:
     /// one turn
     ///
     std::array<Move, 3> imprison_moves;
+    bool imprison = false;
     bool meanlook = false;
     bool charged = false; // charge moves (solarbeam, fly,...)
     bool endure = false;

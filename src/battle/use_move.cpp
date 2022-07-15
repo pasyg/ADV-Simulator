@@ -353,6 +353,19 @@ void Battle::use_move(Team &atkteam, Team &defteam){
             return;
         }
     }
+    if(atkteam.taunt){
+        if(atkteam.taunt_move(atkteam.movechoice->get_move())){
+            return;
+        }   
+    }
+    if(defteam.imprison){
+        if(std::any_of(defteam.imprison_moves.cbegin(), defteam.imprison_moves.cend(), 
+                                [&atkteam](Move impmove) -> bool { 
+                                    return atkteam.movechoice->get_move() == impmove; 
+                                    })){
+                                    return;
+                                }
+    }
     
     // contact move have specific effects vs some abilities
     this->contact_move(atkteam, defteam);
@@ -373,6 +386,8 @@ void Battle::use_move(Team &atkteam, Team &defteam){
         defteam.active()->type[1] = Type::Typeless;
     }
 
+    // helper for imprison
+    std::array<AttackMove, 4> moveset;
     Status status;
     int dmg = 0;
     int switch_target = 0;
@@ -1380,6 +1395,14 @@ void Battle::use_move(Team &atkteam, Team &defteam){
         case Move::Grudge:
         case Move::Helping_Hand:
         case Move::Imprison:
+            moveset = *atkteam.active()->get_moveset();
+            for(int i = 0; i < 4; i++){
+                if(moveset[i] != Move::None){
+                    atkteam.imprison_moves[i] = moveset[i].get_move();
+                }
+            }
+            atkteam.imprison = true;
+            return;
         case Move::Leech_Seed:
             if(*defteam.active() != Type::Grass){
                 defteam.leechseed = true;
