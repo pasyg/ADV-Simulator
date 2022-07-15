@@ -35,6 +35,9 @@ int Battle::calculate_damage(const Team &atkteam, Team &defteam){
     }
 
     damage = 2 * (atkteam.member[atkteam.active_pokemon].get_level());
+    if(critical_hit){
+        damage *= 2;
+    }
     damage /= 5;
     damage += 2;
     damage *= atkteam.movechoice->get_power();
@@ -52,7 +55,6 @@ int Battle::calculate_damage(const Team &atkteam, Team &defteam){
     damage = static_cast<int>(static_cast<float>(damage) * static_cast<float>(85 + this->transition.random(16)) / 100.0f);
 
     if(critical_hit){
-        damage *= 2;
         defteam.active()->reduce_hp_attack(damage);
         crit_log(defteam);
         atk_damage_log(defteam);
