@@ -354,7 +354,7 @@ bool Test::test_substitute(){
     if(member(0, 0)->substitute_hp != 85){
         return false;
     }
-    member(0, 0)->reduce_hp_direct(std::numeric_limits<int>::max());
+    member(0, 0)->reduce_hp_attack(std::numeric_limits<int>::max());
     if(member(0, 0)->get_status() == Status::Fainted ||
        member(0, 0)->current_hp != 341){
            return false;
@@ -546,6 +546,7 @@ bool Test::test_sideeffects_moves(){
             battle.use_move(t1, t2);
             if(t2.active()->get_status() == status){  return true; };
             t1.movechoice->set_pp(10);
+            t2.active()->set_status(Status::Healthy);
             t2.active()->increase_hp(std::numeric_limits<int>::max());
         }
         return false;

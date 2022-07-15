@@ -37,6 +37,7 @@ public:
     bool test_import();
     bool test_team_init();
     bool test_move_options();
+    bool test_calc();
     Pokemon* member(int team, int slot);
 private:
     std::vector<Team> teams;
@@ -50,7 +51,6 @@ private:
     bool init_test_hidden_power();
     bool test_switch();
     bool test_substitute();
-    bool test_calc();
     bool test_crit();
     bool test_ability();
     bool test_item();

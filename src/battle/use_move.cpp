@@ -292,7 +292,7 @@ bool Battle::can_set_status(Team &team, Status status){
             if(*team.active() == Type::Ice){
                 return false;
             }
-            if(team.active()->get_ability() == Ability::Magma_Armor || team.active()->get_ability() == Ability::Shield_Dust){
+            if(team.active()->get_ability() == Ability::Magma_Armor){
                 return false;
             }
             return true;
@@ -325,6 +325,7 @@ bool Battle::can_set_status(Team &team, Status status){
             }
             return true;
     }
+    return false;
 }
 
 void Battle::set_status(Team &atkteam, Team &defteam, Status status){
@@ -1215,8 +1216,9 @@ void Battle::use_move(Team &atkteam, Team &defteam){
         case Move::Sing:
         case Move::Sleep_Powder:
         case Move::Spore:
-            if(can_set_status(defteam, Status::Paralysis)){
-                set_status(atkteam, defteam, Status::Sleep_inflicted);
+        status = Status::Sleep_inflicted;
+            if(can_set_status(defteam, status)){
+                set_status(atkteam, defteam, status);
             }
             return;
         case Move::Yawn:

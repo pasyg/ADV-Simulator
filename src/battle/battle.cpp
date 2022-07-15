@@ -105,25 +105,35 @@ int Battle::play_battle(){
         }
         // if the game is over, return winner or tie
         else{
-            bool t_1 = game_end(this->team[0]);
-            bool t_2 = game_end(this->team[1]);
-            if(t_1 && !t_2){ return 0; }
-            else{ 
-                return t_1 ? 2 : 1; 
+            int end = game_end(this->team[0], this->team[1]);
+            switch(end){
+                case 0: 
+                    continue;
+                default:
+                    return end;
             }
         }
     }
-    return 2;
+    return 0;
 }
 
 // loop through team to check if game has to end
-bool Battle::game_end(const Team &team){
-    for(auto&& member : team.member){
+// 0: game continues, 1: team 1 wins, 2: team 2 wins, 3: tie
+int Battle::game_end(const Team &team1, const Team &team2){
+    int end = 0;
+    for(auto&& member : team1.member){
         if(member.get_status() != Status::Fainted){
-            return false;
+            break;
         }
+        end += 2;
     }
-    return true;
+    for(auto&& member : team2.member){
+        if(member.get_status() != Status::Fainted){
+            break;
+        }
+        end += 1;
+    }
+    return end;
 }
 
 int Battle::get_stat_boosted(int statvalue, const Statname &stat,  const int &boost){

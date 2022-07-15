@@ -57,13 +57,16 @@ bool Battle::play_turn(){
         use_move(this->team[this->move_first], this->team[!(this->move_first)]);
     }
     else{
-        if(game_end(this->team[0])){ return false; }
+        if(game_end(this->team[0], this->team[1])){ 
+            return false; 
+        }
     }
 
     // check if turn ends if one of the active pokemon dies
     if(check_fainted()){
-        if(game_end(this->team[0])){ return false; }
-        if(game_end(this->team[1])){ return false; }
+        if(game_end(this->team[0], this->team[1])){ 
+            return false; 
+        }
         switch_faint(this->team[0], this->team[1]);
         switch_faint(this->team[1], this->team[0]);
         if(!this->end_of_turn()) { return false; }
@@ -74,15 +77,20 @@ bool Battle::play_turn(){
         if(can_move(this->team[!(this->move_first)])){
             use_move(this->team[!(this->move_first)], this->team[this->move_first]);
             if(check_fainted()){
-                if(game_end(this->team[0])){ return false; }
-                if(game_end(this->team[1])){ return false; }
+                if(game_end(this->team[0], this->team[1])){ 
+                    return false; 
+                }
                 bool t1 = switch_faint(this->team[0], this->team[1]);
                 bool t2 = switch_faint(this->team[1], this->team[0]);
                 if(t1 && t2){ 
                     this->abilities_simultaneous(); 
                 }
             }
-        } else{ if(game_end(this->team[0])){ return false; } }
+        } else{ 
+            if(game_end(this->team[0], this->team[1])){ 
+                return false; 
+            }
+        }
         if(!this->end_of_turn()) { return false; }
     }
     // if nothing fainted, go to next turn
@@ -197,15 +205,23 @@ bool Battle::end_of_turn(){
             break;
         case Weather::Hail:
             this->weather_damage(Weather::Hail, *this->team[first].active(), first);
-            if(game_end(this->team[first])){ return false; }
+            if(game_end(this->team[0], this->team[1])){ 
+                return false; 
+            }
             this->weather_damage(Weather::Hail, *this->team[second].active(), second);
-            if(game_end(this->team[second])){ return false; }
+            if(game_end(this->team[0], this->team[1])){ 
+                return false; 
+            }
             break;
         case Weather::Sand:
             this->weather_damage(Weather::Sand, *this->team[first].active(), first);
-            if(game_end(this->team[first])){ return false; }
+                if(game_end(this->team[0], this->team[1])){ 
+                    return false; 
+                }
             this->weather_damage(Weather::Sand, *this->team[second].active(), second);
-            if(game_end(this->team[second])){ return false; }
+            if(game_end(this->team[0], this->team[1])){ 
+                return false; 
+            }
             break;
     }
     // end of turn effects
@@ -262,7 +278,9 @@ bool Battle::end_of_turn(){
         if(this->team[first].leechseed == true){
             int dmg = static_cast<int>(this->team[first].active()->get_stats().hp / 8.0);
             this->team[first].active()->reduce_hp_direct(dmg);
-            if(game_end(this->team[first])){ return false; }
+            if(game_end(this->team[0], this->team[1])){ 
+                return false; 
+            }
             if(this->team[first].active()->get_ability() == Ability::Liquid_Ooze){
                 this->team[second].active()->increase_hp(dmg);     
             }
@@ -274,27 +292,35 @@ bool Battle::end_of_turn(){
         // poison, fixed damage of 1/8th
         if(this->team[first].active()->get_status() == Status::Poison){
             this->team[first].active()->reduce_hp_direct(static_cast<int>(this->team[first].active()->get_stats().hp / 8.0));
-            if(game_end(this->team[first])){ return false; }
+            if(game_end(this->team[0], this->team[1])){ 
+                return false; 
+            }
         }
 
         // toxic, pokemon takes an escalating amount of damage, 
         // increases by 1/16th every consecutive turn on the field
         if(this->team[first].active()->get_status() == Status::Toxic_poison){
             this->team[first].active()->reduce_hp_direct(static_cast<int>(this->team[first].turns_on_the_field * (this->team[first].active()->get_stats().hp / 8.0)));
-            if(game_end(this->team[first])){ return false; }
+            if(game_end(this->team[0], this->team[1])){ 
+                return false; 
+            }
         }
 
         // burn, fixed 1/8th max hp damage
         if(this->team[first].active()->get_status() == Status::Burn){
             this->team[first].active()->reduce_hp_direct(static_cast<int>(this->team[first].active()->get_stats().hp / 8.0));
-            if(game_end(this->team[first])){ return false; }
+            if(game_end(this->team[0], this->team[1])){ 
+                return false; 
+            }
         }
         // nightmare
 
         // curse
         if(this->team[first].curse == true){
             this->team[first].active()->reduce_hp_direct(static_cast<int>(this->team[first].active()->get_stats().hp / 4.0));
-            if(game_end(this->team[first])){ return false; }
+            if(game_end(this->team[0], this->team[1])){ 
+                return false; 
+            }
         }
         // multi turn attacks ??????
 
