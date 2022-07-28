@@ -4,6 +4,19 @@ Pokemon::Pokemon(){
 
 }
 
+Pokemon::Pokemon(Species species, Nature nature, Ability ability, Item item, Stats evs, Stats ivs, std::array<AttackMove, 4> moves){
+    this->species = species;
+    this->nature = nature;
+    this->ability = ability;
+    this->item = item;
+    this->EVs = evs;
+    this->IVs = ivs;
+    this->moveset = moves;
+
+    this->init();
+}
+    
+
 Pokemon::~Pokemon(){
     
 }
@@ -40,7 +53,6 @@ void Pokemon::print_pokemon(){
 // full initilization to prepare for start of a battle
 // puts team always in the same defined state
 void Pokemon::init(){
-
     // stat calculation and initilization
     PokemonType p_type = pokemon_type(this->species);
     this->type[0] = p_type.type1;

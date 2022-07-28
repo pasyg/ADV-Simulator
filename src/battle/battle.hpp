@@ -43,7 +43,7 @@ public:
     void calc_first_attacker();
 
     // damage_calc.cpp
-    int calculate_damage(const Team &atkteam, Team &defteam);
+    int calculate_damage(Team &atkteam, Team &defteam);
     bool is_crit(const Team &atkteam, const Team &defteam);
     float ability_multiplier(const Team &atkteam, Team &defteam);
     int crit_multiplier(const Team &atkteam, const Team &defteam);

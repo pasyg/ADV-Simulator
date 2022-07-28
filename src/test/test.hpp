@@ -45,18 +45,24 @@ private:
     bool import_test;
     bool team_init_test;
     void reset();
+    
+    // init test
     bool init_test_species();
     bool init_test_stats();
     bool init_test_moves();
     bool init_test_hidden_power();
+
+    // various mechanics tests1
     bool test_switch();
     bool test_substitute();
-    bool test_crit();
     bool test_ability();
     bool test_item();
     bool test_weather();
+    
+    // moves test
     bool test_moves();
     bool test_use_move();
+    bool test_crit();
     bool test_accuracy_moves();
     bool test_attacking_moves();
     bool test_sideeffects_moves();

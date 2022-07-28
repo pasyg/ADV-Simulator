@@ -6,9 +6,9 @@ AttackMove::AttackMove(){
 
 }
 
-AttackMove::AttackMove(Move move_, int pp_){
+AttackMove::AttackMove(Move move_){
     this->move = move_;
-    this->pp = pp_;
+    this->pp = move_pp(move_);
 }
 
 AttackMove::~AttackMove(){

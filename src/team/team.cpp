@@ -121,6 +121,13 @@ int Team::get_boost(Statname stat){
 }
 
 void Team::set_boost(Statname stat, int boost){
+    if(this->active()->get_item() == Item::Whiteherb){
+        if(boost < 0){
+            this->active()->set_item(Item::None);
+            return;
+        }
+    }
+
     switch(stat){
         case Statname::Acc:
             this->accboost += boost;
@@ -297,7 +304,7 @@ Pokemon* Team::active(){
 void Team::get_move_options(std::array<Move, 3> impmoves){
     const std::array<AttackMove, 4> *moves = this->active()->get_moveset();
     // Struggle will be chosen if pokemon can use no other move (not switches)
-    static AttackMove struggle(Move::Struggle, std::numeric_limits<int>::max());
+    static AttackMove struggle(Move::Struggle);
 
     // free the vector from previous options
     this->move_options.clear();
@@ -334,14 +341,15 @@ void Team::get_move_options(std::array<Move, 3> impmoves){
                 // add move to options
                 this->move_options.push_back(&move);
                 }
-            // pokemon has to struggle if no other move can be chosen
-            if(this->move_options.size() == 0){
-                this->move_options.push_back(&struggle);
-            }
-            // if trapped, pokemon can't switch
-            if(this->trapped){
-                return;
-            }
+
+        }            
+        // pokemon has to struggle if no other move can be chosen
+        if(this->move_options.size() == 0){
+            this->move_options.push_back(&struggle);
+        }
+        // if trapped, pokemon can't switch
+        if(this->trapped){
+            return;
         }
         // add non fainted pokemon as switch options
         for(int i = 0; i<6; ++i){

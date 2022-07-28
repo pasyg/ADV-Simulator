@@ -1,4 +1,5 @@
 #include "test.hpp"
+#include "test_pokemon.hpp"
 
 Test::Test(){}
 
@@ -555,7 +556,7 @@ bool Test::test_sideeffects_moves(){
     if(!is_status(battle.team[0], battle.team[1], Status::Freeze)){
         return false;
     }
-
+    
     return true;
 }
 

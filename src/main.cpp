@@ -1,6 +1,6 @@
 #include "test.hpp"
 
-constexpr int played_games = 100000;
+constexpr int played_games = 1000000;
 
 std::string create_filepath(){
     auto time = std::chrono::steady_clock::now();

@@ -1,10 +1,16 @@
 #pragma once
 
+#include <array>
+
+#include "moves.hpp"
+
+
 namespace constants{
     // battle stuff
     constexpr int turn_cap = 100;
     constexpr int pp_up = 3;
     constexpr bool ohko_clause = true;
+    constexpr std::array<Move, 6> switches = {Move::Switch0, Move::Switch1, Move::Switch2, Move::Switch3, Move::Switch4, Move::Switch5};
 
     // Type effectiveness
     constexpr float no_effect = 0;

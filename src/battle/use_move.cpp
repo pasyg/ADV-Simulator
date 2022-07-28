@@ -630,6 +630,7 @@ void Battle::use_move(Team &atkteam, Team &defteam){
             return;
 
         // Burn
+        // 10%
         case Move::Blaze_Kick:
         case Move::Ember:
         case Move::Fire_Blast:
@@ -646,7 +647,18 @@ void Battle::use_move(Team &atkteam, Team &defteam){
                 }
             }
             return;
-
+        // 50%
+        case Move::Sacred_Fire:
+            dmg = calculate_damage(atkteam, defteam);
+            status = Status::Burn;
+            if(dmg > 0 && defteam.active()->get_ability() != Ability::Shield_Dust){
+                if(can_set_status(defteam, status)){
+                    if(this->transition.randomChance(serene_grace, 10)){
+                        set_status(atkteam, defteam, status);
+                    }
+                }
+            }
+            return;
         // Freeze
         case Move::Blizzard:
         case Move::Ice_Beam:
@@ -676,6 +688,7 @@ void Battle::use_move(Team &atkteam, Team &defteam){
             return;
         case Move::Body_Slam:
         case Move::Dragon_Breath:
+        case Move::Lick:
         case Move::Thunder:
             dmg = calculate_damage(atkteam, defteam);
             if(dmg > 0 && defteam.active()->get_ability() != Ability::Shield_Dust){
@@ -707,7 +720,7 @@ void Battle::use_move(Team &atkteam, Team &defteam){
                 }
             }
             return;
-        ////////////////// done until here
+            
         case Move::Bubble:
         case Move::Bubble_Beam:
         case Move::Constrict:
@@ -759,17 +772,46 @@ void Battle::use_move(Team &atkteam, Team &defteam){
                 atkteam.delayed_damage_turns = 2;
             }
             return;
+        case Move::Volt_Tackle:
         case Move::Double_Edge:
             dmg = calculate_damage(atkteam, defteam);
             atkteam.active()->reduce_hp_direct(static_cast<int>(dmg/3.0));
+            return;
+        case Move::Submission:
+        case Move::Struggle:
+        case Move::Take_Down:
+            dmg = calculate_damage(atkteam, defteam);
+            atkteam.active()->reduce_hp_direct(static_cast<int>(dmg/4.0));
             return;
         case Move::Dream_Eater:
             dmg = calculate_damage(atkteam, defteam);
             return;
         case Move::Eruption:
         case Move::Water_Spout:
+            atkteam.special_calc = true;
+            atkteam.special_damage_calc = 150 * atkteam.active()->current_hp / atkteam.active()->get_stats().hp;
+            calculate_damage(atkteam, defteam);
+            return;
         case Move::Flail:
         case Move::Reversal:
+            atkteam.special_calc = true;
+            atkteam.special_damage_calc = atkteam.active()->current_hp * 48;
+            atkteam.special_damage_calc /= atkteam.active()->get_stats().hp;
+            if(atkteam.special_damage_calc < 2){ atkteam.special_damage_calc = 200; return; }
+            if(atkteam.special_damage_calc < 5){ atkteam.special_damage_calc = 150; return; }
+            if(atkteam.special_damage_calc < 10){ atkteam.special_damage_calc = 100; return; }
+            if(atkteam.special_damage_calc < 17){ atkteam.special_damage_calc = 80; return; }
+            if(atkteam.special_damage_calc < 33){ atkteam.special_damage_calc = 40; return; }
+            atkteam.special_damage_calc = 20;
+            return;
+        case Move::Pursuit:
+            if(std::any_of(constants::switches.begin(), constants::switches.end(), [&defteam](Move move){ 
+                                                return defteam.movechoice->get_move() == move; 
+                                                })){
+                atkteam.special_calc = true;
+                atkteam.special_damage_calc = move_power(Move::Pursuit) * 2;
+            }
+            calculate_damage(atkteam, defteam);
             return;
         case Move::Self_Destruct:
         case Move::Explosion:
@@ -778,10 +820,17 @@ void Battle::use_move(Team &atkteam, Team &defteam){
             atkteam.active()->kill();
             return;
         case Move::Facade:
+            if(atkteam.active()->get_status() != Status::Healthy){
+                atkteam.special_calc = true;
+                atkteam.special_damage_calc = move_power(Move::Facade) * 2;
+            }
             dmg = calculate_damage(atkteam, defteam);
             return;
         case Move::False_Swipe:
             dmg = calculate_damage(atkteam, defteam);
+            if(defteam.active()->get_current_hp() < 1){
+                defteam.active()->set_current_hp(1);
+            }
             return;
         case Move::Feint_Attack:
             dmg = calculate_damage(atkteam, defteam);
@@ -801,9 +850,6 @@ void Battle::use_move(Team &atkteam, Team &defteam){
                 defteam.active()->previous_item = defteam.active()->get_item();
                 defteam.active()->set_item(Item::None);
             }
-            return;
-        case Move::Lick:
-            dmg = calculate_damage(atkteam, defteam);
             return;
         case Move::Magical_Leaf:
             dmg = calculate_damage(atkteam, defteam);
@@ -835,9 +881,6 @@ void Battle::use_move(Team &atkteam, Team &defteam){
         case Move::Psychic:
             dmg = calculate_damage(atkteam, defteam);
             return;
-        case Move::Pursuit:
-            dmg = calculate_damage(atkteam, defteam);
-            return;
         case Move::Rapid_Spin:
             dmg = calculate_damage(atkteam, defteam);
             if(dmg > 0){
@@ -848,9 +891,6 @@ void Battle::use_move(Team &atkteam, Team &defteam){
             dmg = calculate_damage(atkteam, defteam);
             return;
         case Move::Rock_Tomb:
-            dmg = calculate_damage(atkteam, defteam);
-            return;
-        case Move::Sacred_Fire:
             dmg = calculate_damage(atkteam, defteam);
             return;
         case Move::Secret_Power:
@@ -877,18 +917,10 @@ void Battle::use_move(Team &atkteam, Team &defteam){
         case Move::Steel_Wing:
             dmg = calculate_damage(atkteam, defteam);
             return;
-        case Move::Struggle:
-            dmg = calculate_damage(atkteam, defteam);
-            return;
-        case Move::Submission:
-            dmg = calculate_damage(atkteam, defteam);
-            return;
         case Move::Superpower:
             dmg = calculate_damage(atkteam, defteam);
             return;
-        case Move::Take_Down:
-            dmg = calculate_damage(atkteam, defteam);
-            return;
+        case Move::Covet:
         case Move::Thief:
             dmg = calculate_damage(atkteam, defteam);
             if(dmg > 0){
@@ -897,9 +929,6 @@ void Battle::use_move(Team &atkteam, Team &defteam){
                     defteam.active()->set_item(Item::None);
                 }
             }   
-            return;
-        case Move::Volt_Tackle:
-            dmg = calculate_damage(atkteam, defteam);
             return;
         case Move::Water_Pulse:
             dmg = calculate_damage(atkteam, defteam);
@@ -1046,6 +1075,8 @@ void Battle::use_move(Team &atkteam, Team &defteam){
         case Move::Guillotine:
         case Move::Horn_Drill:
         case Move::Sheer_Cold:
+            defteam.active()->kill();
+            return;
         /// 
         /// trapping moves
         ///
@@ -1371,6 +1402,13 @@ void Battle::use_move(Team &atkteam, Team &defteam){
                 atkteam.member[switch_target].substitute = true;
                 atkteam.member[switch_target].substitute_hp = atkteam.active()->substitute_hp;
                 atkteam.active()->set_sub_hp(0);
+                if(atkteam.active()->get_item() == Item::Whiteherb){
+                    if(atkteam.get_boost(Statname::Atk) < 0){ atkteam.set_boost(Statname::Atk, 0); }
+                    if(atkteam.get_boost(Statname::Def) < 0){ atkteam.set_boost(Statname::Def, 0); }
+                    if(atkteam.get_boost(Statname::Satk) < 0){ atkteam.set_boost(Statname::Satk, 0); }
+                    if(atkteam.get_boost(Statname::Sdef) < 0){ atkteam.set_boost(Statname::Sdef, 0); }
+                    if(atkteam.get_boost(Statname::Spe) < 0){ atkteam.set_boost(Statname::Spe, 0); }
+                }
             }
             atkteam.active_pokemon = switch_target;
 
@@ -1381,7 +1419,6 @@ void Battle::use_move(Team &atkteam, Team &defteam){
         case Move::Conversion:
         case Move::Conversion_2:
         case Move::Counter:
-        case Move::Covet:
         case Move::Destiny_Bond:
         case Move::Detect:
         case Move::Disable:

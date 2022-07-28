@@ -61,6 +61,8 @@ public:
     int protect_acc = 100;
     int delayed_damage = 0;
     int delayed_damage_turns = 0;
+    bool special_calc = false;
+    int special_damage_calc = 0;
     ///
     /// static
     ///

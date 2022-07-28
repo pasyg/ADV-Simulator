@@ -1,6 +1,20 @@
 #include "base_stats.hpp"
+ 
+Stats::Stats(){
 
-Stats base_stats(const Species species){ 
+}
+
+Stats::Stats(int t_hp, int t_atk, int t_def, int t_satk, int t_sdef, int t_spe){
+    this->hp = t_hp;
+    this->atk = t_atk;
+    this->def = t_def;
+    this->satk = t_satk;
+    this->sdef = t_sdef;
+    this->spe = t_spe;    
+}
+
+Stats base_stats(const Species species){
+
     switch(species){ 
 			case Species::Bulbasaur: 	return { 45, 49, 49, 65, 65, 45 };
 			case Species::Ivysaur: 		return { 60, 62, 63, 80, 80, 60 };
@@ -53,7 +67,7 @@ Stats base_stats(const Species species){
 			case Species::Gloom: 		return { 60, 65, 70, 85, 75, 40 };
 			case Species::Vileplume: 	return { 75, 80, 85, 100, 90, 50 };
 			case Species::Paras: 		return { 35, 70, 55, 45, 55, 25 };
-			case Species::Parasect: 	return { 60, 95, 60, 80, 30 };
+			case Species::Parasect: 	return { 60, 95, 80, 60, 80, 30 };
 			case Species::Venonat: 		return { 60, 55, 50, 40, 55, 45 };
 			case Species::Venomoth: 	return { 70, 65, 60, 90, 75, 90 };
 			case Species::Diglett: 		return { 10, 55, 25, 35, 45, 95 };

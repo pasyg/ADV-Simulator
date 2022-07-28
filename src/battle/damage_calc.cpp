@@ -1,7 +1,7 @@
 #include "battle.hpp"
 
 
-int Battle::calculate_damage(const Team &atkteam, Team &defteam){
+int Battle::calculate_damage(Team &atkteam, Team &defteam){
     
     int damage = 0;
     int atk_stat = 0;
@@ -33,6 +33,15 @@ int Battle::calculate_damage(const Team &atkteam, Team &defteam){
             }
             break;
     }
+    int power = 0;
+    // special damages like eruption, flail...
+    if(atkteam.special_calc){
+        power = atkteam.special_damage_calc;
+        atkteam.special_calc = false;
+    }
+    else{
+        power = move_power(atkteam.movechoice->get_move());
+    }
 
     damage = 2 * (atkteam.member[atkteam.active_pokemon].get_level());
     if(critical_hit){
@@ -40,7 +49,7 @@ int Battle::calculate_damage(const Team &atkteam, Team &defteam){
     }
     damage /= 5;
     damage += 2;
-    damage *= atkteam.movechoice->get_power();
+    damage *= power;
     damage = static_cast<int>(static_cast<float>(damage) * static_cast<float>(atk_stat) / static_cast<float>(def_stat));
     damage = static_cast<int>(static_cast<float>(damage) / 50.0f);
     damage += 2;
@@ -287,7 +296,7 @@ float Battle::item_multiplier(const Team &atkteam){
             if(atkteam.member[atkteam.active_pokemon].get_species() == Species::Clamperl &&
                atkteam.movechoice->category == MoveCategory::Special){
                    return 2.0f;
-               }
+            }
         case Item::Dragonfang:
             if(*atkteam.movechoice == Type::Dragon){
                 return 1.1f;
