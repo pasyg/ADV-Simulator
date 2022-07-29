@@ -5,20 +5,72 @@
 
 namespace Tests{
 
-    Stats max_ivs = Stats(31, 31, 31, 31, 31, 31); 
-    Stats evs_atk_spe = Stats(0, 252, 4, 0, 0, 252);
-    Stats evs_satk_spe = Stats(0, 0, 4, 252, 0, 252);
-    Stats ivs_hp_bug = Stats(31, 30, 30, 31, 30, 31);
+    typedef std::array<AttackMove, 4> mset;
+    
+    namespace EV{
+        Stats hp_atk    = Stats(252, 252, 4, 0, 0, 0);
+        Stats hp_def    = Stats(252, 0, 252, 0, 4, 0);
+        Stats hp_satk   = Stats(252, 0, 0, 252, 4, 0);
+        Stats hp_sdef   = Stats(252, 0, 4, 0, 252, 0);
+        Stats hp_spe    = Stats(252, 0, 4, 0, 0, 252);
+        Stats atk_def   = Stats(0, 252, 252, 0, 0, 0);
+        Stats atk_satk  = Stats(0, 252, 0, 252, 0, 0);
+        Stats atk_sdef  = Stats(0, 252, 0, 0, 252, 0);
+        Stats atk_spe   = Stats(0, 252, 0, 0, 0, 252);
+        Stats def_satk  = Stats(0, 0, 252, 252, 0, 0);
+        Stats def_sdef  = Stats(0, 0, 252, 0, 252, 0);
+        Stats def_spe   = Stats(0, 0, 252, 0, 0, 252);
+        Stats satk_sdef = Stats(0, 0, 0, 252, 252, 0);
+        Stats satk_spe  = Stats(0, 0, 0, 252, 0, 252);
+        Stats sdef_spe  = Stats(0, 0, 0, 0, 252, 252);
+    };
+
+    namespace IV{
+        Stats max       = Stats(31, 31, 31, 31, 31, 31); 
+        // max atk
+        Stats bug_a     = Stats(31, 31, 31, 31, 30, 30);
+        // max speed
+        Stats bug_s     = Stats(31, 30, 30, 31, 30, 31);
+        Stats dark      = Stats(31, 31, 31, 31, 31, 31);
+        Stats dragon    = Stats(31, 30, 31, 31, 31, 31);
+        Stats electric  = Stats(31, 31, 31, 30, 31, 31);
+        Stats fighting  = Stats(31, 31, 30, 30, 30, 30);
+        Stats fire      = Stats(31, 30, 31, 30, 31, 30);
+        // max atk
+        Stats flying_a  = Stats(31, 31, 31, 30, 30, 30);
+        // max speed
+        Stats flying_s  = Stats(30, 30, 30, 30, 30, 31);
+        Stats ghost     = Stats(31, 31, 30, 31, 30, 31);
+        Stats grass     = Stats(31, 30, 31, 30, 31, 31);
+        Stats ground    = Stats(31, 31, 31, 30, 30, 31);
+        Stats ice       = Stats(31, 30, 30, 31, 31, 31);
+        Stats poison    = Stats(31, 31, 30, 30, 30, 31);
+        Stats psychic   = Stats(31, 30, 31, 31, 31, 30);
+        Stats rock      = Stats(31, 31, 30, 31, 30, 30);
+        Stats steel     = Stats(31, 31, 31, 31, 30, 31);
+        Stats water     = Stats(31, 30, 30, 30, 31, 31);
+    };
 
     namespace Aerodactyl{
-        std::array<AttackMove, 4> cb_moves = { Moves::rock_slide, Moves::earthquake, Moves::double_edge, Moves::hidden_power };
-        Pokemon* cb = new Pokemon(Species::Aerodactyl, Nature::Jolly, Ability::Rock_Head, Item::Choiceband, evs_atk_spe, ivs_hp_bug, cb_moves);
+        // movesets
+        mset cb_moves = { Moves::rock_slide, Moves::earthquake, Moves::double_edge, Moves::hidden_power };
+        mset liechi_moves = { Moves::substitute, Moves::rock_slide, Moves::earthquake, Moves::double_edge };
+
+        // full set
+        Pokemon* cb = new Pokemon(Species::Aerodactyl, Nature::Jolly, Ability::Rock_Head, Item::Choiceband, EV::atk_spe, IV::bug_s, cb_moves);
+        Pokemon* liechi = new Pokemon(Species::Aerodactyl, Nature::Jolly, Ability::Rock_Head, Item::Liechiberry, EV::atk_spe, IV::max, liechi_moves);
     };
     
     namespace Blissey{
-        std::array<AttackMove, 4> std_twave = { Moves::seismic_toss, Moves::ice_beam, Moves::soft_boiled, Moves::thunder_wave };
-        std::array<AttackMove, 4> std_tox = { Moves::seismic_toss, Moves::ice_beam, Moves::soft_boiled, Moves::toxic };
-        std::array<AttackMove, 4> counter_ = { Moves::seismic_toss, Moves::counter, Moves::soft_boiled, Moves::thunder_wave };
+        // movesets
+        mset std_twave = { Moves::seismic_toss, Moves::ice_beam, Moves::soft_boiled, Moves::thunder_wave };
+        mset std_tox = { Moves::seismic_toss, Moves::ice_beam, Moves::soft_boiled, Moves::toxic };
+        mset counter_ = { Moves::seismic_toss, Moves::counter, Moves::soft_boiled, Moves::thunder_wave };
+
+        // full set
+        Pokemon* twave   = new Pokemon(Species::Blissey, Nature::Bold, Ability::Natural_Cure, Item::Leftovers, EV::def_satk, IV::max, std_twave);
+        Pokemon* toxic   = new Pokemon(Species::Blissey, Nature::Bold, Ability::Natural_Cure, Item::Leftovers, EV::def_satk, IV::max, std_tox);
+        Pokemon* counter = new Pokemon(Species::Blissey, Nature::Bold, Ability::Natural_Cure, Item::Leftovers, EV::hp_def, IV::max, counter_);
     };
 
     namespace Breloom{
@@ -120,4 +172,4 @@ namespace Tests{
     namespace Zapdos{
 
     };
-}
+};
