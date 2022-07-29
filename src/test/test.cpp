@@ -392,7 +392,8 @@ bool Test::test_calc(){
     
     std::vector<int> rolls = { 112, 113, 114, 116, 117, 118, 120, 121, 122, 124, 125, 126, 128, 129, 130, 132,
                                224, 227, 229, 232, 234, 237, 240, 242, 245, 248, 250, 253, 256, 258, 261, 264 };
-    if(!multi_or(rolls, func)){
+    
+    if(!std::any_of(rolls.begin(), rolls.end(), func)){
         return false;
     }
 
@@ -402,7 +403,7 @@ bool Test::test_calc(){
     rolls = { 238, 240, 243, 246, 249, 252 ,254, 257, 260, 263, 266, 268, 271, 274, 277, 280,
               476, 481, 487, 492, 498, 504, 509, 515, 520, 526, 532, 537, 543, 548, 554, 560 };
 
-    if(!multi_or(rolls, func)){
+    if(!std::any_of(rolls.begin(), rolls.end(), func)){
         return false;
     }
 

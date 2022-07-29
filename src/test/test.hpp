@@ -7,7 +7,6 @@
 
 #include "tools/benchmark.hpp"
 #include "tools/import.hpp"
-#include "tools/logic.hpp"
 #include "battle.hpp"
 
 #include "data/base_stats.hpp"

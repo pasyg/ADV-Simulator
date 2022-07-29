@@ -1,8 +1,6 @@
 #include "test.hpp"
 #include "test_moves.hpp"
 
-// Pokemon(Species species, Nature nature, Ability ability, Item item, Stats evs, Stats ivs, std::array<Moves, 4> moves);
-
 namespace Tests{
 
     typedef std::array<AttackMove, 4> mset;
@@ -53,19 +51,19 @@ namespace Tests{
 
     namespace Aerodactyl{
         // movesets
-        mset cb_moves = { Moves::rock_slide, Moves::earthquake, Moves::double_edge, Moves::hidden_power };
-        mset liechi_moves = { Moves::substitute, Moves::rock_slide, Moves::earthquake, Moves::double_edge };
+        mset cb_       = { Moves::rock_slide, Moves::earthquake, Moves::double_edge, Moves::hidden_power };
+        mset liechi_   = { Moves::substitute, Moves::rock_slide, Moves::earthquake, Moves::double_edge };
 
         // full set
-        Pokemon* cb = new Pokemon(Species::Aerodactyl, Nature::Jolly, Ability::Rock_Head, Item::Choiceband, EV::atk_spe, IV::bug_s, cb_moves);
-        Pokemon* liechi = new Pokemon(Species::Aerodactyl, Nature::Jolly, Ability::Rock_Head, Item::Liechiberry, EV::atk_spe, IV::max, liechi_moves);
+        Pokemon* cb     = new Pokemon(Species::Aerodactyl, Nature::Jolly, Ability::Rock_Head, Item::Choiceband, EV::atk_spe, IV::bug_s, cb_);
+        Pokemon* liechi = new Pokemon(Species::Aerodactyl, Nature::Jolly, Ability::Rock_Head, Item::Liechiberry, EV::atk_spe, IV::max, liechi_);
     };
     
     namespace Blissey{
         // movesets
-        mset std_twave = { Moves::seismic_toss, Moves::ice_beam, Moves::soft_boiled, Moves::thunder_wave };
-        mset std_tox = { Moves::seismic_toss, Moves::ice_beam, Moves::soft_boiled, Moves::toxic };
-        mset counter_ = { Moves::seismic_toss, Moves::counter, Moves::soft_boiled, Moves::thunder_wave };
+        mset std_twave  = { Moves::seismic_toss, Moves::ice_beam, Moves::soft_boiled, Moves::thunder_wave };
+        mset std_tox    = { Moves::seismic_toss, Moves::ice_beam, Moves::soft_boiled, Moves::toxic };
+        mset counter_   = { Moves::seismic_toss, Moves::counter, Moves::soft_boiled, Moves::thunder_wave };
 
         // full set
         Pokemon* twave   = new Pokemon(Species::Blissey, Nature::Bold, Ability::Natural_Cure, Item::Leftovers, EV::def_satk, IV::max, std_twave);
@@ -74,102 +72,188 @@ namespace Tests{
     };
 
     namespace Breloom{
+        // movesets
+        mset std_    = { Moves::spore, Moves::focus_punch, Moves::mach_punch, Moves::hidden_power };
+        mset tf_     = { Moves::spore, Moves::focus_punch, Moves::sky_uppercut, Moves::mach_punch };
 
+        // full set
+        Pokemon* std   = new Pokemon(Species::Breloom, Nature::Jolly, Ability::Effect_Spore, Item::Leftovers, EV::atk_spe, IV::bug_s, std_);
+        Pokemon* tf    = new Pokemon(Species::Breloom, Nature::Jolly, Ability::Effect_Spore, Item::Leftovers, EV::atk_spe, IV::max, tf_);
     };
 
     namespace Celebi{
+        //movesets
+        mset off_   = { Moves::calm_mind, Moves::psychic, Moves::giga_drain, Moves::hidden_power };
+        mset lseed  = { Moves::leech_seed, Moves::psychic, Moves::hidden_power, Moves::recover };
 
+        //full set
+        Pokemon* off    = new Pokemon(Species::Celebi, Nature::Timid, Ability::Natural_Cure, Item::Leftovers, EV::satk_spe, IV::fire, off_);
+        Pokemon* slseed = new Pokemon(Species::Celebi, Nature::Calm, Ability::Natural_Cure, Item::Leftovers, EV::hp_sdef, IV::grass, lseed);
+        Pokemon* dlseed = new Pokemon(Species::Celebi, Nature::Bold, Ability::Natural_Cure, Item::Leftovers, EV::hp_def, IV::grass, lseed);
     };
 
     namespace Charizard{
+        //movesets
 
+        //full set
+        
     };
 
     namespace Claydol{
+        //movesets
 
+        //full set
+        
     };
 
     namespace Cloyster{
+        //movesets
 
+        //full set
+        
     };
 
     namespace Dugtrio{
+        //movesets
 
+        //full set
+        
     };
 
     namespace Flygon{
+        //movesets
 
+        //full set
+        
     };
 
     namespace Forretress{
+        //movesets
 
+        //full set
+        
     };
 
     namespace Gengar{
+        //movesets
 
+        //full set
+        
     };
 
     namespace Gyarados{
+        //movesets
 
+        //full set
+        
     };
 
     namespace Heracross{
+        //movesets
 
+        //full set
+        
     };
 
     namespace Jirachi{
+        //movesets
 
+        //full set
+        
     };
 
     namespace Jolteon{
+        //movesets
 
+        //full set
+        
     };
     
     namespace Magneton{
+        //movesets
 
+        //full set
+        
     };
 
     namespace Metagross{
+        //movesets
+
+        //full set
         
     };
 
     namespace Milotic{
+        //movesets
 
+        //full set
+        
     };
 
     namespace Moltres{
+        //movesets
 
+        //full set
+        
     };
 
     namespace Salamence{
+        //movesets
 
+        //full set
+        
     };
 
     namespace Skarmory{
+        //movesets
 
+        //full set
+        
     };
 
     namespace Snorlax{
+        //movesets
 
+        //full set
+        
     };
 
     namespace Starmie{
+        //movesets
 
+        //full set
+        
     };
 
     namespace Suicune{
+        //movesets
 
+        //full set
+        
     };
 
     namespace Swampert{
+        //movesets
 
+        //full set
+        
     };
 
     namespace Tyranitar{
+        //movesets
 
+        //full set
+        
     };
 
     namespace Zapdos{
-
+        //movesets
+        mset std_   = { Moves::thunderbolt, Moves::hidden_power, Moves::thunder_wave, Moves::baton_pass };
+        mset rest_  = { Moves::thunderbolt, Moves::hidden_power, Moves::roar, Moves::rest };
+        
+        //full set
+        Pokemon* modest = new Pokemon(Species::Zapdos, Nature::Modest, Ability::Pressure, Item::Leftovers, EV::satk_spe, IV::grass, std_);
+        Pokemon* timid  = new Pokemon(Species::Zapdos, Nature::Timid, Ability::Pressure, Item::Leftovers, EV::satk_spe, IV::grass, std_);
+        Pokemon* rest   = new Pokemon(Species::Zapdos, Nature::Careful, Ability::Pressure, Item::Leftovers, EV::hp_sdef, IV::grass, rest_);
     };
 };
