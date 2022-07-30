@@ -125,30 +125,34 @@ namespace Tests{
 
     namespace Dugtrio{
         //movesets
+        static const mset std_ = { Moves::earthquake, Moves::rock_slide, Moves::hidden_power, Moves::beat_up };
 
         //full set
-        
+        static const Pokemon* std = new Pokemon(Species::Dugtrio, Nature::Jolly, Ability::Arena_Trap, Item::Choiceband, EV::atk_spe, IV::bug_s, std_);
     };
 
     namespace Flygon{
         //movesets
+        static const mset cb_ = { Moves::earthquake, Moves::rock_slide, Moves::hidden_power, Moves::gust };
 
         //full set
-        
+        static const Pokemon* cb = new Pokemon(Species::Flygon, Nature::Jolly, Ability::Levitate, Item::Choiceband, EV::atk_spe, IV::bug_s, cb_);
     };
 
     namespace Forretress{
         //movesets
+        static const mset std_ = { Moves::spikes, Moves::earthquake, Moves::explosion, Moves::rapid_spin };
 
         //full set
-        
+        static const Pokemon* std = new Pokemon(Species::Forretress, Nature::Calm, Ability::Sturdy, Item::Leftovers, EV::hp_sdef, IV::max, std_);
     };
 
     namespace Gengar{
         //movesets
+        static const mset std_ = { Moves::will_o_wisp, Moves::thunderbolt, Moves::ice_punch, Moves::explosion };
 
         //full set
-        
+        static const Pokemon* std = new Pokemon(Species::Gengar, Nature::Timid, Ability::Levitate, Item::Leftovers, EV::hp_spe, IV::max, std_);
     };
 
     namespace Gyarados{
@@ -216,9 +220,10 @@ namespace Tests{
 
     namespace Skarmory{
         //movesets
+        static const mset std_ = { Moves::spikes, Moves::toxic, Moves::whirlwind, Moves::protect };
 
         //full set
-        
+        static const Pokemon* std = new Pokemon(Species::Skarmory, Nature::Careful, Ability::Keen_Eye, Item::Leftovers, EV::hp_sdef, IV::max, std_);
     };
 
     namespace Snorlax{
@@ -244,15 +249,22 @@ namespace Tests{
 
     namespace Swampert{
         //movesets
+        static const mset std_ = { Moves::hydro_pump, Moves::earthquake, Moves::ice_beam, Moves::protect };
+        static const mset off_ = { Moves::hydro_pump, Moves::earthquake, Moves::ice_beam, Moves::focus_punch };
 
         //full set
+        static const Pokemon* std = new Pokemon(Species::Swampert, Nature::Relaxed, Ability::Torrent, Item::Leftovers, EV::hp_def, IV::max, std_);
+        static const Pokemon* off = new Pokemon(Species::Swampert, Nature::Rash, Ability::Torrent, Item::Leftovers, EV::satk_spe, IV::max, off_);
         
     };
 
     namespace Tyranitar{
         //movesets
+        static const mset cb_ = { Moves::rock_slide, Moves::earthquake, Moves::hidden_power, Moves::focus_punch };
+        static const mset dd_ = { Moves::dragon_dance, Moves::rock_slide, Moves::earthquake, Moves::double_edge };
 
         //full set
+        static const Pokemon* cb = new Pokemon(Species::Tyranitar, Nature::Adamant, Ability::Sand_Stream, Item::Choiceband, EV::atk_spe, IV::bug_s, cb_);
         
     };
 

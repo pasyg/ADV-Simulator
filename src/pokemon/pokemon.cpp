@@ -610,7 +610,7 @@ bool Pokemon::operator!= (const Type _type){
 
 std::ostream& operator<<(std::ostream& out, Pokemon& pokemon){
     out << "Species: "  << to_string(pokemon.get_species()) << "\n";
-    out << "HP: "       << pokemon.current_hp << "/" << pokemon.get_stats().hp << " " << pokemon.hp_percentage << "%\n";
+    out << "HP: "       << pokemon.current_hp << "/" << pokemon.get_stats().hp << " " << pokemon.hp_percentage() << "%\n";
     out << "Status: "   << to_string(pokemon.get_status()) << "\n";
     out << "Ability: "  << to_string(pokemon.get_ability()) << "\n";
     out << "EVs: "      << pokemon.get_evs().hp << " / "
