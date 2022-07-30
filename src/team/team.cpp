@@ -5,6 +5,12 @@ Team::Team() : teamsize(0){
 
 }
 
+Team::Team(std::array<Pokemon, 6> pokemon){
+    for(int i = 0; i < 6; ++i){
+        this->member[i] = pokemon[i];
+    }
+}
+
 Team::~Team(){
 
 }
