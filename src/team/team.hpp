@@ -14,6 +14,7 @@
 class Team{
 public:
     Team();
+    Team(std::array<Pokemon, 6> pokemon);
     ~Team();
     int teamsize;
     std::string team;

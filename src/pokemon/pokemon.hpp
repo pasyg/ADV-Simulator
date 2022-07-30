@@ -19,7 +19,8 @@
 class Pokemon{
 public:
     Pokemon();
-    Pokemon(Species species, Nature nature, Ability ability, Item item, Stats evs, Stats ivs, std::array<AttackMove, 4> moves);
+    Pokemon(Species species);
+    Pokemon(Species species, Nature nature, Ability ability, Item item, Stats& evs, Stats& ivs, std::array<AttackMove, 4> moves);
     ~Pokemon();
     Ability former_ability;
     void set_former_ability(Ability fability);

@@ -4,7 +4,11 @@ Pokemon::Pokemon(){
 
 }
 
-Pokemon::Pokemon(Species species, Nature nature, Ability ability, Item item, Stats evs, Stats ivs, std::array<AttackMove, 4> moves){
+Pokemon::Pokemon(Species species){
+    this->species = species;
+}
+
+Pokemon::Pokemon(Species species, Nature nature, Ability ability, Item item, Stats& evs, Stats& ivs, std::array<AttackMove, 4> moves){
     this->species = species;
     this->nature = nature;
     this->ability = ability;
