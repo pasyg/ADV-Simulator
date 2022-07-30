@@ -5,9 +5,12 @@
 #include <string>
 #include <vector>
 
+#include "test_pokemon.hpp"
+
+#include "battle.hpp"
+
 #include "tools/benchmark.hpp"
 #include "tools/import.hpp"
-#include "battle.hpp"
 
 #include "data/base_stats.hpp"
 #include "../string_conversions/ability.hpp"
@@ -21,6 +24,8 @@
 
 class Test{
 public:
+    void test_works_ok();
+    void test_works_ok_two();
     Test();
     ~Test();
     void test_all();

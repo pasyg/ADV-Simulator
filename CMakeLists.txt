@@ -71,6 +71,7 @@ set(Simulator_SOURCES
 
     "src/main.cpp"
     
-    "src/test/test.cpp")
+    "src/test/test.cpp"
+    "src/test/pokemon_test.cpp")
 
 add_executable(Simulator ${Simulator_SOURCES})
