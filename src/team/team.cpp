@@ -9,12 +9,6 @@ Team::~Team(){
 
 }
 /////////////////////////////////////////////////////
-void Team::print_team(){
-    for(auto&& pokemon : this->member){
-        pokemon.print_pokemon();
-    }
-}
-
 void Team::init(){
     // switch move options
     for(int i = 0; i < 6; ++i){
@@ -299,6 +293,23 @@ void Team::use_hp_berry(){
 
 Pokemon* Team::active(){
     return &this->member[this->active_pokemon];
+}
+
+std::ostream& operator<<(std::ostream& out, Team& team){
+    out << "Size: " << team.teamsize << "\n";
+    out << "Active Pokemon: " << team.active()->get_species() << "\n";
+    out << "Boosts: Atk: "  << team.get_boost(Statname::Atk)
+                            << "Def: "  << team.get_boost(Statname::Def)
+                            << "SAtk: " << team.get_boost(Statname::Satk)
+                            << "SDef: " << team.get_boost(Statname::Sdef)
+                            << "Spe: "  << team.get_move_options(Statname::Spe)
+                            << "\n";
+    for(auto&& member : team.member){
+        if(member.get_species() != Species::None){
+            out << member;
+        }
+    }
+    return out;
 }
 
 void Team::get_move_options(std::array<Move, 3> impmoves){

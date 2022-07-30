@@ -17,7 +17,6 @@ public:
     ~Team();
     int teamsize;
     std::string team;
-    void print_team();
     int get_boost(Statname stat);
     void get_move_options(std::array<Move, 3> impmoves);
     bool taunt_move(const Move move);
@@ -35,11 +34,12 @@ public:
     AttackMove* disabled_move;
     std::array<AttackMove, 6> switches;
     std::vector<AttackMove*> move_options;
-/// TRANSFORM / BIDE / DOOMDESIRE / FUTURE SIGHT / IMPRISON / METRONOME / MIRRORMOVE
+/// TRANSFORM / BIDE / METRONOME / MIRRORMOVE
     std::array<Pokemon, 6> member;
     int active_pokemon = 0;     // index of currently active pokemon
     Pokemon* active();
 
+    friend std::ostream& operator<<(std::ostream& out, Team& team);
     ///
     /// one turn
     ///

@@ -26,29 +26,6 @@ void Pokemon::kill(){
     this->status = Status::Fainted;
 }
 
-void Pokemon::print_pokemon(){
-    std::cout << "Species: " << to_string(this->get_species()) << "\n";
-    std::cout << "Ability: " << to_string(this->get_ability()) << "\n";
-    std::cout << "EVs: " << this->get_evs().hp << " / "
-                         << this->get_evs().atk << " / "
-                         << this->get_evs().def << " / "
-                         << this->get_evs().satk << " / "
-                         << this->get_evs().sdef << " / "
-                         << this->get_evs().spe << "\n";
-
-    std::cout << "IVs: " << this->get_ivs().hp << " / "
-                         << this->get_ivs().atk << " / "
-                         << this->get_ivs().def << " / "
-                         << this->get_ivs().satk << " / "
-                         << this->get_ivs().sdef << " / "
-                         << this->get_ivs().spe << "\n"; 
-                         
-    std::cout << "Nature: " << to_string(this->get_nature()) << "\n";
-    std::cout << "Move 1: " << to_string(this->moveset[0].get_move()) << "\n";
-    std::cout << "Move 2: " << to_string(this->moveset[1].get_move()) << "\n";
-    std::cout << "Move 3: " << to_string(this->moveset[2].get_move()) << "\n";
-    std::cout << "Move 4: " << to_string(this->moveset[3].get_move()) << "\n\n";
-}
 
 // full initilization to prepare for start of a battle
 // puts team always in the same defined state
@@ -623,9 +600,38 @@ bool Pokemon::operator== (const Type _type){
     }
     return false;
 }
+
 bool Pokemon::operator!= (const Type _type){
     if(this->type[0] != _type && this->type[1] != _type){
         return true;
     }
     return false;
+}
+
+std::ostream& operator<<(std::ostream& out, Pokemon& pokemon){
+    out << "Species: "  << to_string(pokemon.get_species()) << "\n";
+    out << "HP: "       << pokemon.current_hp << "/" << pokemon.get_stats().hp << " " << pokemon.hp_percentage << "%\n";
+    out << "Status: "   << to_string(pokemon.get_status()) << "\n";
+    out << "Ability: "  << to_string(pokemon.get_ability()) << "\n";
+    out << "EVs: "      << pokemon.get_evs().hp << " / "
+                        << pokemon.get_evs().atk << " / "
+                        << pokemon.get_evs().def << " / "
+                        << pokemon.get_evs().satk << " / "
+                        << pokemon.get_evs().sdef << " / "
+                        << pokemon.get_evs().spe << "\n";
+
+    out << "IVs: "      << pokemon.get_ivs().hp << " / "
+                        << pokemon.get_ivs().atk << " / "
+                        << pokemon.get_ivs().def << " / "
+                        << pokemon.get_ivs().satk << " / "
+                        << pokemon.get_ivs().sdef << " / "
+                        << pokemon.get_ivs().spe << "\n"; 
+                         
+    out << "Nature: "   << to_string(pokemon.get_nature()) << "\n";
+    out << "Move 1: "   << to_string(pokemon.moveset[0].get_move()) << "\n";
+    out << "Move 2: "   << to_string(pokemon.moveset[1].get_move()) << "\n";
+    out << "Move 3: "   << to_string(pokemon.moveset[2].get_move()) << "\n";
+    out << "Move 4: "   << to_string(pokemon.moveset[3].get_move()) << "\n\n";
+
+    return out;
 }

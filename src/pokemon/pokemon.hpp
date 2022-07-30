@@ -32,7 +32,6 @@ public:
     void create_substitute();
 
     void kill();
-    void print_pokemon();
     int hp_percentage();
     void init();
     void stat_init();
@@ -90,8 +89,10 @@ public:
     void set_happiness(const int p_happiness);
     void set_hiddenpower(const Type p_type, const int p_power);
 
+    // operator overloads
     bool operator== (const Type _type);
     bool operator!= (const Type _type);
+    friend std::ostream& operator<<(std::ostream& out, Pokemon& pokemon);
 //private:
     int current_hp = 0;
     ///
