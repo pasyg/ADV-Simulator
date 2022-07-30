@@ -297,12 +297,12 @@ Pokemon* Team::active(){
 
 std::ostream& operator<<(std::ostream& out, Team& team){
     out << "Size: " << team.teamsize << "\n";
-    out << "Active Pokemon: " << team.active()->get_species() << "\n";
+    out << "Active Pokemon: " << to_string(team.active()->get_species()) << "\n";
     out << "Boosts: Atk: "  << team.get_boost(Statname::Atk)
                             << "Def: "  << team.get_boost(Statname::Def)
                             << "SAtk: " << team.get_boost(Statname::Satk)
                             << "SDef: " << team.get_boost(Statname::Sdef)
-                            << "Spe: "  << team.get_move_options(Statname::Spe)
+                            << "Spe: "  << team.get_boost(Statname::Spe)
                             << "\n";
     for(auto&& member : team.member){
         if(member.get_species() != Species::None){
