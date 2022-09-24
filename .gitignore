@@ -1,0 +1,10 @@
+.vscode
+build
+Release
+Simulator
+TODO.txt
+.idea
+cmake-build-debug
+dependencies
+vtune
+moar.txt
