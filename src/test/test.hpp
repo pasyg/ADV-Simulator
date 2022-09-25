@@ -13,16 +13,15 @@
 namespace Tests
 {
     template<typename Func>
-    bool check(std::string_view funcname, Func func)
+    bool check(Func func)
     {
         if(func())
         {
-            std::cout << funcname << " test successful\n\n";
             return true;
         }
         else
         {
-            std::cout << funcname << " test NOT successful\n\n";
+            std::cout << "failed" << std::endl;
             return false;
         }
     }
