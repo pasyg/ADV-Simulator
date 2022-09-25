@@ -427,6 +427,7 @@ bool Tests::test_status()
 }
 bool Tests::test_healing()
 {
+    
     return true;
 }
 bool Tests::test_misc()
