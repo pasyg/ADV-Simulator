@@ -2,7 +2,8 @@
 
 #include <cstdint>
 
-enum class Nature : std::uint8_t{
+enum class Nature : std::uint8_t
+{
     Adamant,
     Bashful,
     Bold,

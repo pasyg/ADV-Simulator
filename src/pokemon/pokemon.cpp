@@ -11,37 +11,38 @@ void Pokemon::kill()
 void Pokemon::init()
 {
     // stat calculation and initilization
-    PokemonType p_type = pokemon_type(this->species);
-    this->type[0] = p_type.type1;
-    this->type[1] = p_type.type2;
+    PokemonType p_type  = pokemon_type(this->species);
+    this->type[0]       = p_type.type1;
+    this->type[1]       = p_type.type2;
     
-    this->basestats = base_stats(this->species);
+    this->basestats     = base_stats(this->species);
+    this->current_hp    = this->stats.hp;
     this->stat_init();
-    this->current_hp = this->stats.hp;
 
     // initialize each move
-    for(auto&& move : this->moveset){
-        if(move.get_move() != Move::None){
+    for(auto&& move : this->moveset)
+    {
+        if(move.get_move() != Move::None)
+        {
             move.init();
         }
     }
 
-    // assign damage boost trait for items for damage calculation
-    if(damage_boosting(this->item)){
-        this->item_damage_boost = true;
-    }
-
     // sets STAB trait for same type attacks
     // assigns the type and power of hidden power
-    for(auto&& move : this->moveset){    
-        if(move.get_type() == Type::Hidden_Power){
+    for(auto&& move : this->moveset)
+    {    
+        if(move.get_type() == Type::Hidden_Power)
+        {
             move.set_type(this->hiddenpower);
             move.set_power(this->hiddenpower_power);
         }
-        if(this->type[0] == move.get_type()){
+        if(this->type[0] == move.get_type())
+        {
             move.set_stab(true);
         }
-        else if(this->type[0] == move.get_type()){        
+        else if(this->type[0] == move.get_type())
+        {        
                 move.set_stab(true);
         }
     }
@@ -76,7 +77,8 @@ int Pokemon::hp_percentage()
 
 void Pokemon::set_status(const Status p_status)
 {
-    if(p_status == Status::Sleep_inflicted){
+    if(p_status == Status::Sleep_inflicted)
+    {
         this->sleep_turns = get_random(2,5); // TODO
     }
     this->status = p_status;
@@ -146,7 +148,8 @@ void Pokemon::reduce_hp_direct(const int damage)
 {
     this->current_hp -= damage;
     
-    if(this->current_hp <= 0){
+    if(this->current_hp <= 0)
+    {
         this->kill();
     }
 }
@@ -156,7 +159,8 @@ void Pokemon::reduce_hp_attack(const int damage)
     if(this->substitute)
     {
         this->substitute_hp -= damage;
-        if(this->substitute_hp <= 0){
+        if(this->substitute_hp <= 0)
+        {
             this->substitute = false;
             this->substitute_hp = 0;
         }
@@ -165,7 +169,8 @@ void Pokemon::reduce_hp_attack(const int damage)
     {
         this->current_hp -= damage;
     }
-    if(this->current_hp <= 0){
+    if(this->current_hp <= 0)
+    {
         this->kill();
     }
 }
@@ -183,11 +188,6 @@ void Pokemon::increase_hp(const int heal)
 Item Pokemon::get_item() const
 {
     return this->item;
-}
-
-bool Pokemon::get_item_damage_boost() const
-{
-    return this->item_damage_boost;
 }
 
 bool Pokemon::get_revealed() const
@@ -306,11 +306,6 @@ void Pokemon::set_moveset(const std::array<AttackMove, 4> p_moveset)
 void Pokemon::set_type(const std::array<Type, 2> p_type)
 {
     this->type = p_type;
-}
-
-void Pokemon::set_item_damage_boost(const bool dmgboost)
-{
-    this->item_damage_boost = dmgboost;
 }
 
 void Pokemon::set_level(const int p_level)

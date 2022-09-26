@@ -8,14 +8,14 @@ AttackMove::AttackMove()
 
 void AttackMove::init()
 {
-    this->base_pp = static_cast<int>(move_pp(this->move) * (constants::pp_up * 0.2 + 1));
-    this->pp = this->base_pp;
-    this->power = move_power(this->move);
-    this->type = move_type(this->move);
-    this->priority = move_prio(this->move);
-    this->revealed = false;
-    //this->secondary =
-    this->disabled = false;
+    this->base_pp   = static_cast<int>(move_pp(this->move) * (constants::pp_up * 0.2 + 1));
+    this->pp        = this->base_pp;
+    this->power     = move_power(this->move);
+    this->type      = move_type(this->move);
+    this->priority  = move_prio(this->move);
+    this->revealed  = false;
+    this->disabled  = false;
+
     switch(this->type)
     {
         case Type::Bug:
@@ -95,7 +95,7 @@ void AttackMove::reduce_pp(const int x = 1)
 {
     this->pp -= x;
     if(this->pp < 0)
-{
+    {
         this->pp = 0;
     }
 }

@@ -54,10 +54,8 @@ bool Tests::test_import_init()
     {
         return false;
     }
-    
-    std::cout << "Testing init\n";
-    
-    std::cout << "Testing stats...";
+
+    std::cout << "Testing stats...\t";
     // init test for import
     for(auto&& team : teams)
     {
@@ -118,7 +116,7 @@ bool Tests::test_import_init()
     {
         return false;
     }
-    std::cout << " success\nTesting moves...";
+    std::cout << "success\nTesting moves...\t";
     
     if(teams[0].member[0].get_moveset()->at(0).base_pp    != 8 ||
        teams[0].member[0].get_moveset()->at(0).get_pp()   != 8 ||
@@ -169,7 +167,7 @@ bool Tests::test_import_init()
         return false;
     }
     
-    std::cout << " success\nTesting hidden power...";
+    std::cout << "success\nTesting hidden power...\t";
 
     if(teams[1].member[0].hiddenpower != Type::Bug ||
        teams[1].member[0].hiddenpower_power != 70)
@@ -217,7 +215,7 @@ bool Tests::test_import_init()
         return false;
     }
 
-    std::cout << " success\n";
+    std::cout << "success\n";
 
     return true;
 }

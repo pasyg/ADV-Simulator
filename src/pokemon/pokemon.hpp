@@ -18,7 +18,9 @@
 
 class Pokemon{
 public:
-    Pokemon(){};
+    Pokemon()
+    {
+    };
     constexpr Pokemon(Species species, Nature nature, Ability ability, Item item, Stats evs, Stats ivs, std::array<AttackMove, 4> moves) :
         species(species), 
         nature(nature), 
@@ -26,7 +28,9 @@ public:
         item(item), 
         EVs(evs), 
         IVs(ivs),
-        moveset(moves){};
+        moveset(moves)
+        {
+        };
     Ability former_ability = Ability::Air_Lock;
     void set_former_ability(Ability fability);
     // in this class, because of reduce_hp(), reset on switch
@@ -98,37 +102,36 @@ public:
     bool operator!= (const Type _type);
     friend std::ostream& operator<<(std::ostream& out, Pokemon& pokemon);
 //private:
-    int current_hp = 0;
+    int current_hp      = 0;
     ///
     /// given by import
     ///
     Species species;
-    Gender gender = Gender::Genderless;
-    Item item;
-    Item previous_item = Item::None;
-    bool knocked_off = false;
-    bool item_damage_boost = false;
     Ability ability;
-    int level = 100;
-    int happiness = 255;
-    Stats EVs = { 0, 0, 0, 0, 0, 0 };
     Nature nature;
-    Stats IVs = { 31, 31, 31, 31, 31, 31 };
-    Status status = Status::Healthy;
-    int sleep_turns = 0;
+    Item item;
+    Gender gender       = Gender::Genderless;
+    Item previous_item  = Item::None;
+    bool knocked_off    = false;
+    int level           = 100;
+    int happiness       = 255;
+    Stats EVs           = { 0, 0, 0, 0, 0, 0 };
+    Stats IVs           = { 31, 31, 31, 31, 31, 31 };
+    Status status       = Status::Healthy;
+    int sleep_turns     = 0;
     ///
     /// implied / initialized
     ///
     std::array<AttackMove, 4> moveset;
-    std::array<Type, 2> type = { Type::Typeless, Type::Typeless };
+    std::array<Type, 2> type        = { Type::Typeless, Type::Typeless };
     std::array<Type, 2> former_type = { Type::Typeless, Type::Typeless };
     bool revealed = false;
     ///
     /// calculated
     ///
-    Stats basestats = { 0, 0, 0, 0, 0, 0 };
-    Stats stats = { 0, 0, 0, 0, 0, 0 };
-    Type hiddenpower = Type::Normal;
+    Stats basestats       = { 0, 0, 0, 0, 0, 0 };
+    Stats stats           = { 0, 0, 0, 0, 0, 0 };
+    Type hiddenpower      = Type::Normal;
     int hiddenpower_power = 70;
     ///
     /// private methods

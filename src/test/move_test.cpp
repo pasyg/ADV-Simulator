@@ -2,6 +2,7 @@
 
 bool Tests::test_all_move()
 {
+    std::cout << "\n== Move Test ==\n";
     if(!check(test_damage))  { return false; }
     if(!check(test_crit))    { return false; }
     if(!check(test_accuracy)){ return false; }
@@ -23,7 +24,7 @@ void Tests::refresh(Pokemon& poki)
 }
 bool Tests::test_damage()
 {
-    std::cout << "Testing damage...";
+    std::cout << "Testing damage...\t";
     // possible damage values to compare to
     std::array<int, 32> rolls;
 
@@ -153,12 +154,12 @@ bool Tests::test_damage()
         }
     }
     
-    std::cout << " success\n";
+    std::cout << "success\n";
     return true;
 }
 bool Tests::test_crit()
 {    
-    std::cout << "Testing crit...";
+    std::cout << "Testing crit...\t\t";
     // possible damage values to compare to
     std::array<int, 16> rolls;
 
@@ -310,12 +311,12 @@ bool Tests::test_crit()
             }
         }
     }
-    std::cout << " success\n";
+    std::cout << "success\n";
     return true;
 }
 bool Tests::test_accuracy()
 {
-    std::cout << "Testing accuracy...";
+    std::cout << "Testing accuracy...\t";
 
     // test battle to generate damage calcs
     Battle tbattle = Battle({ Alph::ABCe, Alph::C });
@@ -378,12 +379,12 @@ bool Tests::test_accuracy()
             }
         }
     }
-    std::cout << " success\n";
+    std::cout << "success\n";
     return true;
 }
 bool Tests::test_status()
 {    
-    std::cout << "Testing status...";
+    std::cout << "Testing status...\t";
     // test battle to generate damage calcs
     Battle tbattle = Battle({ Alph::ABCe, Alph::C });
     
@@ -408,6 +409,7 @@ bool Tests::test_status()
         {
             if(i == (LOOP_N-1))
             {
+                std::cout << "Error burn Fire Blast Charizard vs Aero\n";
                 return false;
             }
         }
@@ -418,16 +420,79 @@ bool Tests::test_status()
 
     // Choose Thunder Wave
     tbattle.team[0].movechoice = &tbattle.team[0].active()->get_moveset()->at(3);
+
+    // use Thunder Wave vs Charizard
+    tbattle.use_move(tbattle.team[0], tbattle.team[1]);
+
     if(tbattle.team[1].active()->get_status() != Status::Paralysis)
     {
+        std::cout << "Error Thunder Wave Blissey vs Charizard\n";
         return false;
     }
-    std::cout << "success" << std::endl;
+
+    std::cout << "success\n";
     return true;
 }
 bool Tests::test_healing()
 {
+    std::cout << "Testing healing...\t";
+    Battle tbattle = Battle({ Alph::ABCe, Alph::GHJ });
     
+    // Choose Blissey and Gyarados
+    tbattle.team[0].active_pokemon = 2;
+    tbattle.team[1].active_pokemon = 1;
+
+    int bliss_hp = tbattle.team[0].active()->current_hp;
+    int gyara_hp = tbattle.team[1].active()->current_hp;
+    
+    // reduce HP of both and give status to Gyarados
+    tbattle.team[0].active()->reduce_hp_direct(100);
+    tbattle.team[1].active()->reduce_hp_direct(100);
+    tbattle.team[1].active()->set_status(Status::Burn);
+
+    // check if changes were applied
+    if(tbattle.team[0].active()->current_hp == bliss_hp)
+    {
+        std::cout << "Error reduce Blissey HP\n";
+        return false;
+    }
+    if(tbattle.team[1].active()->current_hp == gyara_hp)
+    {
+        std::cout << "Error reduce Gyarados HP\n";
+        return false;
+    }
+    if(tbattle.team[1].active()->get_status() != Status::Burn)
+    {
+        std::cout << "Error set Gyarados status\n";
+        return false;
+    }
+    // Choose Softboiled and Rest as moves
+    tbattle.team[0].movechoice = &tbattle.team[0].active()->get_moveset()->at(2);
+    tbattle.team[1].movechoice = &tbattle.team[1].active()->get_moveset()->at(3);
+    
+    // use moves to heal
+    tbattle.use_move(tbattle.team[1], tbattle.team[0]);
+    tbattle.use_move(tbattle.team[0], tbattle.team[1]);
+
+    if(tbattle.team[0].active()->current_hp != bliss_hp)
+    {
+        std::cout << to_string(tbattle.team[0].movechoice->get_move());
+        std::cout << "Should be: " << bliss_hp << "\n is: " << tbattle.team[0].active()->current_hp << "\n";
+        std::cout << "Error Blissey healing\n";
+        return false;
+    }
+    if(tbattle.team[1].active()->current_hp != gyara_hp)
+    {
+        std::cout << "Error Gyarados healing\n";
+        return false;
+    }
+    if(tbattle.team[1].active()->get_status() != Status::Sleep_self)
+    {
+        std::cout << "Error Gyarados curing status\n";
+        return false;
+    }
+
+    std::cout << "success\n";
     return true;
 }
 bool Tests::test_misc()

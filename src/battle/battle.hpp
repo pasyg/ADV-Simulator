@@ -15,19 +15,21 @@
 class Battle
 {
 public:
-    Battle(std::array<Team, 2>, const std::string &filepath);
-    Battle(std::array<Team, 2> teams);
+    using bTeams = std::array<Team, 2>;
+
+    Battle(bTeams, const std::string &filepath);
+    Battle(bTeams teams);
     Battle();
     ~Battle();
     std::ofstream logger;
     std::string_view p1 = "p1a";
     std::string_view p2 = "p2a";
-    std::array<Team, 2> team = {};
-    Weather weather = Weather::Clear;
-    bool uproar = false;
-    int weather_turns = 0;
-    bool move_first = true;
-    bool winner = false; // false: team 1, true: team 2
+    bTeams team         = {};
+    Weather weather     = Weather::Clear;
+    int weather_turns   = 0;
+    bool uproar         = false;
+    bool move_first     = true;
+    bool winner         = false; // false: team 1, true: team 2
 
     Transition transition;
 

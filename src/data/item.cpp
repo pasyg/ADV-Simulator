@@ -1,6 +1,7 @@
 #include "item.hpp"
 
-bool const damage_boosting(const Item item){
+bool const damage_boosting(const Item item)
+{
     switch(item){
         case Item::Blackbelt:
         case Item::Sharpbeak:

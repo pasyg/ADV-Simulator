@@ -2,7 +2,8 @@
 
 #include <cstdint>
 
-enum class Item : std::uint8_t {
+enum class Item : std::uint8_t
+{
     None,
     Leftovers,
     // pinch berries

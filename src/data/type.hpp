@@ -2,8 +2,8 @@
 
 #include <cstdint>
 
-enum class Type : std::uint8_t {
-
+enum class Type : std::uint8_t
+{
 	// physical types
 	Normal,
 	Flying,

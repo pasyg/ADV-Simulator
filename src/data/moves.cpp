@@ -6,8 +6,10 @@
 	- Ohko Move
 */
 
-int move_power(const Move move){
-    switch (move) {	
+int move_power(const Move move)
+{
+    switch (move)
+	{
 		case Move::Pass: 			return 0;
 		case Move::Switch0: 		return 0;
 		case Move::Switch1: 		return 0;
@@ -377,8 +379,10 @@ int move_power(const Move move){
 }
 // -1 for perfect accuracy
 // -1 for moves without accuracy check, ever
-int move_accuracy(const Move move, const Weather weather){
-    switch (move) {
+int move_accuracy(const Move move, const Weather weather)
+{
+    switch (move)
+	{
 		case Move::Pass: 			return -1;
 		case Move::Switch0: 		return -1;
 		case Move::Switch1: 		return -1;
@@ -475,13 +479,16 @@ int move_accuracy(const Move move, const Weather weather){
 		case Move::Thunderbolt: 	return 100;
 		case Move::Thunder_Wave: 	return 100;
 		case Move::Thunder:
-			if(weather == Weather::Rain){
+			if(weather == Weather::Rain)
+			{
 				return -1;
 			}
-			else if(weather == Weather::Sun){
+			else if(weather == Weather::Sun)
+			{
 				return 50;
 			}
-			else{
+			else
+			{
 				return 70;
 			}
 		case Move::Rock_Throw: 		return 90;
@@ -757,7 +764,8 @@ int move_accuracy(const Move move, const Weather weather){
 
 int move_prio(const Move move)
 {
-	switch(move){
+	switch(move)
+	{
 		case Move::Switch:
 			return 6;
 		case Move::Helping_Hand:
@@ -794,7 +802,8 @@ int move_prio(const Move move)
 
 Type move_type(const Move move)
 {
-	switch(move){
+	switch(move)
+	{
 		case Move::Pass: 			return Type::Typeless;
 		case Move::Switch0: 		return Type::Typeless;
 		case Move::Switch1: 		return Type::Typeless;

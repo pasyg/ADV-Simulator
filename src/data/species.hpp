@@ -9,7 +9,8 @@ struct PokemonType{
 	Type type2 = Type::Typeless;
 };
 
-enum class Species : std::uint16_t {
+enum class Species : std::uint16_t
+{
 	None,
 	Unrevealed,
 	// Generation 1

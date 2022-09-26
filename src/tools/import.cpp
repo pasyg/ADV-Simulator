@@ -43,12 +43,12 @@ void set_evs(std::string &evs, Pokemon &pokemon)
             arrevs[i] = "0";
         }
     }
-    stats.hp = std::stoi(arrevs[0]);
-    stats.atk = std::stoi(arrevs[1]);
-    stats.def = std::stoi(arrevs[2]);
-    stats.satk = std::stoi(arrevs[3]);
-    stats.sdef = std::stoi(arrevs[4]);
-    stats.spe = std::stoi(arrevs[5]);
+    stats.hp    = std::stoi(arrevs[0]);
+    stats.atk   = std::stoi(arrevs[1]);
+    stats.def   = std::stoi(arrevs[2]);
+    stats.satk  = std::stoi(arrevs[3]);
+    stats.sdef  = std::stoi(arrevs[4]);
+    stats.spe   = std::stoi(arrevs[5]);
 
     pokemon.set_evs(stats);
 }
@@ -63,12 +63,12 @@ void set_ivs(std::string &ivs, Pokemon &pokemon)
     
     if(ivs == "")
     {
-        stats.hp = 31;
-        stats.atk = 31;
-        stats.def = 31;
-        stats.satk = 31;
-        stats.sdef = 31;
-        stats.spe = 31;
+        stats.hp    = 31;
+        stats.atk   = 31;
+        stats.def   = 31;
+        stats.satk  = 31;
+        stats.sdef  = 31;
+        stats.spe   = 31;
 
         pokemon.set_ivs(stats);
         return;
@@ -90,12 +90,12 @@ void set_ivs(std::string &ivs, Pokemon &pokemon)
             arrivs[i] = "31";
         }
     }
-    stats.hp = std::stoi(arrivs[0]);
-    stats.atk = std::stoi(arrivs[1]);
-    stats.def = std::stoi(arrivs[2]);
-    stats.satk = std::stoi(arrivs[3]);
-    stats.sdef = std::stoi(arrivs[4]);
-    stats.spe = std::stoi(arrivs[5]);
+    stats.hp    = std::stoi(arrivs[0]);
+    stats.atk   = std::stoi(arrivs[1]);
+    stats.def   = std::stoi(arrivs[2]);
+    stats.satk  = std::stoi(arrivs[3]);
+    stats.sdef  = std::stoi(arrivs[4]);
+    stats.spe   = std::stoi(arrivs[5]);
 
     pokemon.set_ivs(stats);
 }

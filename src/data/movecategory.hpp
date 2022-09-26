@@ -1,4 +1,7 @@
-enum class MoveCategory{
+#pragma once
+
+enum class MoveCategory
+{
     Physical,
     Special
 };

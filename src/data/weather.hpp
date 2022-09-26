@@ -2,7 +2,8 @@
 
 #include <cstdint>
 
-enum class Weather : uint8_t{
+enum class Weather : uint8_t
+{
     Clear,
     Hail,
     Rain,

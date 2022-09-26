@@ -5,8 +5,8 @@
 #include "type.hpp"
 #include "weather.hpp"
 
-enum class Move : std::uint16_t{
-    
+enum class Move : std::uint16_t
+{    
     None,
 	Unrevealed,
 	Pass,

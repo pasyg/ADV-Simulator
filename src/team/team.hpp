@@ -51,68 +51,69 @@ public:
     ///
     /// one turn
     ///
-    std::array<Move, 3> imprison_moves = { Move::None, Move::None, Move::None };
-    bool imprison = false;
-    bool meanlook = false;
-    bool charged = false; // charge moves (solarbeam, fly,...)
-    bool endure = false;
-    bool flinch = false;
-    bool focuspunch = false;
-    bool grudge = false;
-    bool magiccoat = false;
-    bool protect = false;
-    bool torment = false;
-    bool truant = false;
-    int safeguard = 0;
-    int wrap = 0;
-    int lastdamage = 0;
-    int protect_acc = 100;
-    int delayed_damage = 0;
-    int delayed_damage_turns = 0;
-    bool special_calc = false;
-    int special_damage_calc = 0;
+    using ImpMoves = std::array<Move, 3>;
+    ImpMoves imprison_moves     = { Move::None, Move::None, Move::None };
+    bool imprison               = false;
+    bool meanlook               = false;
+    bool charged                = false; // charge moves (solarbeam, fly,...)
+    bool endure                 = false;
+    bool flinch                 = false;
+    bool focuspunch             = false;
+    bool grudge                 = false;
+    bool magiccoat              = false;
+    bool protect                = false;
+    bool torment                = false;
+    bool truant                 = false;
+    int safeguard               = 0;
+    int wrap                    = 0;
+    int lastdamage              = 0;
+    int protect_acc             = 100;
+    int delayed_damage          = 0;
+    int delayed_damage_turns    = 0;
+    bool special_calc           = false;
+    int special_damage_calc     = 0;
     ///
     /// static
     ///
-    bool sleep_inflict = false;
-    int spikes = 0;
-    int wish = 0;
-    int wish_recovery = 0;
+    bool sleep_inflict          = false;
+    int spikes                  = 0;
+    int wish                    = 0;
+    int wish_recovery           = 0;
     ///
     /// reset on switch
     ///
-    int atkboost = 0;
-    int defboost = 0;
-    int satkboost = 0;
-    int sdefboost = 0;
-    int speboost = 0;
-    int accboost = 0;
-    int evaboost = 0; // evasion
-    bool flash_fire = false;
+    int atkboost                = 0;
+    int defboost                = 0;
+    int satkboost               = 0;
+    int sdefboost               = 0;
+    int speboost                = 0;
+    int accboost                = 0;
+    int evaboost                = 0; // evasion
+    bool flash_fire             = false;
     
-    int confusion = 0;
-    int encore = 0;
-    int lightscreen = 0;
-    int lockon = 0;
-    int perishsong = 0;
-    int recharge = 0;
-    int reflect = 0;
-    int selflock = 0; // outrage, petaldance, thrash
-    int taunt = 0;
-    int turns_on_the_field = 0;
-    int uproar = 0;
-    int yawn = false;  
+    int confusion               = 0;
+    int encore                  = 0;
+    int lightscreen             = 0;
+    int lockon                  = 0;
+    int perishsong              = 0;
+    int recharge                = 0;
+    int reflect                 = 0;
+    int selflock                = 0; // outrage, petaldance, thrash
+    int taunt                   = 0;
+    int turns_on_the_field      = 0;
+    int uproar                  = 0;
+    int yawn                    = false;  
 
-    AttackMove* locked_move = nullptr;
-    bool move_locked = false;
-    bool block = false;
-    bool charge = false;
-    bool curse = false;
-    bool foresight = false;
-    bool infatuated = false;
-    bool ingrain = false;
-    bool leechseed = false;
-    bool mist = false;
-    bool targetable = true; // bounce, dig, etc.
-    bool trapped = false;
+    AttackMove* locked_move     = nullptr;
+    bool move_locked            = false;
+    bool block                  = false;
+    bool charge                 = false;
+    bool curse                  = false;
+    bool foresight              = false;
+    bool infatuated             = false;
+    bool ingrain                = false;
+    bool leechseed              = false;
+    bool mist                   = false;
+    bool targetable             = true; // bounce, dig, etc.
+    bool trapped                = false;
 };

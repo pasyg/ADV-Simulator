@@ -19,46 +19,46 @@ void Team::init()
     }
     
     this->active_pokemon = 0;
-    this->protect = false;
-    this->protect_acc = 100;
-    this->flinch = false;
-    this->focuspunch = false;
-    this->magiccoat = false;
-    this->endure = false;
-    this->grudge = false;
-    this->lastdamage = 0;
+    this->protect        = false;
+    this->protect_acc    = 100;
+    this->flinch         = false;
+    this->focuspunch     = false;
+    this->magiccoat      = false;
+    this->endure         = false;
+    this->grudge         = false;
+    this->lastdamage     = 0;
 
-    this->wish = false;
-    this->wish_recovery = 0;
-    this->spikes = 0;
+    this->wish           = false;
+    this->wish_recovery  = 0;
+    this->spikes         = 0;
 
-    this->atkboost = 0;
-    this->defboost = 0;
-    this->satkboost = 0;
-    this->sdefboost = 0;
-    this->speboost = 0;
-    this->accboost = 0;
-    this->evaboost = 0;
+    this->atkboost       = 0;
+    this->defboost       = 0;
+    this->satkboost      = 0;
+    this->sdefboost      = 0;
+    this->speboost       = 0;
+    this->accboost       = 0;
+    this->evaboost       = 0;
 
-    this->reflect = 0;
-    this->lightscreen = 0;
-    this->perishsong = 0;
+    this->reflect        = 0;
+    this->lightscreen    = 0;
+    this->perishsong     = 0;
 
-    this->trapped = false;
-    this->move_locked = false;
-    this->taunt = false;
-    this->confusion = false;
-    this->ingrain = false;
-    this->yawn = false;
-    this->infatuated = false;
-    this->curse = false;
-    this->leechseed = false;
-    this->block = false;
-    this->targetable = true;
-    this->charge = false;
-    this->foresight = false;
-    this->lockon = false;
-    this->mist = false;
+    this->trapped        = false;
+    this->move_locked    = false;
+    this->taunt          = false;
+    this->confusion      = false;
+    this->ingrain        = false;
+    this->yawn           = false;
+    this->infatuated     = false;
+    this->curse          = false;
+    this->leechseed      = false;
+    this->block          = false;
+    this->targetable     = true;
+    this->charge         = false;
+    this->foresight      = false;
+    this->lockon         = false;
+    this->mist           = false;
 }
 
 int Team::get_boost(Statname stat)
@@ -135,7 +135,7 @@ void Team::use_pinch_berry()
 
     if(this->active()->get_current_hp() < 
         (this->active()->get_stats().hp / 4.0))
-        {
+    {
         switch(this->active()->get_item())
         {
             case Item::Liechiberry:
@@ -173,7 +173,7 @@ void Team::use_hp_berry(){
 
     if(this->active()->get_current_hp() < 
         (this->active()->get_stats().hp / 2.0))
-        {
+    {
         switch(this->active()->get_item())
         {
             case Item::Aguavberry:
@@ -240,7 +240,8 @@ void Team::use_hp_berry(){
     }
 }
 
-Pokemon* Team::active(){
+Pokemon* Team::active()
+{
     return &this->member[this->active_pokemon];
 }
 
@@ -254,7 +255,8 @@ std::ostream& operator<<(std::ostream& out, Team& team)
                             << "SDef: " << team.get_boost(Statname::Sdef)
                             << "Spe: "  << team.get_boost(Statname::Spe)
                             << "\n";
-    for(auto&& member : team.member){
+    for(auto&& member : team.member)
+    {
         if(member.get_species() != Species::None)
         {
             out << member;
@@ -298,7 +300,8 @@ void Team::get_move_options(std::array<Move, 3> impmoves)
                     continue;
                 }
                 // can't select same move twice in a row when tormented
-                if(this->torment){
+                if(this->torment)
+                {
                     if(this->prev_movechoice->get_move() == move.get_move())
                     {
                         continue;
@@ -313,7 +316,6 @@ void Team::get_move_options(std::array<Move, 3> impmoves)
                 // add move to options
                 this->move_options.push_back(&move);
             }
-
         }    
     }        
     // pokemon has to struggle if no other move can be chosen
@@ -327,7 +329,8 @@ void Team::get_move_options(std::array<Move, 3> impmoves)
         return;
     }
     // add non fainted pokemon as switch options
-    for(int i = 0; i<6; ++i){
+    for(int i = 0; i<6; ++i)
+    {
         // don't switch to self
         if(i == this->active_pokemon)
         {
@@ -345,7 +348,8 @@ void Team::get_move_options(std::array<Move, 3> impmoves)
 // returns true if move is affected by taunt
 bool Team::taunt_move(const Move move)
 {
-    switch(move){
+    switch(move)
+    {
         case Move::Acid_Armor:
         case Move::Agility:
         case Move::Amnesia:

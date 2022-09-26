@@ -2,7 +2,8 @@
 
 #include <cstdint>
 
-enum class Status : std::uint8_t {
+enum class Status : std::uint8_t
+{
 	Healthy,
     Fainted,
     Paralysis,

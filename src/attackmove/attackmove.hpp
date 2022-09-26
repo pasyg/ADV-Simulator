@@ -6,12 +6,14 @@
 #include "data/moves.hpp"
 #include "data/type.hpp"
 
-class AttackMove{
-    
+class AttackMove
+{
 public:
     AttackMove();
     constexpr AttackMove(Move move) : 
-        move(move){};
+        move(move)
+        {
+        };
     
     void init();
 
@@ -25,14 +27,14 @@ public:
     void set_disabled(const bool disable);
     void set_move(const Move move);
 
-    int get_power() const;
-    bool get_stab() const;
-    bool get_revealed() const;
-    int get_pp() const;
+    Move get_move();
     Type get_type() const;
+    int get_power() const;
+    int get_pp() const;
     int get_priority() const;
     bool get_disabled() const;
-    Move get_move();
+    bool get_revealed() const;
+    bool get_stab() const;
 
     bool operator== (const Move _move);
     bool operator!= (const Move _move);
@@ -40,19 +42,17 @@ public:
     bool operator!= (const Type _type);
 
 //private:
+    using MC = MoveCategory;
     Move move;
-    MoveCategory category = MoveCategory::Physical;
-    int pp = 0;
-    int base_pp = 0;
-    int power = 0;
-    Type type = Type::Typeless;
-    int priority = 0;
-    bool revealed = false;
-    bool damage = false;
-    bool secondary = false;
-    bool disabled = false;
-    #ifndef OHKO_CLAUSE
-    bool ohko = false;
-    #endif
-    bool is_stab = false;
+    Type type       = Type::Typeless;
+    MC category     = MC::Physical;
+    int base_pp     = 0;
+    int power       = 0;
+    int pp          = 0;
+    int priority    = 0;
+    bool damage     = false;
+    bool disabled   = false;
+    bool is_stab    = false;
+    bool revealed   = false;
+    bool secondary  = false;
 };

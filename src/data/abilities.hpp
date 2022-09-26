@@ -2,7 +2,8 @@
 
 #include <cstdint>
 
-enum class Ability : std::uint16_t {
+enum class Ability : std::uint16_t 
+{
 	// Generation 3
 	Stench,
 	Drizzle,

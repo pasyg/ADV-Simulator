@@ -1,6 +1,7 @@
 #include <cstdint>
 
-enum class Statname : std::uint8_t{
+enum class Statname : std::uint8_t
+{
     HP,
     Atk,
     Def,
