@@ -69,6 +69,7 @@ set(Simulator_SOURCES
     src/main.cpp
     
     src/test/import_test.cpp
+    src/test/mechanic_test.cpp
     src/test/move_test.cpp
     src/test/test.cpp)
 

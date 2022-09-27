@@ -126,6 +126,20 @@ void Team::set_boost(Statname stat, int boost)
     }
 }
 
+void Team::set_boost_flat(Statname stat, int boost)
+{
+    switch(stat)
+    {
+        case Statname::Atk:     this->atkboost  = boost; return;
+        case Statname::Def:     this->defboost  = boost; return;
+        case Statname::Satk:    this->satkboost = boost; return;
+        case Statname::Sdef:    this->sdefboost = boost; return;
+        case Statname::Spe:     this->speboost  = boost; return;
+        case Statname::Acc:     this->accboost  = boost; return;
+        case Statname::Eva:     this->evaboost  = boost; return;
+        default: std::cout << "Error set_boost_flat\n";  return;
+    }
+}
 void Team::use_pinch_berry()
 {
     auto berry_boost = [&](Statname stat){

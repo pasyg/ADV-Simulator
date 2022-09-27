@@ -28,7 +28,6 @@ Battle::Battle(std::array<Team, 2> teams) :
 
 Battle::Battle()
 {
-
 }
 
 Battle::~Battle()
@@ -56,7 +55,7 @@ void Battle::abilities_simultaneous()
     this->weather_turns = 0;
 
     switch(this->team[first].active()->get_ability())
-{
+    {
         case Ability::Sand_Stream:
             this->weather = Weather::Sand;
             break;
@@ -71,7 +70,7 @@ void Battle::abilities_simultaneous()
             break;
     }
     switch(this->team[!first].active()->get_ability())
-{
+    {
         case Ability::Sand_Stream:
             this->weather = Weather::Sand;
             break;
@@ -188,11 +187,10 @@ int Battle::get_stat_boosted(int statvalue, const Statname &stat,  const int &bo
     }
 }
 ///
-/// checks which pokemon moves first, returns 0 (false) for first move for team 1, 1 (true) for first move for team 2
+/// checks which pokemon moves first, sets move_first to 0 (false) for first move for team 1, 1 (true) for first move for team 2
 ///
 void Battle::calc_first_attacker()
 {
-
     static std::array<Move, 7> switches = {Move::Switch, Move::Switch0, Move::Switch1, Move::Switch2, Move::Switch3,
                                         Move::Switch4, Move::Switch5};
 
@@ -201,14 +199,12 @@ void Battle::calc_first_attacker()
 
 
     if(std::any_of(switches.cbegin(), switches.cend(), [&](Move pSwitch)
-                                                        { if(pSwitch == this->team[0].movechoice->get_move())
-                                                         { return true;} return false;}))
+                                                        { return pSwitch == this->team[0].movechoice->get_move();}))
     {
         prio1 = 7;
     }
     if(std::any_of(switches.cbegin(), switches.cend(), [&](Move pSwitch)
-                                                        { if(pSwitch == this->team[1].movechoice->get_move())
-                                                         { return true;} return false;}))
+                                                        { return pSwitch == this->team[1].movechoice->get_move();}))
     {
         prio2 = 7;
     }

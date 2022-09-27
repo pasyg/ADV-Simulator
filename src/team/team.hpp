@@ -23,6 +23,7 @@ public:
     void get_move_options(std::array<Move, 3> impmoves);
     bool taunt_move(const Move move);
     void set_boost(Statname stat, int boost);
+    void set_boost_flat(Statname stat, int boost);
     void set_confusion();
     void swap(int slot);
     void init();

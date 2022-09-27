@@ -436,7 +436,7 @@ bool Tests::test_status()
 bool Tests::test_healing()
 {
     std::cout << "Testing healing...\t";
-    Battle tbattle = Battle({ Alph::ABCe, Alph::GHJ });
+    Battle tbattle({ Alph::ABCe, Alph::GHJ });
     
     // Choose Blissey and Gyarados
     tbattle.team[0].active_pokemon = 2;

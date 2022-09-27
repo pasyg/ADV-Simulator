@@ -16,8 +16,8 @@ void Pokemon::init()
     this->type[1]       = p_type.type2;
     
     this->basestats     = base_stats(this->species);
-    this->current_hp    = this->stats.hp;
     this->stat_init();
+    this->current_hp    = this->stats.hp;
 
     // initialize each move
     for(auto&& move : this->moveset)
