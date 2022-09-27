@@ -101,8 +101,8 @@ bool Tests::speed_test()
     // Blissey Counter vs Dugtrio
     tbattle.team[0].active_pokemon = 3;
 
-    tbattle.team[0].movechoice = &tbattle.team[0].active()->get_moveset()->at(0);
-    tbattle.team[1].movechoice = &tbattle.team[1].active()->get_moveset()->at(1);
+    tbattle.team[0].movechoice = &tbattle.team[0].active()->get_moveset()->at(1);
+    tbattle.team[1].movechoice = &tbattle.team[1].active()->get_moveset()->at(0);
     tbattle.calc_first_attacker();
     if(tbattle.move_first == false)
     {
@@ -114,8 +114,8 @@ bool Tests::speed_test()
     // Blissey Counter vs Dugtrio
     tbattle.team[0].active_pokemon = 3;
     
-    tbattle.team[0].movechoice = &tbattle.team[0].active()->get_moveset()->at(0);
-    tbattle.team[1].movechoice = &tbattle.team[1].active()->get_moveset()->at(1);
+    tbattle.team[0].movechoice = &tbattle.team[0].active()->get_moveset()->at(1);
+    tbattle.team[1].movechoice = &tbattle.team[1].active()->get_moveset()->at(0);
     tbattle.team[1].active()->set_status(Status::Paralysis);
     tbattle.calc_first_attacker();
     if(tbattle.move_first == false)

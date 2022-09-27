@@ -790,7 +790,6 @@ int move_prio(const Move move)
 		case Move::Focus_Punch:
 			return -2;
 		case Move::Revenge:
-			std::cout << "HI\n";
 			return -3;
 		case Move::Mirror_Coat:
 		case Move::Counter:
