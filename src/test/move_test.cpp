@@ -497,5 +497,35 @@ bool Tests::test_healing()
 }
 bool Tests::test_misc()
 {
+    std::cout << "Testing misc. ...";
+    
+    Battle tbattle = Battle({ Alph::ABCe, Alph::JM });
+
+    // Blissey snatch vs Milotic Refresh
+    tbattle.team[0].active_pokemon = 2;
+    tbattle.team[1].active_pokemon = 5;
+
+    // status on blissey and reduce hp
+    tbattle.team[0].active()->set_status(Status::Burn);
+    tbattle.team[0].active()->reduce_hp_direct(200);
+
+    // choose Snatch and Refresh
+    tbattle.team[0].movechoice = &tbattle.team[0].active()->get_moveset()->at(0);
+    tbattle.team[1].movechoice = &tbattle.team[1].active()->get_moveset()->at(3);
+    tbattle.calc_first_attacker();
+    if(tbattle.move_first == true)
+    {
+        std::cout << "Error move order Snatch Blissey vs Milotic\n";
+        return false;
+    }
+    tbattle.use_move(tbattle.team[0], tbattle.team[1]);
+    tbattle.use_move(tbattle.team[1], tbattle.team[0]);
+    if(tbattle.team[0].active()->get_status() == Status::Burn)
+    {
+        std::cout << "Error status Snatch Blissey vs Milotic\n";
+        return false;
+    }
+
+    std::cout << "success\n";
     return true;
 }

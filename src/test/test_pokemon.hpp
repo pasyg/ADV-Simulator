@@ -66,7 +66,7 @@ namespace Tests
     namespace Blissey
     {
         // movesets
-        static constexpr mset std_twave  { Moves::seismic_toss, Moves::ice_beam, Moves::soft_boiled, Moves::thunder_wave };
+        static constexpr mset std_twave  { Moves::snatch, Moves::ice_beam, Moves::soft_boiled, Moves::thunder_wave };
         static constexpr mset std_tox    { Moves::seismic_toss, Moves::ice_beam, Moves::soft_boiled, Moves::toxic };
         static constexpr mset counter_   { Moves::seismic_toss, Moves::counter, Moves::soft_boiled, Moves::thunder_wave };
         // full set

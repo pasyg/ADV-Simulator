@@ -1552,6 +1552,13 @@ void Battle::use_move(Team &atkteam, Team &defteam)
         case Move::Skill_Swap:
         case Move::Uproar:
         case Move::Snatch:
+            if(is_snatchable(defteam.movechoice->get_move()))
+            {
+                atkteam.movechoice = defteam.movechoice;
+                use_move(atkteam, defteam);
+                defteam.movechoice = nullptr;
+            }
+            return;
         case Move::Spikes:
             if(defteam.spikes < 3){
                 ++defteam.spikes;
@@ -1592,6 +1599,7 @@ void Battle::use_move(Team &atkteam, Team &defteam)
                 }
             }
             return;
+        default: return;
     }
 }
 
@@ -1856,6 +1864,60 @@ bool Battle::is_contact_move(Move move){
         case Move::Sizzly_Slide:
         case Move::Veevee_Volley:
         case Move::Double_Iron_Bash:
+            return true;
+        default:
+            return false;
+    }
+}
+
+bool Battle::is_snatchable(Move const move)
+{
+    switch(move)
+    {
+        case Move::Acid_Armor:
+        case Move::Agility:
+        case Move::Amnesia:
+        case Move::Aromatherapy:
+        case Move::Barrier:
+        case Move::Belly_Drum:
+        case Move::Bulk_Up:
+        case Move::Calm_Mind:
+        case Move::Camouflage:
+        case Move::Charge:
+        case Move::Cosmic_Power:
+        case Move::Defense_Curl:
+        case Move::Double_Team:
+        case Move::Dragon_Dance:
+        case Move::Focus_Energy:
+        case Move::Growth:
+        case Move::Harden:
+        case Move::Heal_Bell:
+        case Move::Howl:
+        case Move::Ingrain:
+        case Move::Iron_Defense:
+        case Move::Light_Screen:
+        case Move::Meditate:
+        case Move::Milk_Drink:
+        case Move::Minimize:
+        case Move::Mist:
+        case Move::Moonlight:
+        case Move::Morning_Sun:
+        case Move::Psych_Up:
+        case Move::Recover:
+        case Move::Reflect:
+        case Move::Refresh:
+        case Move::Rest:
+        case Move::Safeguard:
+        case Move::Sharpen:
+        case Move::Slack_Off:
+        case Move::Soft_Boiled:
+        case Move::Stockpile:
+        case Move::Substitute:
+        case Move::Swallow:
+        case Move::Swords_Dance:
+        case Move::Synthesis:
+        case Move::Tail_Glow:
+        case Move::Withdraw:
             return true;
         default:
             return false;

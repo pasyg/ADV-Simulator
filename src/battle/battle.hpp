@@ -74,6 +74,7 @@ public:
     int used_pp(Team &atkteam, Team &defteam);
     bool can_set_status(Team &team, Status status);
     void set_status(Team &atkteam, Team &defteam, Status status);
+    bool is_snatchable(Move const move);
 
     // log.cpp
     void cant_move_log(Team &team, std::string_view reason);

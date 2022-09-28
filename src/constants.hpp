@@ -3,7 +3,7 @@
 #include <array>
 #include <iostream>
 
-#include "moves.hpp"
+#include "attackmove.hpp"
 
 
 namespace constants
@@ -13,6 +13,8 @@ namespace constants
     constexpr int pp_up         = 3;
     constexpr bool ohko_clause  = true;
     constexpr std::array<Move, 6> switches { Move::Switch0, Move::Switch1, Move::Switch2, Move::Switch3, Move::Switch4, Move::Switch5 };
+    constexpr std::array<AttackMove, 6> Aswitches { AttackMove(Move::Switch0), AttackMove(Move::Switch1), AttackMove(Move::Switch2), 
+                                                    AttackMove(Move::Switch3), AttackMove(Move::Switch4), AttackMove(Move::Switch5) };
 
     // Type effectiveness
     constexpr float no_effect           = 0;
