@@ -1,56 +1,71 @@
 #include "battle.hpp"
 
-void Battle::opp_boost(Team &team, const Statname stat, const int boost, const int chance){
-	switch(stat){
+void Battle::opp_boost(Team &team, const Statname stat, const int boost, const int chance)
+{
+	switch(stat)
+    {
 		case Statname::Acc:
-			if(team.active()->get_ability() == Ability::Keen_Eye){
+			if(team.active()->get_ability() == Ability::Keen_Eye)
+            {
 				return;
 			}
 		break;
 		default:
-			switch(team.active()->get_ability()){
+			switch(team.active()->get_ability())
+            {
 				case Ability::Clear_Body:
 				case Ability::White_Smoke:
 				case Ability::Hyper_Cutter:
-					if(boost < 0){
+					if(boost < 0)
+                    {
 						return;
 					}
 				default: break;
 			}
-		if(this->transition.randomChance(chance, 100)){
+		if(this->transition.randomChance(chance, 100))
+        {
 			team.set_boost(stat, boost);
 		}
 	}
 }
 
-void Battle::contact_move(Team &atkteam, Team &defteam){
-	if(!is_contact_move(atkteam.movechoice->get_move())){
+void Battle::contact_move(Team &atkteam, Team &defteam)
+{
+	if(!is_contact_move(atkteam.movechoice->get_move()))
+    {
 		return;
 	}
 	
-	switch(defteam.active()->get_ability()){
+	switch(defteam.active()->get_ability())
+    {
 		case Ability::Cute_Charm:
-			if(this->transition.randomChance(3, 10)){
+			if(this->transition.randomChance(3, 10))
+            {
 				atkteam.infatuated = true;
 			}
 		case Ability::Effect_Spore:
-			if(this->transition.randomChance(1, 10)){
-				switch(this->transition.random(3)){
+			if(this->transition.randomChance(1, 10))
+            {
+				switch(this->transition.random(3))
+                {
 					case 0: 
 						atkteam.active()->set_status(Status::Poison);
-						if(atkteam.active()->get_ability() == Ability::Synchronize){
+						if(atkteam.active()->get_ability() == Ability::Synchronize)
+                        {
 							defteam.active()->set_status(Status::Poison);
 						}
 						break;
 					case 1:
 						atkteam.active()->set_status(Status::Sleep_inflicted);
-						if(atkteam.active()->get_ability() == Ability::Synchronize){
+						if(atkteam.active()->get_ability() == Ability::Synchronize)
+                        {
 							defteam.active()->set_status(Status::Sleep_inflicted);
 						}
 						break;
 					case 2:
 						atkteam.active()->set_status(Status::Paralysis);
-						if(atkteam.active()->get_ability() == Ability::Synchronize){
+						if(atkteam.active()->get_ability() == Ability::Synchronize)
+                        {
 							defteam.active()->set_status(Status::Paralysis);
 						}
 						break;
@@ -58,17 +73,20 @@ void Battle::contact_move(Team &atkteam, Team &defteam){
 				}
 			break;
         	case Ability::Flame_Body: 
-        		if(this->transition.randomChance(3, 10)){ 
+        		if(this->transition.randomChance(3, 10))
+                {
         			atkteam.active()->set_status(Status::Burn);
         		} 
         		break;
         	case Ability::Poison_Point: 
-        		if(this->transition.randomChance(3, 10)){ 
+        		if(this->transition.randomChance(3, 10))
+                {
         			atkteam.active()->set_status(Status::Poison);
         		} 
         		break;
         	case Ability::Static: 
-        		if(this->transition.randomChance(3, 10)){ 
+        		if(this->transition.randomChance(3, 10))
+                { 
         			atkteam.active()->set_status(Status::Paralysis);
         		} 
         		break;
@@ -78,16 +96,19 @@ void Battle::contact_move(Team &atkteam, Team &defteam){
         	}
 }
 
-void Battle::switch_in(Team &atkteam, Team &defteam, const int target){
+void Battle::switch_in(Team &atkteam, Team &defteam, const int target)
+{
 	atkteam.meanlook = false;
 	atkteam.active()->set_ability(atkteam.active()->former_ability);
-	if(atkteam.active()->get_ability() == Ability::Natural_Cure){
+	if(atkteam.active()->get_ability() == Ability::Natural_Cure)
+    {
 		atkteam.active()->status = Status::Healthy;
 	}
 	
 	atkteam.active_pokemon = target;
 	
-	switch(atkteam.active()->get_ability()){
+	switch(atkteam.active()->get_ability())
+    {
 		case Ability::Drizzle:
 			this->weather = Weather::Rain;
 			break;
@@ -134,7 +155,8 @@ int Battle::calculate_accuracy(Team &atkteam, Team &defteam)
 	}
 
 
-	switch(atkteam.movechoice->get_move()){
+	switch(atkteam.movechoice->get_move())
+    {
 		case Move::Switch:
 		case Move::Switch0:
 		case Move::Switch1:
@@ -388,7 +410,8 @@ void Battle::use_move(Team &atkteam, Team &defteam)
             return;
         }
     }
-    if(atkteam.taunt){
+    if(atkteam.taunt)
+    {
         if(atkteam.taunt_move(atkteam.movechoice->get_move()))
         {
             return;
@@ -445,6 +468,7 @@ void Battle::use_move(Team &atkteam, Team &defteam)
     
     // for multihit moves
     int hits = 0;
+    AttackMove tmp_none(Move::None);
     switch(atkteam.movechoice->get_move())
     {
         ///
@@ -578,7 +602,8 @@ void Battle::use_move(Team &atkteam, Team &defteam)
         case Move::Leech_Life:
         case Move::Mega_Drain:
             dmg = calculate_damage(atkteam, defteam);
-            if(dmg > 1){
+            if(dmg > 1)
+            {
                 atkteam.active()->increase_hp(static_cast<int>(dmg / 2.0));
             }
             else{
@@ -595,7 +620,8 @@ void Battle::use_move(Team &atkteam, Team &defteam)
         case Move::Ancient_Power:
         case Move::Silver_Wind:
             dmg = calculate_damage(atkteam, defteam);
-            if(dmg > 0){
+            if(dmg > 0)
+            {
                 if(this->transition.randomChance(serene_grace, 10))
                 {
                     atkteam.set_boost(Statname::Atk,  1);
@@ -703,7 +729,8 @@ void Battle::use_move(Team &atkteam, Team &defteam)
             status = Status::Burn;
             if(dmg > 0 && defteam.active()->get_ability() != Ability::Shield_Dust)
             {
-                if(can_set_status(defteam, status)){
+                if(can_set_status(defteam, status))
+                {
                     if(this->transition.randomChance(serene_grace, 10))
                     {
                         set_status(atkteam, defteam, status);
@@ -717,7 +744,8 @@ void Battle::use_move(Team &atkteam, Team &defteam)
             status = Status::Burn;
             if(dmg > 0 && defteam.active()->get_ability() != Ability::Shield_Dust)
             {
-                if(can_set_status(defteam, status)){
+                if(can_set_status(defteam, status))
+                {
                     if(this->transition.randomChance(serene_grace, 10))
                     {
                         set_status(atkteam, defteam, status);
@@ -732,7 +760,8 @@ void Battle::use_move(Team &atkteam, Team &defteam)
             dmg = calculate_damage(atkteam, defteam);
             if(dmg > 0 && defteam.active()->get_ability() != Ability::Shield_Dust)
             {
-                if(can_set_status(defteam, Status::Freeze)){
+                if(can_set_status(defteam, Status::Freeze))
+                {
                     if(this->transition.randomChance(serene_grace, 10))
                     {
                         set_status(atkteam, defteam, Status::Freeze);
@@ -748,7 +777,8 @@ void Battle::use_move(Team &atkteam, Team &defteam)
             dmg = calculate_damage(atkteam, defteam);
             if(dmg > 0 && defteam.active()->get_ability() != Ability::Shield_Dust)
             {
-                if(can_set_status(defteam, Status::Paralysis)){
+                if(can_set_status(defteam, Status::Paralysis))
+                {
                     if(this->transition.randomChance(serene_grace, 10))
                     {
                         set_status(atkteam, defteam, Status::Paralysis);
@@ -763,7 +793,8 @@ void Battle::use_move(Team &atkteam, Team &defteam)
             dmg = calculate_damage(atkteam, defteam);
             if(dmg > 0 && defteam.active()->get_ability() != Ability::Shield_Dust)
             {
-                if(can_set_status(defteam, Status::Paralysis)){
+                if(can_set_status(defteam, Status::Paralysis))
+                {
                     if(this->transition.randomChance(3 * serene_grace, 10))
                     {
                         set_status(atkteam, defteam, Status::Paralysis);
@@ -775,9 +806,12 @@ void Battle::use_move(Team &atkteam, Team &defteam)
             dmg = calculate_damage(atkteam, defteam);
             if(can_set_status(defteam, Status::Burn) && 
                can_set_status(defteam, Status::Freeze) &&
-               can_set_status(defteam, Status::Paralysis)){
-                if(this->transition.randomChance(2 * serene_grace, 10)){
-                    switch(this->transition.random(3)){
+               can_set_status(defteam, Status::Paralysis))
+               {
+                if(this->transition.randomChance(2 * serene_grace, 10))
+                {
+                    switch(this->transition.random(3))
+                    {
                         case 0:
                             status = Status::Burn;
                             break;
@@ -797,49 +831,58 @@ void Battle::use_move(Team &atkteam, Team &defteam)
         case Move::Bubble_Beam:
         case Move::Constrict:
             dmg = calculate_damage(atkteam, defteam);
-            if(dmg > 0 && defteam.active()->get_ability() != Ability::Shield_Dust){
+            if(dmg > 0 && defteam.active()->get_ability() != Ability::Shield_Dust)
+            {
                 opp_boost(defteam, Statname::Spe, -1, 10 * serene_grace);
             }
             return;
         case Move::Confusion:
         case Move::Signal_Beam:
             dmg = calculate_damage(atkteam, defteam);
-            if(dmg > 0 && defteam.active()->get_ability() != Ability::Shield_Dust){
-                if(this->transition.randomChance(serene_grace, 10)){
+            if(dmg > 0 && defteam.active()->get_ability() != Ability::Shield_Dust)
+            {
+                if(this->transition.randomChance(serene_grace, 10))
+                {
                     defteam.set_confusion(); // Reminder to look at confusion, sleep, encore, etc
                 }
             }
             return;
         case Move::Dizzy_Punch:
             dmg = calculate_damage(atkteam, defteam);
-            if(dmg > 0 && defteam.active()->get_ability() != Ability::Shield_Dust){
-                if(this->transition.randomChance(serene_grace * 2, 10)){
+            if(dmg > 0 && defteam.active()->get_ability() != Ability::Shield_Dust)
+            {
+                if(this->transition.randomChance(serene_grace * 2, 10))
+                {
                     defteam.set_confusion();
                 }
             }
             return;
         case Move::Dynamic_Punch:
             dmg = calculate_damage(atkteam, defteam);
-            if(dmg >  0 && defteam.active()->get_ability() != Ability::Shield_Dust){
+            if(dmg >  0 && defteam.active()->get_ability() != Ability::Shield_Dust)
+            {
                 defteam.set_confusion();
             }
             return;
         case Move::Crunch:
             dmg = calculate_damage(atkteam, defteam);
-            if(dmg > 0 && defteam.active()->get_ability() != Ability::Shield_Dust){
+            if(dmg > 0 && defteam.active()->get_ability() != Ability::Shield_Dust)
+            {
                 opp_boost(defteam, Statname::Sdef, -1, 30 * serene_grace);
             }
             return;
         case Move::Crush_Claw:
             dmg = calculate_damage(atkteam, defteam);
-            if(dmg > 0 && defteam.active()->get_ability() != Ability::Shield_Dust){
+            if(dmg > 0 && defteam.active()->get_ability() != Ability::Shield_Dust)
+            {
                 opp_boost(defteam, Statname::Def, -1, 50 * serene_grace);
             }
             return;
         // can't crit
         case Move::Doom_Desire:
         case Move::Future_Sight:
-            if(atkteam.delayed_damage_turns){
+            if(atkteam.delayed_damage_turns)
+            {
                 atkteam.delayed_damage = calculate_damage(atkteam, defteam);
                 atkteam.delayed_damage_turns = 2;
             }
@@ -869,11 +912,11 @@ void Battle::use_move(Team &atkteam, Team &defteam)
             atkteam.special_calc = true;
             atkteam.special_damage_calc = atkteam.active()->current_hp * 48;
             atkteam.special_damage_calc /= atkteam.active()->get_stats().hp;
-            if(atkteam.special_damage_calc < 2){ atkteam.special_damage_calc = 200; return; }
-            if(atkteam.special_damage_calc < 5){ atkteam.special_damage_calc = 150; return; }
+            if(atkteam.special_damage_calc < 2) { atkteam.special_damage_calc = 200; return; }
+            if(atkteam.special_damage_calc < 5) { atkteam.special_damage_calc = 150; return; }
             if(atkteam.special_damage_calc < 10){ atkteam.special_damage_calc = 100; return; }
-            if(atkteam.special_damage_calc < 17){ atkteam.special_damage_calc = 80; return; }
-            if(atkteam.special_damage_calc < 33){ atkteam.special_damage_calc = 40; return; }
+            if(atkteam.special_damage_calc < 17){ atkteam.special_damage_calc = 80;  return; }
+            if(atkteam.special_damage_calc < 33){ atkteam.special_damage_calc = 40;  return; }
             atkteam.special_damage_calc = 20;
             return;
         case Move::Pursuit:
@@ -892,7 +935,8 @@ void Battle::use_move(Team &atkteam, Team &defteam)
             atkteam.active()->kill();
             return;
         case Move::Facade:
-            if(atkteam.active()->get_status() != Status::Healthy){
+            if(atkteam.active()->get_status() != Status::Healthy)
+            {
                 atkteam.special_calc = true;
                 atkteam.special_damage_calc = move_power(Move::Facade) * 2;
             }
@@ -900,7 +944,8 @@ void Battle::use_move(Team &atkteam, Team &defteam)
             return;
         case Move::False_Swipe:
             dmg = calculate_damage(atkteam, defteam);
-            if(defteam.active()->get_current_hp() < 1){
+            if(defteam.active()->get_current_hp() < 1)
+            {
                 defteam.active()->set_current_hp(1);
             }
             return;
@@ -918,7 +963,8 @@ void Battle::use_move(Team &atkteam, Team &defteam)
             return;
         case Move::Knock_Off:
             dmg = calculate_damage(atkteam, defteam);
-            if(defteam.active()->get_ability() != Ability::Sticky_Hold && dmg > 0){
+            if(defteam.active()->get_ability() != Ability::Sticky_Hold && dmg > 0)
+            {
                 defteam.active()->previous_item = defteam.active()->get_item();
                 defteam.active()->set_item(Item::None);
             }
@@ -955,7 +1001,8 @@ void Battle::use_move(Team &atkteam, Team &defteam)
             return;
         case Move::Rapid_Spin:
             dmg = calculate_damage(atkteam, defteam);
-            if(dmg > 0){
+            if(dmg > 0)
+            {
                 atkteam.spikes = 0;
             }
             return;
@@ -995,8 +1042,10 @@ void Battle::use_move(Team &atkteam, Team &defteam)
         case Move::Covet:
         case Move::Thief:
             dmg = calculate_damage(atkteam, defteam);
-            if(dmg > 0){
-                if(atkteam.active()->get_item() == Item::None && defteam.active()->get_ability() != Ability::Sticky_Hold){
+            if(dmg > 0)
+            {
+                if(atkteam.active()->get_item() == Item::None && defteam.active()->get_ability() != Ability::Sticky_Hold)
+                {
                     atkteam.active()->set_item(defteam.active()->get_item());
                     defteam.active()->set_item(Item::None);
                 }
@@ -1008,7 +1057,8 @@ void Battle::use_move(Team &atkteam, Team &defteam)
         ////////////////// 
         case Move::Zap_Cannon:
             dmg = calculate_damage(atkteam, defteam);
-            if(can_set_status(defteam, Status::Paralysis)){
+            if(can_set_status(defteam, Status::Paralysis))
+            {
                 set_status(atkteam, defteam, Status::Paralysis);
             }
             return;	
@@ -1025,7 +1075,8 @@ void Battle::use_move(Team &atkteam, Team &defteam)
             atkteam.set_boost(Statname::Satk, -2);
             return;	
 	    case Move::Psywave:
-            if(*defteam.active() == Type::Dark){
+            if(*defteam.active() == Type::Dark)
+            {
                 return;
             }
             else{
@@ -1055,7 +1106,8 @@ void Battle::use_move(Team &atkteam, Team &defteam)
         case Move::Pin_Missile:
         case Move::Rock_Blast:
         case Move::Spike_Cannon:
-            switch(this->transition.random(7)){
+            switch(this->transition.random(7))
+            {
                 case 0:
                 case 1:
                 case 2:
@@ -1073,7 +1125,8 @@ void Battle::use_move(Team &atkteam, Team &defteam)
                     hits = 5;
                     break;
             }
-            for(int i = 0; i < hits; ++i){
+            for(int i = 0; i < hits; ++i)
+            {
                 dmg = calculate_damage(atkteam, defteam);
             }
             return;
@@ -1081,12 +1134,14 @@ void Battle::use_move(Team &atkteam, Team &defteam)
         case Move::Double_Kick:
         case Move::Double_Slap:
         case Move::Twineedle:
-            for(int i = 0; i < 2; ++i){
+            for(int i = 0; i < 2; ++i)
+            {
                 dmg = calculate_damage(atkteam, defteam);
             }
             return;
         case Move::Triple_Kick:
-            for(int i = 0; i < 3; ++i){
+            for(int i = 0; i < 3; ++i)
+            {
                 dmg = calculate_damage(atkteam, defteam);
             }
             return;
@@ -1111,7 +1166,8 @@ void Battle::use_move(Team &atkteam, Team &defteam)
         case Move::Razor_Wind:
         case Move::Skull_Bash:
         case Move::Solar_Beam:
-            if(atkteam.charged == false){
+            if(atkteam.charged == false)
+            {
                 atkteam.charged = true;
             }
             else{
@@ -1121,15 +1177,19 @@ void Battle::use_move(Team &atkteam, Team &defteam)
             }
             return;
         case Move::Sky_Attack:
-            if(atkteam.charged == false){
+            if(atkteam.charged == false)
+            {
                 atkteam.charged = true;
             }
             else{
                 dmg = calculate_damage(atkteam, defteam);
                 
-                if(dmg > 0 && defteam.active()->get_ability() != Ability::Shield_Dust){
-                    if(defteam.active()->get_ability() != Ability::Inner_Focus){   
-                        if(this->transition.randomChance(3 * serene_grace, 10)){   
+                if(dmg > 0 && defteam.active()->get_ability() != Ability::Shield_Dust)
+                {
+                    if(defteam.active()->get_ability() != Ability::Inner_Focus)
+                    {
+                        if(this->transition.randomChance(3 * serene_grace, 10))
+                        { 
                             defteam.flinch = true;
                         }
                     }
@@ -1274,19 +1334,24 @@ void Battle::use_move(Team &atkteam, Team &defteam)
             return;
 
         case Move::Psych_Up:
-            if(defteam.atkboost > atkteam.atkboost){
+            if(defteam.atkboost > atkteam.atkboost)
+            {
                 atkteam.atkboost = defteam.atkboost;
             }
-            if(defteam.defboost > atkteam.defboost){
+            if(defteam.defboost > atkteam.defboost)
+            {
                 atkteam.defboost = defteam.defboost;
             }
-            if(defteam.satkboost > atkteam.satkboost){
+            if(defteam.satkboost > atkteam.satkboost)
+            {
                 atkteam.satkboost = defteam.satkboost;
             }
-            if(defteam.sdefboost > atkteam.sdefboost){
+            if(defteam.sdefboost > atkteam.sdefboost)
+            {
                 atkteam.sdefboost = defteam.sdefboost;
             }
-            if(defteam.speboost > atkteam.speboost){
+            if(defteam.speboost > atkteam.speboost)
+            {
                 atkteam.speboost = defteam.speboost;
             }
             return;
@@ -1313,17 +1378,20 @@ void Battle::use_move(Team &atkteam, Team &defteam)
 
         // paralysis
         case Move::Glare:
-            if(*defteam.active() != Type::Ghost && can_set_status(defteam, Status::Paralysis)){
+            if(*defteam.active() != Type::Ghost && can_set_status(defteam, Status::Paralysis))
+            {
                 set_status(atkteam, defteam, Status::Paralysis);
             }
             return;
         case Move::Stun_Spore:
-            if(can_set_status(defteam, Status::Paralysis)){
+            if(can_set_status(defteam, Status::Paralysis))
+            {
                 set_status(atkteam, defteam, Status::Paralysis);
             }
             return;
         case Move::Thunder_Wave:
-            if(*defteam.active() != Type::Ground && can_set_status(defteam, Status::Paralysis)){
+            if(*defteam.active() != Type::Ground && can_set_status(defteam, Status::Paralysis))
+            {
                 set_status(atkteam, defteam, Status::Paralysis);
             }
             return;
@@ -1335,7 +1403,8 @@ void Battle::use_move(Team &atkteam, Team &defteam)
         case Move::Sleep_Powder:
         case Move::Spore:
         status = Status::Sleep_inflicted;
-            if(can_set_status(defteam, status)){
+            if(can_set_status(defteam, status))
+            {
                 set_status(atkteam, defteam, status);
             }
             return;
@@ -1344,11 +1413,15 @@ void Battle::use_move(Team &atkteam, Team &defteam)
             return;
         case Move::Snore:
             if(atkteam.active()->get_status() == Status::Sleep_inflicted ||
-               atkteam.active()->get_status() == Status::Sleep_self){
+               atkteam.active()->get_status() == Status::Sleep_self)
+               {
                 dmg = calculate_damage(atkteam, defteam);
-                if(dmg > 0 && defteam.active()->get_ability() != Ability::Shield_Dust){
-                    if(defteam.active()->get_ability() != Ability::Inner_Focus){   
-                        if(this->transition.randomChance(3 * serene_grace, 10)){   
+                if(dmg > 0 && defteam.active()->get_ability() != Ability::Shield_Dust)
+                {
+                    if(defteam.active()->get_ability() != Ability::Inner_Focus)
+                    {
+                        if(this->transition.randomChance(3 * serene_grace, 10))
+                        { 
                             defteam.flinch = true;
                         }
                     }
@@ -1360,26 +1433,32 @@ void Battle::use_move(Team &atkteam, Team &defteam)
         case Move::Sleep_Talk:
         // poison
         case Move::Poison_Powder:
-            if(can_set_status(defteam, Status::Poison)){
+            if(can_set_status(defteam, Status::Poison))
+            {
                 set_status(atkteam, defteam, Status::Poison);
             }
             return;
         case Move::Toxic:
-            if(can_set_status(defteam, Status::Toxic_poison)){
+            if(can_set_status(defteam, Status::Toxic_poison))
+            {
                 set_status(atkteam, defteam, Status::Toxic_poison);
                 defteam.turns_on_the_field = 1;
             }
             return;
         // burn
         case Move::Will_O_Wisp:
-            if(can_set_status(defteam, Status::Burn)){
+            if(can_set_status(defteam, Status::Burn))
+            {
                 set_status(atkteam, defteam, Status::Burn);
             }
             return;
         case Move::Refresh:
-            if(atkteam.active()->get_status() != Status::Freeze){
-                if(atkteam.active()->get_status() != Status::Sleep_inflicted){
-                    if(atkteam.active()->get_status() != Status::Sleep_self){
+            if(atkteam.active()->get_status() != Status::Freeze)
+            {
+                if(atkteam.active()->get_status() != Status::Sleep_inflicted)
+                {
+                    if(atkteam.active()->get_status() != Status::Sleep_self)
+                    {
                         atkteam.active()->set_status(Status::Healthy);
                     }
                 }
@@ -1395,8 +1474,10 @@ void Battle::use_move(Team &atkteam, Team &defteam)
         //related
         case Move::Aromatherapy:
         case Move::Heal_Bell:
-            for(auto&& member : atkteam.member){
-                if(member.get_status() != Status::Fainted){
+            for(auto&& member : atkteam.member)
+            {
+                if(member.get_status() != Status::Fainted)
+                {
                     member.set_status(Status::Healthy);
                 }
             }
@@ -1417,7 +1498,8 @@ void Battle::use_move(Team &atkteam, Team &defteam)
         case Move::Moonlight:
         case Move::Morning_Sun:
         case Move::Synthesis:
-            switch(this->weather){
+            switch(this->weather)
+            {
                 case Weather::Sun:
                     atkteam.active()->increase_hp(
                         static_cast<int>(atkteam.active()->get_stats().hp * (2.0 / 3.0)));
@@ -1431,7 +1513,8 @@ void Battle::use_move(Team &atkteam, Team &defteam)
             return;
         case Move::Rest:
             if(atkteam.active()->get_status() != Status::Sleep_inflicted &&
-                atkteam.active()->get_status() != Status::Sleep_self){
+                atkteam.active()->get_status() != Status::Sleep_self)
+                {
                     atkteam.active()->set_status(Status::Sleep_self);
                     atkteam.active()->increase_hp(999);
                 }
@@ -1469,17 +1552,19 @@ void Battle::use_move(Team &atkteam, Team &defteam)
         case Move::Attract:
         case Move::Baton_Pass:
             // input to switch pokemon
-            if(atkteam.active()->substitute){
+            if(atkteam.active()->substitute)
+            {
                 atkteam.active()->set_sub(false);
                 atkteam.member[switch_target].substitute = true;
                 atkteam.member[switch_target].substitute_hp = atkteam.active()->substitute_hp;
                 atkteam.active()->set_sub_hp(0);
-                if(atkteam.active()->get_item() == Item::Whiteherb){
-                    if(atkteam.get_boost(Statname::Atk) < 0){ atkteam.set_boost(Statname::Atk, 0); }
-                    if(atkteam.get_boost(Statname::Def) < 0){ atkteam.set_boost(Statname::Def, 0); }
+                if(atkteam.active()->get_item() == Item::Whiteherb)
+                {
+                    if(atkteam.get_boost(Statname::Atk) < 0) { atkteam.set_boost(Statname::Atk,  0); }
+                    if(atkteam.get_boost(Statname::Def) < 0) { atkteam.set_boost(Statname::Def,  0); }
                     if(atkteam.get_boost(Statname::Satk) < 0){ atkteam.set_boost(Statname::Satk, 0); }
                     if(atkteam.get_boost(Statname::Sdef) < 0){ atkteam.set_boost(Statname::Sdef, 0); }
-                    if(atkteam.get_boost(Statname::Spe) < 0){ atkteam.set_boost(Statname::Spe, 0); }
+                    if(atkteam.get_boost(Statname::Spe) < 0) { atkteam.set_boost(Statname::Spe,  0); }
                 }
             }
             atkteam.active_pokemon = switch_target;
@@ -1505,15 +1590,18 @@ void Battle::use_move(Team &atkteam, Team &defteam)
         case Move::Helping_Hand:
         case Move::Imprison:
             moveset = *atkteam.active()->get_moveset();
-            for(int i = 0; i < 4; i++){
-                if(moveset[i] != Move::None){
+            for(int i = 0; i < 4; i++)
+            {
+                if(moveset[i] != Move::None)
+                {
                     atkteam.imprison_moves[i] = moveset[i].get_move();
                 }
             }
             atkteam.imprison = true;
             return;
         case Move::Leech_Seed:
-            if(*defteam.active() != Type::Grass){
+            if(*defteam.active() != Type::Grass)
+            {
                 defteam.leechseed = true;
             }
             return;
@@ -1556,11 +1644,12 @@ void Battle::use_move(Team &atkteam, Team &defteam)
             {
                 atkteam.movechoice = defteam.movechoice;
                 use_move(atkteam, defteam);
-                defteam.movechoice = nullptr;
+                defteam.movechoice = &tmp_none;
             }
             return;
         case Move::Spikes:
-            if(defteam.spikes < 3){
+            if(defteam.spikes < 3)
+            {
                 ++defteam.spikes;
             }
             return;
@@ -1579,7 +1668,8 @@ void Battle::use_move(Team &atkteam, Team &defteam)
         case Move::Transform:
         case Move::Water_Sport:
         case Move::Trick:
-            if(defteam.active()->get_ability() != Ability::Sticky_Hold){
+            if(defteam.active()->get_ability() != Ability::Sticky_Hold)
+            {
                 Item tmp = defteam.active()->get_item();
                 defteam.active()->set_item(atkteam.active()->get_item());
                 atkteam.active()->set_item(tmp);
@@ -1587,14 +1677,17 @@ void Battle::use_move(Team &atkteam, Team &defteam)
             return;
         case Move::Roar:
         case Move::Whirlwind:
-            if(defteam.active()->get_ability() != Ability::Suction_Cups){
+            if(defteam.active()->get_ability() != Ability::Suction_Cups)
+            {
                 std::vector<int> targets = {};
-                for(int i = 0; i < 6; ++i){
+                for(int i = 0; i < 6; ++i)
+                {
                     if(defteam.member[i].current_hp > 0) {
                         targets.push_back(i);
                     }
                 }
-                if(targets.size() > 1){
+                if(targets.size() > 1)
+                {
                     switch_in(defteam, atkteam, this->transition.random(targets.size()));
                 }
             }
@@ -1603,8 +1696,10 @@ void Battle::use_move(Team &atkteam, Team &defteam)
     }
 }
 
-bool Battle::is_sound_move(Move move){
-    switch(move){
+bool Battle::is_sound_move(Move move)
+{
+    switch(move)
+    {
         case Move::Boomburst:
         case Move::Bug_Buzz:
         case Move::Chatter:
@@ -1638,8 +1733,10 @@ bool Battle::is_sound_move(Move move){
     }
 }
 
-bool Battle::is_contact_move(Move move){
-    switch(move){
+bool Battle::is_contact_move(Move move)
+{
+    switch(move)
+    {
         case Move::Pound:
         case Move::Karate_Chop:
         case Move::Double_Slap:

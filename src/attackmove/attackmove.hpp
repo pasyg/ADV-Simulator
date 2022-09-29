@@ -48,7 +48,7 @@ public:
     MC category     = MC::Physical;
     int base_pp     = 0;
     int power       = 0;
-    int pp          = 0;
+    int pp          = 5;
     int priority    = 0;
     bool damage     = false;
     bool disabled   = false;

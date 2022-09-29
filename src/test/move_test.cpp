@@ -497,7 +497,7 @@ bool Tests::test_healing()
 }
 bool Tests::test_misc()
 {
-    std::cout << "Testing misc. ...";
+    std::cout << "Testing misc. ...\t";
     
     Battle tbattle = Battle({ Alph::ABCe, Alph::JM });
 
@@ -507,6 +507,7 @@ bool Tests::test_misc()
 
     // status on blissey and reduce hp
     tbattle.team[0].active()->set_status(Status::Burn);
+    tbattle.team[1].active()->set_status(Status::Burn);
     tbattle.team[0].active()->reduce_hp_direct(200);
 
     // choose Snatch and Refresh
@@ -519,10 +520,18 @@ bool Tests::test_misc()
         return false;
     }
     tbattle.use_move(tbattle.team[0], tbattle.team[1]);
-    tbattle.use_move(tbattle.team[1], tbattle.team[0]);
-    if(tbattle.team[0].active()->get_status() == Status::Burn)
+    if(tbattle.team[0].active()->get_status() == Status::Burn && tbattle.team[1].active()->get_status() != Status::Burn)
     {
         std::cout << "Error status Snatch Blissey vs Milotic\n";
+        return false;
+    }
+    //choose Recover for Milotic
+    tbattle.team[0].movechoice = &tbattle.team[0].active()->get_moveset()->at(0);
+    tbattle.team[1].movechoice = &tbattle.team[1].active()->get_moveset()->at(2);
+    tbattle.use_move(tbattle.team[0], tbattle.team[1]);
+    if(tbattle.team[0].active()->get_current_hp() < 651)
+    {
+        std::cout << "Error HP Snatch Blisey vs Milotic\n";
         return false;
     }
 
