@@ -5,6 +5,7 @@
 
 #include "string_conversions/string_conversions.hpp"
 
+#include "constants.hpp"
 #include "effectiveness.hpp"
 #include "team.hpp"
 #include "rng.hpp"
@@ -30,6 +31,7 @@ public:
     bool uproar         = false;
     bool move_first     = true;
     bool winner         = false; // false: team 1, true: team 2
+    std::array<AttackMove, 6> Aswitches { constants::Aswitches };
 
     Transition transition;
 

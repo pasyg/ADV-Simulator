@@ -5,6 +5,7 @@
 enum class Item : std::uint8_t
 {
     None,
+    Knocked,
     Leftovers,
     // pinch berries
     Apicotberry,

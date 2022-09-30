@@ -13,48 +13,48 @@ std::string create_filepath()
 
 int main(int argc, char* argv[])
 {
-    Tests::test_all();
+    // Tests::test_all();
 
-    // int played_games = 100;
+    int played_games = 100;
 
-    // if(argc > 1)
-    // {
-    //     played_games = std::stoi(argv[1]);
-    // }
+    if(argc > 1)
+    {
+        played_games = std::stoi(argv[1]);
+    }
 
-    // std::cout << "\nStart gaming!\n";
-    // std::vector<Team> teams = import_team("brr");
-    // std::array<Team, 2> teamsS { Tests::TSS::aero, Tests::SpecOff::cm };
+    std::cout << "\nStart gaming!\n";
+    std::vector<Team> teams = import_team("brr");
+    std::array<Team, 2> teamsS { Tests::TSS::aero, Tests::SpecOff::cm };
 
-    // int fract = played_games / 10;
-    // int w1 = 0, w2 = 0, tie = 0, tie_cap = 0;
+    int fract = played_games / 10;
+    int w1 = 0, w2 = 0, tie = 0, tie_cap = 0;
 
-    // {
-    //     Timer timer;
+    {
+        Timer timer;
 
-    //     for(int i = 0; i < played_games; ++i)
-    //     {
-    //         constants::progress(i, played_games);
-    //         //Battle battle(teamsS);
-    //         Battle battle({ teams[5], teams[23] });
-    //         //Battle battle({ Tests::TSS::aero, Tests::SpecOff::cm });
+        for(int i = 0; i < played_games; ++i)
+        {
+            constants::progress(i, played_games);
+            Battle battle(teamsS);
+            //Battle battle({ teams[5], teams[23] });
+            //Battle battle({ Tests::TSS::aero, Tests::SpecOff::cm });
 
-    //        int winner = battle.play_battle();
+           int winner = battle.play_battle();
 
-    //         switch(winner)
-    //         {
-    //             case 0: ++tie_cap; break;
-    //             case 1:      ++w1; break;
-    //             case 2:      ++w2; break;
-    //             case 3:     ++tie; break;
-    //             default:
-    //                 std::cout << winner << "\n";
-    //                 std::cout << "Sumtin Wong\n";
-    //                 break;
-    //         }
-    //     }
-    //     constants::summary(w1, w2, tie, tie_cap, played_games);
-    // }
+            switch(winner)
+            {
+                case 0: ++tie_cap; break;
+                case 1:      ++w1; break;
+                case 2:      ++w2; break;
+                case 3:     ++tie; break;
+                default:
+                    std::cout << winner << "\n";
+                    std::cout << "Sumtin Wong\n";
+                    break;
+            }
+        }
+        constants::summary(w1, w2, tie, tie_cap, played_games);
+    }
     
     return 0;
 }
