@@ -111,7 +111,8 @@ int Battle::play_battle()
             continue;
         }
         // if the game is over, return winner or tie
-        else{
+        else
+        {
             int end = game_end(this->team[0], this->team[1]);
             switch(end)
             {

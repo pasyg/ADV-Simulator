@@ -58,6 +58,7 @@ public:
 
     // turn.cpp
     bool play_turn();
+    bool switch_faint(Team& team, Team& oppteam);
     int game_end(const Team &team1, const Team &team2);
     bool can_move(Team &team);
     bool check_fainted();

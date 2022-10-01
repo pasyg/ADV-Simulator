@@ -264,10 +264,10 @@ std::ostream& operator<<(std::ostream& out, Team& team)
     out << "Size: " << team.teamsize << "\n";
     out << "Active Pokemon: " << to_string(team.active()->get_species()) << "\n";
     out << "Boosts: Atk: "  << team.get_boost(Statname::Atk)
-                            << "Def: "  << team.get_boost(Statname::Def)
-                            << "SAtk: " << team.get_boost(Statname::Satk)
-                            << "SDef: " << team.get_boost(Statname::Sdef)
-                            << "Spe: "  << team.get_boost(Statname::Spe)
+                            << " Def: "  << team.get_boost(Statname::Def)
+                            << " SAtk: " << team.get_boost(Statname::Satk)
+                            << " SDef: " << team.get_boost(Statname::Sdef)
+                            << " Spe: "  << team.get_boost(Statname::Spe)
                             << "\n";
     for(auto&& member : team.member)
     {
@@ -284,7 +284,8 @@ void Team::get_move_options(std::array<Move, 3> impmoves)
     const std::array<AttackMove, 4> *moves = this->active()->get_moveset();
     // Struggle will be chosen if pokemon can use no other move (not switches)
     static AttackMove struggle(Move::Struggle);
-
+    struggle.set_pp(9999);
+    
     // free the vector from previous options
     this->move_options.clear();
 
@@ -293,6 +294,7 @@ void Team::get_move_options(std::array<Move, 3> impmoves)
         // if pokemon is locked into a move, add it
         if(this->move_locked)
         {
+            // needs torment taunt etc. too
             if(this->locked_move->get_pp() > 0)
             {
                 this->move_options.push_back(this->locked_move);        
@@ -303,13 +305,18 @@ void Team::get_move_options(std::array<Move, 3> impmoves)
         {
             for(auto&& move : *this->active()->get_moveset())
             {
+                // can't select move without pp
+                if(move.get_pp() < 1)
+                {
+                    continue;
+                }
                 // can't select disabled moves
-                if(move.get_pp() > 0 && !move.get_disabled())
+                if(move.get_disabled())
                 {
                     continue;
                 }
                 // can't select certain moves when taunted
-                if(!(taunt_move(move.get_move()) && this->taunt))
+                if(taunt_move(move.get_move()) && this->taunt)
                 {
                     continue;
                 }
@@ -322,7 +329,7 @@ void Team::get_move_options(std::array<Move, 3> impmoves)
                     }
                 }
                 // can't select moves shared with opponent when opponents imprison is active
-                if(std::any_of(impmoves.cbegin(), impmoves.cend(), 
+                if(std::any_of(impmoves.begin(), impmoves.end(), 
                                 [&move](Move impmove) -> bool { return move.get_move() == impmove; }))
                 {
                         continue;
@@ -330,17 +337,17 @@ void Team::get_move_options(std::array<Move, 3> impmoves)
                 // add move to options
                 this->move_options.push_back(&move);
             }
+        }        
+        // pokemon has to struggle if no other move can be chosen
+        if(this->move_options.size() == 0)
+        {
+            this->move_options.push_back(&struggle);
         }    
-    }        
-    // pokemon has to struggle if no other move can be chosen
-    if(this->move_options.size() == 0)
-    {
-        this->move_options.push_back(&struggle);
-    }
-    // if trapped, pokemon can't switch
-    if(this->trapped)
-    {
-        return;
+        // if trapped, pokemon can't switch
+        if(this->trapped)
+        {
+            return;
+        }
     }
     // add non fainted pokemon as switch options
     for(int i = 0; i<6; ++i)
@@ -350,7 +357,8 @@ void Team::get_move_options(std::array<Move, 3> impmoves)
         {
             continue;
         }
-        else{
+        else
+        {
             if(this->member[i].get_status() != Status::Fainted)
             {
                 this->move_options.push_back(&this->switches[i]);

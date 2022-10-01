@@ -670,10 +670,15 @@ std::ostream& operator<<(std::ostream& out, Pokemon& pokemon)
                         << pokemon.get_ivs().spe << "\n"; 
                          
     out << "Nature: "   << to_string(pokemon.get_nature()) << "\n";
-    out << "Move 1: "   << to_string(pokemon.moveset[0].get_move()) << "   " << pokemon.moveset[0].get_pp() << "\n";
-    out << "Move 2: "   << to_string(pokemon.moveset[1].get_move()) << "   " << pokemon.moveset[1].get_pp() << "\n";
-    out << "Move 3: "   << to_string(pokemon.moveset[2].get_move()) << "   " << pokemon.moveset[2].get_pp() << "\n";
-    out << "Move 4: "   << to_string(pokemon.moveset[3].get_move()) << "   " << pokemon.moveset[3].get_pp() << "\n\n";
+    std::string tab =  "\t";
+    for(int i = 0; i < 4; ++i)
+    {
+        std::string_view strMove = to_string(pokemon.moveset[i].get_move());
+        if(strMove.size() < 10) { tab = "\t\t"; }
+        else { tab = "\t"; }
+        out << "Move: " << strMove << tab << pokemon.moveset[i].get_pp() << "\n";
+    }
+    out << "\n";
 
     return out;
 }

@@ -12,4 +12,5 @@ namespace Tests
 {
     bool test_all_mechanic();
     bool speed_test();
+    bool game_end();
 }

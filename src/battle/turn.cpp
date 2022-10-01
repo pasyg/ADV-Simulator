@@ -3,23 +3,6 @@
 
 bool Battle::play_turn()
 {
-    // check if fainted pokemon is fainted,
-    // initiate the forced switchout if so
-    auto switch_faint = [&](Team &team, Team &oppteam)
-    { 
-        if(team.active()->get_current_hp() <= 0)
-        {
-            faint_log(team);
-            team.get_move_options(oppteam.imprison_moves);
-            this->decide_move(team);
-            this->use_move(team, oppteam);
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    };
     // set trapped if trapped
     // reset trapped if not
     auto is_trapped = [&](Team &team, Team &oppteam)
@@ -44,6 +27,10 @@ bool Battle::play_turn()
             team.trapped = false;
         }
     };
+    if(game_end(this->team[0], this->team[1]))
+    {
+        return false;
+    }
     // check if any active mon is trapped
     is_trapped(this->team[0], this->team[1]);
     is_trapped(this->team[1], this->team[0]);
@@ -80,12 +67,17 @@ bool Battle::play_turn()
             return false; 
         }
         switch_faint(this->team[0], this->team[1]);
+        if(game_end(this->team[0], this->team[1]))
+        { 
+            return false; 
+        }
         switch_faint(this->team[1], this->team[0]);
         if(!this->end_of_turn()) { return false; }
     }
 
     // slower pokemon uses move now, check if any pokemon died and has to be swapped out
-    else{
+    else
+    {
         if(can_move(this->team[!(this->move_first)]))
         {
             use_move(this->team[!(this->move_first)], this->team[this->move_first]);
@@ -102,7 +94,9 @@ bool Battle::play_turn()
                     this->abilities_simultaneous(); 
                 }
             }
-        } else{ 
+        } 
+        else
+        { 
             if(game_end(this->team[0], this->team[1]))
             { 
                 return false; 
@@ -114,6 +108,21 @@ bool Battle::play_turn()
     return true;
 }
 
+
+// check if fainted pokemon is fainted,
+// initiate the forced switchout if so
+bool Battle::switch_faint(Team &team, Team &oppteam)
+{ 
+    if(game_end(team, oppteam)) { return false; }
+    if(team.active()->get_current_hp() <= 0)
+    {
+        faint_log(team);
+        team.get_move_options(oppteam.imprison_moves);
+        this->decide_move(team);
+        this->use_move(team, oppteam);
+    }
+    return true;
+};
 
 // checks if the pokemon is able to use a move
 // true: move will be used, false: move will be canceled
@@ -184,11 +193,11 @@ bool Battle::can_move(Team &team)
 // and true if the turn will be ended
 bool Battle::check_fainted()
 {
-    if(this->team[0].active()->get_current_hp() <= 0)
+    if(this->team[0].active()->get_status() == Status::Fainted)
     {
         return true;
     }
-    if(this->team[1].active()->get_current_hp() <= 0)
+    if(this->team[1].active()->get_status() == Status::Fainted)
     {
         return true;
     }
@@ -239,24 +248,24 @@ bool Battle::end_of_turn()
             break;
         case Weather::Hail:
             this->weather_damage(Weather::Hail, *this->team[first].active(), first);
-            if(game_end(this->team[0], this->team[1]))
+            if(switch_faint(this->team[0], this->team[1]))
             {
                 return false; 
             }
             this->weather_damage(Weather::Hail, *this->team[second].active(), second);
-            if(game_end(this->team[0], this->team[1]))
+            if(switch_faint(this->team[0], this->team[1]))
             {
                 return false; 
             }
             break;
         case Weather::Sand:
             this->weather_damage(Weather::Sand, *this->team[first].active(), first);
-                if(game_end(this->team[0], this->team[1]))
+                if(switch_faint(this->team[0], this->team[1]))
                 {
                     return false; 
                 }
             this->weather_damage(Weather::Sand, *this->team[second].active(), second);
-            if(game_end(this->team[0], this->team[1]))
+            if(switch_faint(this->team[0], this->team[1]))
             {
                 return false; 
             }

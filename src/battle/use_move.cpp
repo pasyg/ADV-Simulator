@@ -98,9 +98,30 @@ void Battle::contact_move(Team &atkteam, Team &defteam)
 
 void Battle::switch_in(Team &atkteam, Team &defteam, const int target)
 {
-	atkteam.meanlook = false;
+    atkteam.atkboost      = 0;
+    atkteam.defboost      = 0;
+    atkteam.satkboost     = 0;
+    atkteam.sdefboost     = 0;
+    atkteam.speboost      = 0;
+    atkteam.accboost      = 0;
+    atkteam.evaboost      = 0;
+    atkteam.confusion     = 0;
+    atkteam.encore        = 0;
+    atkteam.move_locked   = false;
+	atkteam.meanlook      = false;
+    atkteam.charge        = false;
+    atkteam.charged       = false;
+    atkteam.curse         = false;
+    atkteam.endure        = false;
+    atkteam.flash_fire    = false;
+    atkteam.grudge        = false;
+    atkteam.imprison      = false;
+    atkteam.infatuated    = false;
+    atkteam.leechseed     = false;
+    atkteam.disabled_move = nullptr;
 	atkteam.active()->set_ability(atkteam.active()->former_ability);
-	if(atkteam.active()->get_ability() == Ability::Natural_Cure)
+	if(atkteam.active()->get_ability() == Ability::Natural_Cure
+       && atkteam.active()->get_status() != Status::Fainted)
     {
 		atkteam.active()->status = Status::Healthy;
 	}
@@ -403,6 +424,13 @@ void Battle::use_move(Team &atkteam, Team &defteam)
         atkteam.locked_move = atkteam.movechoice;
     }
     
+    // std::cout << to_string(atkteam.active()->get_species())
+    //           << " uses "
+    //           << to_string(atkteam.movechoice->get_move())
+    //           << " vs. "
+    //           << to_string(defteam.active()->get_species())
+    //           << "\n";
+
     // for multihit moves
     int hits = 0;
     AttackMove tmp_none(Move::None);
@@ -1585,6 +1613,7 @@ void Battle::use_move(Team &atkteam, Team &defteam)
         case Move::Attract:
         case Move::Baton_Pass:
             // input to switch pokemon
+            atkteam.move_options.clear();
             for(int i = 0; i < 6; ++i)
             {
                 if(atkteam.active_pokemon == i)
@@ -1595,12 +1624,12 @@ void Battle::use_move(Team &atkteam, Team &defteam)
                 {
                     switch (i)
                     {
-                    case 0: bp_switches.push_back(this->Aswitches[0]); continue;
-                    case 1: bp_switches.push_back(this->Aswitches[1]); continue;
-                    case 2: bp_switches.push_back(this->Aswitches[2]); continue;
-                    case 3: bp_switches.push_back(this->Aswitches[3]); continue;
-                    case 4: bp_switches.push_back(this->Aswitches[4]); continue;
-                    case 5: bp_switches.push_back(this->Aswitches[5]); break;;
+                    case 0: atkteam.move_options.push_back(&this->Aswitches[0]); continue;
+                    case 1: atkteam.move_options.push_back(&this->Aswitches[1]); continue;
+                    case 2: atkteam.move_options.push_back(&this->Aswitches[2]); continue;
+                    case 3: atkteam.move_options.push_back(&this->Aswitches[3]); continue;
+                    case 4: atkteam.move_options.push_back(&this->Aswitches[4]); continue;
+                    case 5: atkteam.move_options.push_back(&this->Aswitches[5]); break;;
                     }
                 }
             }

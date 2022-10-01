@@ -13,7 +13,7 @@ std::string create_filepath()
 
 int main(int argc, char* argv[])
 {
-    // Tests::test_all();
+    //Tests::test_all();
 
     int played_games = 100;
 
@@ -35,9 +35,9 @@ int main(int argc, char* argv[])
         for(int i = 0; i < played_games; ++i)
         {
             constants::progress(i, played_games);
-            Battle battle(teamsS);
+            //Battle battle(teamsS);
             //Battle battle({ teams[5], teams[23] });
-            //Battle battle({ Tests::TSS::aero, Tests::SpecOff::cm });
+            Battle battle({ Tests::Physoff::std, Tests::Alph::TZ });
 
            int winner = battle.play_battle();
 

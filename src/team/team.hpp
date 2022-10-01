@@ -17,7 +17,7 @@ public:
     Team();
     constexpr Team(const std::array<Pokemon, 6>& pokemon) :
         member(pokemon) {};
-    int teamsize = 6;
+    int teamsize = 0;
     std::string_view team = "";
     int get_boost(Statname stat);
     void get_move_options(std::array<Move, 3> impmoves);
@@ -32,9 +32,9 @@ public:
     void use_pinch_berry();
     // if a pokemon is below 25% health, some berries will activate
     // at the end of turn
-    AttackMove* movechoice = nullptr;
+    AttackMove* movechoice      = nullptr;
     AttackMove* prev_movechoice = nullptr;
-    AttackMove* disabled_move = nullptr;
+    AttackMove* disabled_move   = nullptr;
     // sinn????
     std::array<AttackMove, 6> switches = {  AttackMove(Move::Switch0), 
                                             AttackMove(Move::Switch1), 
