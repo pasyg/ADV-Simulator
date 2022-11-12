@@ -24,7 +24,7 @@ int main(int argc, char* argv[])
 
     std::cout << "\nStart gaming!\n";
     std::vector<Team> teams = import_team("brr");
-    std::array<Team, 2> teamsS { Tests::TSS::aero, Tests::SpecOff::cm };
+    std::array<Team, 2> teamsS { Tests::TSS::aero, Tests::TSS::sbt };
 
     int fract = played_games / 10;
     int w1 = 0, w2 = 0, tie = 0, tie_cap = 0;
@@ -37,16 +37,18 @@ int main(int argc, char* argv[])
             constants::progress(i, played_games);
             //Battle battle(teamsS);
             //Battle battle({ teams[5], teams[23] });
-            Battle battle({ Tests::Physoff::std, Tests::Alph::TZ });
+            //Battle battle({ Tests::Physoff::std, Tests::Alph::TZ });
+            Battle battle({ Tests::Physoff::std, Tests::SpecOff::cm }, create_filepath());
+            //Battle battle({ Tests::TSS::aero, Tests::TSS::sbt });
 
            int winner = battle.play_battle();
 
             switch(winner)
             {
-                case 0: ++tie_cap; break;
-                case 1:      ++w1; break;
-                case 2:      ++w2; break;
-                case 3:     ++tie; break;
+                case 0: ++tie_cap; battle.game_end_log("tie", ""); break;
+                case 1:      ++w1; battle.game_end_log("win", battle.team[0].team); break;
+                case 2:      ++w2; battle.game_end_log("win", battle.team[0].team); break;
+                case 3:     ++tie; battle.game_end_log("tie", ""); break;
                 default:
                     std::cout << winner << "\n";
                     std::cout << "Sumtin Wong\n";

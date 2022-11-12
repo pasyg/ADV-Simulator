@@ -1,10 +1,11 @@
 #include "battle.hpp"
 
-Battle::Battle(std::array<Team, 2>, const std::string &filepath) 
-    : logger(filepath)
+Battle::Battle(std::array<Team, 2> teams, const std::string &filepath) 
+    : team(teams), logger(filepath)
 {
     this->init();
-
+    this->team[0].team = "p1a";
+    this->team[1].team = "p2a";
     this->logger << constants::log::html_header;
     this->logger << constants::log::generation;
     this->logger << constants::log::sleep_clause;
@@ -16,7 +17,7 @@ Battle::Battle(std::array<Team, 2>, const std::string &filepath)
     this->logger << constants::log::hp_percentage_mod;
     this->logger << constants::log::baton_pass_clause;
     this->logger << "|teamsize|p1|" << this->team[0].teamsize << "\n";
-    this->logger << "|teamsize|p2|" << this->team[1].teamsize << "\n";
+    this->logger << "|teamsize|p2|" << this->team[1].teamsize;
     this->logger << constants::log::start;
 }
 

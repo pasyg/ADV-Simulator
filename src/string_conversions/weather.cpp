@@ -5,7 +5,7 @@ std::string_view to_string(Weather const name){
         case Weather::Clear:    return "Clear";
         case Weather::Hail:     return "Hail";
         case Weather::Rain:     return "Rain";
-        case Weather::Sand:     return "Sand Storm";
+        case Weather::Sand:     return "Sandstorm";
         case Weather::Sun:      return "Sun";
         default:                return "ERROR weather";
     }

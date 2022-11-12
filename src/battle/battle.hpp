@@ -18,7 +18,7 @@ class Battle
 public:
     using bTeams = std::array<Team, 2>;
 
-    Battle(bTeams, const std::string &filepath);
+    Battle(bTeams teams, const std::string &filepath);
     Battle(bTeams teams);
     Battle();
     ~Battle();
@@ -100,4 +100,5 @@ public:
     void boost_log();
     void curestatus_log();
     void effective_log();
+    void game_end_log(std::string_view outcome, std::string_view name);
 };

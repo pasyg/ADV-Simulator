@@ -65,13 +65,13 @@ public:
     bool protect                = false;
     bool torment                = false;
     bool truant                 = false;
+    bool special_calc           = false;
     int safeguard               = 0;
     int wrap                    = 0;
     int lastdamage              = 0;
     int protect_acc             = 100;
     int delayed_damage          = 0;
     int delayed_damage_turns    = 0;
-    bool special_calc           = false;
     int special_damage_calc     = 0;
     ///
     /// static

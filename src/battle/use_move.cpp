@@ -131,19 +131,31 @@ void Battle::switch_in(Team &atkteam, Team &defteam, const int target)
 	switch(atkteam.active()->get_ability())
     {
 		case Ability::Drizzle:
+            if(this->weather != Weather::Rain)
+            {
+                weather_start(atkteam, Weather::Rain, to_string(atkteam.active()->get_species()));
+            }
 			this->weather = Weather::Rain;
 			break;
 		case Ability::Drought:
+            if(this->weather != Weather::Sun)
+            {
+                weather_start(atkteam, Weather::Sun, to_string(atkteam.active()->get_species()));
+            }
 			this->weather = Weather::Sun;
+			break;
+		case Ability::Sand_Stream:
+            if(this->weather != Weather::Sand)
+            {
+                weather_start(atkteam, Weather::Sand, to_string(atkteam.active()->get_species()));
+            }
+            this->weather = Weather::Sand;
 			break;
 		case Ability::Forecast:
 			// weird sh*t
 			break;
 		case Ability::Intimidate:
 			opp_boost(defteam, Statname::Atk, -1, 100);
-			break;
-		case Ability::Sand_Stream:
-			this->weather = Weather::Sand;
 			break;
 		case Ability::Trace:
 			atkteam.active()->set_former_ability(Ability::Trace);
@@ -441,28 +453,28 @@ void Battle::use_move(Team &atkteam, Team &defteam)
         /// switches
         ///
         case Move::Switch0:
-            switch_in(atkteam, defteam, 0);
             switch_log(atkteam);
+            switch_in(atkteam, defteam, 0);
             return;
         case Move::Switch1:
-            switch_in(atkteam, defteam, 1);
             switch_log(atkteam);
+            switch_in(atkteam, defteam, 1);
             return;
         case Move::Switch2:
-            switch_in(atkteam, defteam, 2);
             switch_log(atkteam);
+            switch_in(atkteam, defteam, 2);
             return;
         case Move::Switch3:
-            switch_in(atkteam, defteam, 3);
             switch_log(atkteam);
+            switch_in(atkteam, defteam, 3);
             return;
         case Move::Switch4:
-            switch_in(atkteam, defteam, 4);
             switch_log(atkteam);
+            switch_in(atkteam, defteam, 4);
             return;
         case Move::Switch5:
-            switch_in(atkteam, defteam, 5);
             switch_log(atkteam);
+            switch_in(atkteam, defteam, 5);
             return;
         // splash...
         case Move::Splash: 

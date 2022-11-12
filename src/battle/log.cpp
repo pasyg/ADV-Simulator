@@ -127,3 +127,11 @@ void Battle::infatuation_log()
 void Battle::truant_log()
 {    
 }
+
+void Battle::game_end_log(std::string_view outcome, std::string_view name)
+{
+    if(this->logger.is_open())
+    {
+        this->logger << "|" << outcome << "|" << name << "\n";
+    }
+}

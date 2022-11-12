@@ -5,7 +5,6 @@
 
 #include "attackmove.hpp"
 
-
 namespace constants
 {
     // battle stuff
@@ -31,7 +30,7 @@ namespace constants
     {
         constexpr auto html_header          = "<!DOCTYPE html>\n<script type=\"text/plain\" class=\"battle-log-data\">|t:|1638527531\n|gametype|singles\n|player|p1|Player 1||\n|player|p2|Player 2||\n";
         constexpr auto generation           = "|gen|3\n|tier|[Gen 3] OU\n";
-        constexpr auto sleep_clause         = "|rule\n|Sleep Clause Mod: Limit one foe put to sleep\n";
+        constexpr auto sleep_clause         = "|rule|Sleep Clause Mod: Limit one foe put to sleep\n";
         constexpr auto prio_switch_clause   = "|rule|Switch Priority Clause Mod: Faster Pokémon switch first\n";
         constexpr auto species_clause       = "|rule|Species Clause: Limit one of each Pokémon\n";
         constexpr auto ohko_clause          = "|rule|OHKO Clause: OHKO moves are banned\n";
